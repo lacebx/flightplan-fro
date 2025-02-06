@@ -9,20 +9,32 @@
       </button>
       <p class="note">* Only users with an @oc.edu email can use this app</p>
     </header>
-    <main>
-      
+    <main v-if="!isLoggedIn">
+      <!-- Login view -->
+    </main>
+    <main v-else>
+      <h2>Home View</h2>
+      <p>Welcome to the home page!</p>
     </main>
   </div>
 </template>
 
 <script>
+import { ref } from 'vue'; // Import ref for reactive state
+
 export default {
   name: "App",
-  methods: {
-    loginWithGoogle() {
+  setup() {
+    const isLoggedIn = ref(false); // Reactive state for login status
+
+    const loginWithGoogle = () => {
       // Placeholder function for Google login
-      alert("Redirecting to Google Login...");
-    },
+      setTimeout(() => {
+      }, 2);
+      isLoggedIn.value = true; // Simulate successful login
+    };
+
+    return { loginWithGoogle, isLoggedIn };
   },
 };
 </script>
