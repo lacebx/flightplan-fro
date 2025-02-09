@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <header v-if="isLoggedIn">
-      <nav>
+    <header style="position: absolute; top: 0; width: 100%; z-index: 1000;" v-if="isLoggedIn">
+      <nav >
         <ul>
           <li><router-link to="/home" class="nav-link">Home</router-link></li>
           <li><router-link to="/tasks-events" class="nav-link">Tasks & Events</router-link></li>
@@ -22,19 +22,26 @@
 </template>
 
 <script>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 
 export default {
   name: "App",
   setup() {
     const isLoggedIn = ref(false);
 
+    // Check localStorage for logged-in state on mount
+    onMounted(() => {
+      isLoggedIn.value = localStorage.getItem('isLoggedIn') === 'true';
+    });
+
     const handleLogin = () => {
       isLoggedIn.value = true;
+      localStorage.setItem('isLoggedIn', 'true'); // Save logged-in state
     };
 
     const handleLogout = () => {
       isLoggedIn.value = false;
+      localStorage.removeItem('isLoggedIn'); // Remove logged-in state
     };
 
     return { isLoggedIn, handleLogin, handleLogout };
