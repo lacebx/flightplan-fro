@@ -67,13 +67,21 @@
           </div>
         </div>
       </div>
+
+      <button class="logout-btn" @click="logout">Logout</button>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'ProfileView'
+  name: 'ProfileView',
+  methods: {
+    logout() {
+      this.$emit('logout'); // Emit logout event
+      this.$router.push('/'); // Redirect to login view
+    },
+  },
 };
 </script>
 
@@ -221,5 +229,19 @@ export default {
   padding: 5px 15px;
   border-radius: 15px;
   font-size: 0.9em;
+}
+
+.logout-btn {
+  background-color: #e74c3c; /* Red color for logout */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.logout-btn:hover {
+  background-color: #c0392b; /* Darker red on hover */
 }
 </style>

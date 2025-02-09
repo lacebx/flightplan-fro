@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <header>
+    <header v-if="isLoggedIn">
       <nav>
         <ul>
           <li><router-link to="/home" class="nav-link">Home</router-link></li>
@@ -12,9 +12,9 @@
       </nav>
     </header>
     <main>
-      <router-view />
+      <router-view @login="handleLogin" @logout="handleLogout" />
     </main>
-    <footer>
+    <footer v-if="isLoggedIn">
       <div class="footer-left">Overview and comments</div>
       <div class="footer-right">Current Points</div>
     </footer>
@@ -22,8 +22,23 @@
 </template>
 
 <script>
+import { ref } from 'vue';
+
 export default {
   name: "App",
+  setup() {
+    const isLoggedIn = ref(false);
+
+    const handleLogin = () => {
+      isLoggedIn.value = true;
+    };
+
+    const handleLogout = () => {
+      isLoggedIn.value = false;
+    };
+
+    return { isLoggedIn, handleLogin, handleLogout };
+  },
 };
 </script>
 

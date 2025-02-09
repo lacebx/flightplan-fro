@@ -3,7 +3,7 @@
     <h1>Welcome to Career Services</h1>
     <p class="tagline">Helping OC students prepare for their future, one step at a time.</p>
     <img alt="Career Services logo" src="@/assets/google-icon.svg" class="logo" />
-    <button class="google-login" @click="loginWithGoogle">
+    <button class="google-login" @click="login">
       Login with Google
     </button>
     <p class="note">* Only users with an @oc.edu email can use this app</p>
@@ -14,9 +14,10 @@
 export default {
   name: "LoginView",
   methods: {
-    loginWithGoogle() {
-      // Placeholder function for Google login
-      alert("Redirecting to Google Login...");
+    login() {
+      // Simulate successful login
+      this.$emit('login'); // Emit login event
+      this.$router.push('/home'); // Redirect to home view
     },
   },
 };
