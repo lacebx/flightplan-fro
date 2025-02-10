@@ -1,21 +1,23 @@
 <template>
   <div id="app">
     <header>
-      <h1>Welcome to Career Services</h1>
-      <p class="tagline">Helping OC students prepare for their future, one step at a time.</p>
-      <img alt="Career Services logo" src="./assets/google-icon.svg" class="logo" />
-      <button class="google-login" @click="loginWithGoogle">
-        Login with Google
-      </button>
-      <p class="note">* Only users with an @oc.edu email can use this app</p>
+      <nav>
+        <ul>
+          <li><router-link to="/home" class="nav-link">Home</router-link></li>
+          <li><router-link to="/tasks-events" class="nav-link">Tasks & Events</router-link></li>
+          <li><router-link to="/sw" class="nav-link">S&W</router-link></li>
+          <li><router-link to="/experience" class="nav-link">Experience</router-link></li>
+          <li><router-link to="/profile" class="nav-link">Profile</router-link></li>
+        </ul>
+      </nav>
     </header>
-    <main v-if="!isLoggedIn">
-      <!-- Login view -->
+    <main>
+      
     </main>
-    <main v-else>
-      <h2>Home View</h2>
-      <p>Welcome to the home page!</p>
-    </main>
+    <footer>
+      <div class="footer-left">Overview and comments</div>
+      <div class="footer-right">Current Points</div>
+    </footer>
   </div>
 </template>
 
@@ -24,17 +26,11 @@ import { ref } from 'vue'; // Import ref for reactive state
 
 export default {
   name: "App",
-  setup() {
-    const isLoggedIn = ref(false); // Reactive state for login status
-
-    const loginWithGoogle = () => {
+  methods: {
+    loginWithGoogle() {
       // Placeholder function for Google login
-      setTimeout(() => {
-      }, 2);
-      isLoggedIn.value = true; // Simulate successful login
-    };
-
-    return { loginWithGoogle, isLoggedIn };
+      alert("Redirecting to Google Login...");
+    },
   },
 };
 </script>
@@ -48,10 +44,15 @@ export default {
   color: #2c3e50;
   margin-top: 60px;
   background-color: #f6fff0;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
 }
 
 header {
   margin-bottom: 80px;
+  background-color: #d3d3d3;
+  padding: 10px;
 }
 
 .logo {
@@ -98,5 +99,49 @@ h1 {
   margin-top: 15px;
   font-size: 0.9rem;
   color: #666;
+}
+
+nav ul {
+  display: flex;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  gap: 20px;
+  justify-content: center;
+}
+
+nav li {
+  cursor: pointer;
+}
+
+.nav-link {
+  display: inline-block;
+  padding: 8px 16px;
+  background-color: #d3d3d3;
+  color: #333;
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+.nav-link:hover {
+  background-color: #c0c0c0;
+}
+
+.router-link-active {
+  background-color: #b0b0b0;
+  font-weight: bold;
+}
+
+main {
+  flex-grow: 1;
+  background-color: white;
+  padding: 20px;
+}
+
+footer {
+  display: flex;
+  justify-content: space-between;
+  background-color: #d3d3d3;
+  padding: 10px;
 }
 </style>
