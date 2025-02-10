@@ -12,7 +12,7 @@
       </nav>
     </header>
     <main>
-      
+      <router-view />
     </main>
     <footer>
       <div class="footer-left">Overview and comments</div>
@@ -22,16 +22,8 @@
 </template>
 
 <script>
-import { ref } from 'vue'; // Import ref for reactive state
-
 export default {
   name: "App",
-  methods: {
-    loginWithGoogle() {
-      // Placeholder function for Google login
-      alert("Redirecting to Google Login...");
-    },
-  },
 };
 </script>
 
