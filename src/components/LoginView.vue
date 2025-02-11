@@ -3,6 +3,22 @@
     <h1>Welcome to Career Services</h1>
     <p class="tagline">Helping OC students prepare for their future, one step at a time.</p>
     <img alt="Career Services logo" src="@/assets/google-icon.svg" class="logo" />
+
+ <div class="login-container">
+    <h2>Login</h2>
+    <form @submit.prevent="handleLogin">
+     <div><input v-model="username" type="text" placeholder="Username" required /></div><br>
+
+     <div> <input v-model="password" type="password" placeholder="Password" required /></div><br>
+      <button type="submit" class="nav-link">Login</button>
+    </form>
+    <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
+  </div>
+
+
+<br>
+Or 
+
     <button class="google-login" @click="loginWithGoogle">
       Login with Google
     </button>
@@ -11,7 +27,34 @@
 </template>
 
 <script>
+import { ref, getCurrentInstance } from "vue";
+import { useRouter } from "vue-router";
+
 export default {
+
+setup() {
+    const username = ref("");
+    const password = ref("");
+    const errorMessage = ref("");
+    const router = useRouter();
+
+    // Access globalProperties.$auth inside setup()
+    const { appContext } = getCurrentInstance();
+    const auth = appContext.config.globalProperties.$auth;
+
+    const handleLogin = () => {
+      if (auth.login(username.value, password.value)) {
+        router.push("/home"); // Redirect after login
+      } else {
+        errorMessage.value = "Invalid username or password.";
+      }
+    };
+
+    return { username, password, errorMessage, handleLogin };
+  },
+
+
+
   name: "LoginView",
   methods: {
     loginWithGoogle() {
@@ -21,6 +64,14 @@ export default {
   },
 };
 </script>
+
+
+
+
+    
+
+
+
 
 <style scoped>
 .login {

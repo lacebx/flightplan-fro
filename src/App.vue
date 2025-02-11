@@ -8,6 +8,8 @@
           <li><router-link to="/sw" class="nav-link">S&W</router-link></li>
           <li><router-link to="/experience" class="nav-link">Experience</router-link></li>
           <li><router-link to="/profile" class="nav-link">Profile</router-link></li>
+         <li> <router-link v-if="!$auth.user" to="/"  class="nav-link"  >Login</router-link></li>
+    <li><button v-if="$auth.user" @click="logout" class="nav-link">Logout</button></li>
         </ul>
       </nav>
     </header>
@@ -22,9 +24,29 @@
 </template>
 
 <script>
+
+import { useRouter } from "vue-router";
+import { getCurrentInstance } from "vue";
+
 export default {
   name: "App",
+
+  setup() {
+    const router = useRouter();
+
+    // Get access to global properties
+    const { appContext } = getCurrentInstance();
+    const auth = appContext.config.globalProperties.$auth;
+
+    const logout = () => {
+      auth.logout();
+      router.push("/"); // Redirect to login page after logout
+    };
+
+    return { logout };
+  },
 };
+
 </script>
 
 <style>
