@@ -1,40 +1,69 @@
 <template>
-  <div class="sw">
-    <div class="sw-container">
-      <div class="info-section">
-        <h2>Strengths & Weaknesses Assessment</h2>
-        <div class="description">
+  <div class="sw-page">
+    <!-- Parallax Hero Section -->
+    <div class="parallax-hero">
+      <div class="hero-content glass-effect">
+        <h1>Strengths & Weaknesses</h1>
+        <p>Discover your unique potential with the Clifton Strengths Assessment</p>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content-wrapper">
+      <!-- Info Section with Glassmorphism -->
+      <section class="info-section glass-card" data-scroll>
+        <div class="info-content">
+          <h2>About the Assessment</h2>
           <p>The Clifton Strengths assessment helps you discover your unique combination of talents. 
              Understanding your strengths can help you perform better in your career and daily life.</p>
         </div>
-      </div>
-
-      <div class="test-section">
-        <div class="test-info">
-          <h3>Take the Assessment</h3>
-          <p>Duration: ~45 minutes</p>
-          <p>Get detailed insights about your top strengths</p>
-          <a href="#" class="test-link">Start Assessment</a>
-        </div>
-      </div>
-
-      <div class="results-section">
-        <h3>Your Results</h3>
-        <div class="strengths-grid">
-          <div class="strength-item">
-            <span class="strength-icon">1</span>
-            <p>Strategic Thinking</p>
+        <div class="stats-grid">
+          <div class="stat-card neumorphic">
+            <span class="stat-number">34</span>
+            <p>Themes of Talent</p>
           </div>
-          <div class="strength-item">
-            <span class="strength-icon">2</span>
-            <p>Relationship Building</p>
+          <div class="stat-card neumorphic">
+            <span class="stat-number">45</span>
+            <p>Minutes to Complete</p>
           </div>
-          <div class="strength-item">
-            <span class="strength-icon">3</span>
-            <p>Executing</p>
+          <div class="stat-card neumorphic">
+            <span class="stat-number">20M+</span>
+            <p>People Assessed</p>
           </div>
         </div>
-      </div>
+      </section>
+
+      <!-- Assessment Section -->
+      <section class="assessment-section" data-scroll>
+        <div class="video-container glass-card">
+          <video autoplay loop muted playsinline>
+            <source src="https://assets.mixkit.co/videos/preview/mixkit-typing-on-a-keyboard-in-an-office-environment-41493-large.mp4" type="video/mp4">
+          </video>
+          <div class="overlay"></div>
+          <div class="video-content">
+            <h2>Take the Assessment</h2>
+            <p>Start your journey of self-discovery</p>
+            <button class="start-btn neumorphic">Begin Assessment</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Results Section with Scroll Animation -->
+      <section class="results-section" data-scroll>
+        <h2>Your Top Strengths</h2>
+        <div class="strengths-container">
+          <div class="strength-card neumorphic" v-for="(strength, index) in strengths" :key="index">
+            <div class="strength-header">
+              <span class="strength-number">{{ index + 1 }}</span>
+              <h3>{{ strength.name }}</h3>
+            </div>
+            <p>{{ strength.description }}</p>
+            <div class="strength-meter">
+              <div class="meter-fill" :style="{ width: strength.score + '%' }"></div>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   </div>
 </template>
@@ -42,97 +71,203 @@
 <script>
 export default {
   name: 'SWView',
+  data() {
+    return {
+      strengths: [
+        {
+          name: 'Strategic Thinking',
+          description: 'You create alternative ways to proceed and easily spot relevant patterns.',
+          score: 85
+        },
+        {
+          name: 'Relationship Building',
+          description: 'You excel at establishing strong connections with others.',
+          score: 75
+        },
+        {
+          name: 'Executing',
+          description: 'You have the ability to catch an idea and make it happen.',
+          score: 90
+        }
+      ]
+    };
+  },
+  mounted() {
+    this.initScrollAnimations();
+  },
+  methods: {
+    initScrollAnimations() {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate');
+          }
+        });
+      }, { threshold: 0.1 });
+
+      document.querySelectorAll('[data-scroll]').forEach((section) => {
+        observer.observe(section);
+      });
+    }
+  }
 };
 </script>
 
 <style scoped>
-.sw {
-  padding: 20px;
+.sw-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
 }
 
-.sw-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-}
-
-.info-section, .test-section, .results-section {
-  background-color: #f5f5f5;
-  padding: 25px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.info-section h2 {
-  color: #2c3e50;
-  margin-bottom: 15px;
-}
-
-.description {
-  color: #666;
-  line-height: 1.6;
-}
-
-.test-section {
-  background-color: #41b883;
-  color: white;
-}
-
-.test-info {
-  text-align: center;
-}
-
-.test-info h3 {
-  margin-bottom: 15px;
-}
-
-.test-info p {
-  margin: 10px 0;
-}
-
-.test-link {
-  display: inline-block;
-  background-color: white;
-  color: #41b883;
-  padding: 12px 24px;
-  border-radius: 25px;
-  text-decoration: none;
-  margin-top: 15px;
-  font-weight: bold;
-  transition: transform 0.2s ease;
-}
-
-.test-link:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-}
-
-.strengths-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px;
-  margin-top: 20px;
-}
-
-.strength-item {
+.parallax-hero {
+  height: 60vh;
+  background-image: url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
   display: flex;
   align-items: center;
-  gap: 15px;
-  padding: 15px;
-  background-color: white;
-  border-radius: 8px;
-  transition: transform 0.2s ease;
+  justify-content: center;
+  position: relative;
 }
 
-.strength-item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+.hero-content {
+  text-align: center;
+  color: white;
+  padding: 2rem;
 }
 
-.strength-icon {
-  background-color: #41b883;
+.hero-content h1 {
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.content-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.info-section {
+  margin-top: -5rem;
+  position: relative;
+  z-index: 2;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.stat-card {
+  text-align: center;
+  padding: 1.5rem;
+  border-radius: 15px;
+  background: white;
+  transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+}
+
+.stat-number {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #41b883;
+}
+
+.video-container {
+  position: relative;
+  height: 400px;
+  overflow: hidden;
+  border-radius: 20px;
+}
+
+.video-container video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.video-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: white;
+  width: 100%;
+  padding: 2rem;
+}
+
+.start-btn {
+  background: #41b883;
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 30px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  margin-top: 1rem;
+}
+
+.start-btn:hover {
+  transform: scale(1.05);
+}
+
+.strengths-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.strength-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 15px;
+  transform: translateY(50px);
+  opacity: 0;
+  transition: all 0.6s ease;
+}
+
+.strength-card.animate {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.strength-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.strength-number {
+  background: #41b883;
   color: white;
   width: 30px;
   height: 30px;
@@ -143,9 +278,42 @@ export default {
   font-weight: bold;
 }
 
-.strength-item p {
-  margin: 0;
-  color: #2c3e50;
-  font-weight: 500;
+.strength-meter {
+  height: 6px;
+  background: #eee;
+  border-radius: 3px;
+  margin-top: 1rem;
+}
+
+.meter-fill {
+  height: 100%;
+  background: #41b883;
+  border-radius: 3px;
+  transition: width 1s ease;
+}
+
+[data-scroll] {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.6s ease;
+}
+
+[data-scroll].animate {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+  .hero-content h1 {
+    font-size: 2.5rem;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .video-container {
+    height: 300px;
+  }
 }
 </style>
