@@ -11,12 +11,9 @@ const routes = [
 
   {
     path: '/home',
+     name: 'home',
     component: HomeView,
-    beforeEnter: (to, from, next) => {
-      const auth = JSON.parse(localStorage.getItem("user"));
-      if (!auth) next("/");
-      else next();
-    }
+  
     
   },
   { path: '/tasks-events', component: TasksAndEventsView },

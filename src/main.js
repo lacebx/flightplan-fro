@@ -1,29 +1,37 @@
-import { createApp, reactive } from 'vue'
-import App from './App.vue'
-import router from './router'
-
-
-//createApp(App).use(router).mount('#app')
+import { createApp } from "vue";
+import App from "./App.vue";
+import router from "./router";
 
 const app = createApp(App);
 
-// Global authentication state (shared across components)
-app.config.globalProperties.$auth = reactive({
-  user: JSON.parse(localStorage.getItem("user")) || null,
-  login(username, password) {
-    // Hardcoded credentials (replace later with API)
-    if (username === "admin" && password === "1234") {
-      this.user = { username };
-      localStorage.setItem("user", JSON.stringify(this.user));
-      return true;
+app.config.globalProperties.$auth = {
+  user: null,
+
+  async checkAuth() {
+    try {
+      const response = await fetch("http://localhost:8082/auth/user", {
+        credentials: "include",
+      });
+      if (response.ok) {
+        this.user = await response.json();
+      } else {
+        this.user = null;
+      }
+    } catch (error) {
+      console.error("Error checking auth:", error);
+      this.user = null;
     }
-    return false;
   },
-  logout() {
+
+  async logout() {
+    await fetch("http://localhost:8082/logout", { credentials: "include" });
     this.user = null;
-    localStorage.removeItem("user");
+    router.push("/login");
   },
-});
+};
+
+// Check authentication on app startup
+app.config.globalProperties.$auth.checkAuth();
 
 app.use(router);
 app.mount("#app");
