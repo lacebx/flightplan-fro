@@ -8,7 +8,7 @@
           <li><router-link to="/sw" class="nav-link">S&W</router-link></li>
           <li><router-link to="/experience" class="nav-link">Experience</router-link></li>
           <li><router-link to="/profile" class="nav-link">Profile</router-link></li>
-         <li> <router-link v-if="!isAuthenticated" to="/"  class="nav-link"  >Login</router-link></li>
+         <li> <router-link v-if="!isAuthenticated" to="/"  class="nav-link"  >Logins</router-link></li>
     <li><button v-if="isAuthenticated" @click="logout" class="nav-link">Logout</button></li>
    
         </ul>
@@ -23,19 +23,46 @@
     </footer>
   </div>
 </template>
-
 <script>
+import axios from 'axios';
+
 export default {
+  name: 'App',
+  data() {
+    return {
+      // Local user state (initially null means not authenticated)
+      user: null
+    };
+  },
   computed: {
     isAuthenticated() {
-      return this.$auth.user !== null;
-    },
+      return this.user !== null;
+    }
+  },
+  created() {
+    this.fetchUser();
   },
   methods: {
-    logout() {
-      this.$auth.logout();
+    async fetchUser() {
+      try {
+        // Call your backend endpoint to fetch the authenticated user.
+        const response = await axios.get('http://localhost:8082/auth/user', { withCredentials: true });
+        this.user = response.data;
+      } catch (error) {
+        console.error('Error fetching user:', error);
+        this.user = null;
+      }
     },
-  },
+    async logout() {
+      try {
+        await axios.get('http://localhost:8082/logout', { withCredentials: true });
+        this.user = null;
+        this.$router.push('/'); // Redirect to login page after logout
+      } catch (error) {
+        console.error('Error during logout:', error);
+      }
+    }
+  }
 };
 </script>
 
