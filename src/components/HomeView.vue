@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <h1>Welcome, {{ $auth.user?.username }}</h1>
+    <h1>Welcome,</h1>
     <div class="grid-container">
       <div class="box green">
         <span class="icon">A</span>

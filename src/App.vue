@@ -8,7 +8,7 @@
           <li><router-link to="/sw" class="nav-link">S&W</router-link></li>
           <li><router-link to="/experience" class="nav-link">Experience</router-link></li>
           <li><router-link to="/profile" class="nav-link">Profile</router-link></li>
-         <li> <router-link v-if="!isAuthenticated" to="/"  class="nav-link"  >Logins</router-link></li>
+         <li> <router-link v-if="!isAuthenticated" to="/"  class="nav-link"  >Login</router-link></li>
     <li><button v-if="isAuthenticated" @click="logout" class="nav-link">Logout</button></li>
    
         </ul>

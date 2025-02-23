@@ -33,19 +33,6 @@ export default {
     },
   },
 
-  mounted() {
-    if (this.$auth.user) {
-      this.$router.push("/home");
-    }
-  },
-
-
-   
-
-
-
-
-
 
 };
 </script>
