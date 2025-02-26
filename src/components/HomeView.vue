@@ -43,7 +43,7 @@
     <section class="featured-content">
       <div class="content-grid">
         <div class="feature-card large">
-          <img src="https://www.oc.edu/images/home/student-success.jpg" alt="Career Success">
+          <img src="career.jpg" alt="Career Success">
           <div class="card-content">
             <h2>Career Success</h2>
             <p>96% of OC graduates employed or in graduate school within 6 months</p>
@@ -98,6 +98,8 @@ export default {
 <style scoped>
 .home {
   overflow-x: hidden;
+  background: #1a1a1a;
+  color: white;
 }
 
 /* Hero Section */
@@ -105,6 +107,9 @@ export default {
   height: 100vh;
   position: relative;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .hero-video {
@@ -159,18 +164,8 @@ export default {
   font-weight: bold;
   transition: all 0.3s ease;
   text-transform: uppercase;
-}
-
-.primary-btn {
-  background: #862633;
+  background: #41b883;
   color: white;
-  border: none;
-}
-
-.secondary-btn {
-  background: transparent;
-  color: white;
-  border: 2px solid white;
 }
 
 .primary-btn:hover, .secondary-btn:hover {
@@ -184,7 +179,7 @@ export default {
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 2rem;
   padding: 4rem 2rem;
-  background: white;
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .link-card {
@@ -206,7 +201,7 @@ export default {
 /* Featured Content */
 .featured-content {
   padding: 4rem 2rem;
-  background: #f5f5f5;
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .content-grid {
@@ -256,7 +251,7 @@ export default {
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 2rem;
   padding: 4rem 2rem;
-  background: #862633;
+  background: #41b883;
   color: white;
   text-align: center;
 }

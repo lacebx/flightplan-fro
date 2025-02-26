@@ -116,7 +116,8 @@ export default {
 <style scoped>
 .sw-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background: #1a1a1a; /* Match ExperienceView background */
+  color: white; /* Match text color */
 }
 
 .parallax-hero {
@@ -125,7 +126,7 @@ export default {
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
-  display: flex;
+  display: flex; /* Center content */
   align-items: center;
   justify-content: center;
   position: relative;
@@ -150,7 +151,7 @@ export default {
 }
 
 .glass-card {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.1); /* Glassmorphism effect */
   backdrop-filter: blur(10px);
   border-radius: 20px;
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -246,7 +247,7 @@ export default {
 }
 
 .strength-card {
-  background: white;
+  background: rgba(255, 255, 255, 0.1); /* Glassmorphism effect */
   padding: 1.5rem;
   border-radius: 15px;
   transform: translateY(50px);

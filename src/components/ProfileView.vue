@@ -13,7 +13,7 @@
       <section class="profile-header glass-morphism" data-scroll>
         <div class="profile-avatar-wrapper">
           <div class="profile-avatar">
-            <span class="avatar-text">JD</span>
+            <span class="avatar-text">MK</span>
             <div class="status-indicator"></div>
           </div>
           <div class="level-badge">
@@ -28,7 +28,7 @@
         </div>
         
         <div class="profile-info">
-          <h1>John Doe</h1>
+          <h1>Mike Kobe</h1>
           <p class="title">Computer Science Major</p>
           <p class="graduation">Class of 2024</p>
         </div>

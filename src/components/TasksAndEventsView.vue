@@ -129,6 +129,8 @@ export default {
   position: relative;
   min-height: 100vh;
   overflow-x: hidden;
+  background: #1a1a1a; /* Match ExperienceView background */
+  color: white; /* Match text color */
 }
 
 /* Video Background */
@@ -160,7 +162,7 @@ export default {
 /* Hero Section */
 .hero-section {
   height: 60vh;
-  display: flex;
+  display: flex; /* Center content */
   align-items: center;
   justify-content: center;
 }
@@ -173,7 +175,7 @@ export default {
 
 /* Glassmorphism Effect */
 .glass-effect {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.1); /* Glassmorphism effect */
   backdrop-filter: blur(10px);
   border-radius: 15px;
   padding: 20px;
@@ -225,6 +227,7 @@ export default {
 /* Events Section */
 .events-section {
   padding: 40px 20px;
+  background: rgba(255, 255, 255, 0.1); /* Glassmorphism effect */
 }
 
 .events-container {
