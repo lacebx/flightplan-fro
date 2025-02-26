@@ -14,7 +14,7 @@
     <main>
       <router-view @login="handleLogin" @logout="handleLogout" />
     </main>
-    <footer v-if="isLoggedIn">
+    <footer  v-if="isLoggedIn">
       <div class="footer-left">Overview and comments</div>
       <div class="footer-right">Current Points</div>
     </footer>

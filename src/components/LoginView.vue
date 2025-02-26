@@ -1,69 +1,70 @@
 <template>
-  <div class="login-container">
-    <!-- Animated Background -->
-    <div class="animated-bg">
-      <div class="particle" v-for="n in 20" :key="n"></div>
-    </div>
-
-    <!-- Login Card -->
-    <div class="login-card glass-effect" data-tilt>
-      <!-- Title Section (Logo Removed) -->
-      <div class="logo-section">
-        <h1>Flight Plan</h1>
-        <p class="tagline">Your Career Journey Begins Here</p>
-      </div>
-
-      <!-- Login Form -->
-      <div class="login-content">
-        <div class="welcome-text">
-          <h2>Welcome Back</h2>
-          <p>Sign in with your OC email</p>
-        </div>
-
-        <button class="google-login-btn" @click="login">
-          <div class="btn-content">
-            <span>Sign in with Google</span>
-          </div>
-          <div class="btn-glow"></div>
-        </button>
-
-        <!-- Login Requirements -->
-        <div class="requirements">
-          <div class="requirement-item">
-            <i class="fas fa-check-circle"></i>
-            <span>Use your @oc.edu email</span>
-          </div>
-          <div class="requirement-item">
-            <i class="fas fa-shield-alt"></i>
-            <span>Secure authentication</span>
-          </div>
-        </div>
-      </div>
-    </div>
+  <div class="login">
+    <h1>Welcome to Career Services</h1>
+    <p class="tagline">Helping OC students prepare for their future, one step at a time.</p>
+    <img alt="Career Services logo" src="@/assets/google-icon.svg" class="logo" />
+    <button class="google-login" @click="login">
+      Login with Google
+    </button>
+    <p class="note">* Only users with an @oc.edu email can use this app</p>
   </div>
 </template>
 
 <script>
-import VanillaTilt from 'vanilla-tilt';
-
 export default {
   name: "LoginView",
   methods: {
     login() {
-      this.$emit('login');
-      this.$router.push('/home');
-    }
+      // Simulate successful login
+      this.$emit('login'); // Emit login event
+      this.$router.push('/home'); // Redirect to home view
+    },
   },
-  mounted() {
-    // Initialize tilt effect if using vanilla-tilt.js
-    if (typeof VanillaTilt !== 'undefined') {
-      VanillaTilt.init(document.querySelector("[data-tilt]"), {
-        max: 5,
-        speed: 400,
-        glare: true,
-        "max-glare": 0.2
-      });
-    }
-  }
 };
 </script>
+
+<style scoped>
+.login {
+  text-align: center;
+  background-color: #d3d3d3;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+.logo {
+  width: 120px;
+  margin-bottom: 20px;
+}
+
+h1 {
+  color: #41b883;
+  font-size: 2.5rem;
+  margin: 10px 0;
+}
+
+.tagline {
+  font-size: 1.2rem;
+  color: #3c3c3c;
+}
+
+.google-login {
+  background-color: #41b883;
+  color: #fff;
+  font-size: 1rem;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.google-login:hover {
+  background-color: #369f6b;
+}
+
+.note {
+  margin-top: 15px;
+  font-size: 0.9rem;
+  color: #666;
+}
+</style> 
