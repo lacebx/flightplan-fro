@@ -15,9 +15,8 @@ export default {
   name: "LoginView",
   methods: {
     login() {
-      // Simulate successful login
-      this.$emit('login'); // Emit login event
-      this.$router.push('/home'); // Redirect to home view
+      // Redirect to the backend Google OAuth login route
+      window.location.href = "http://localhost:8082/auth/google"; // Redirect to backend for Google login
     },
   },
 };
