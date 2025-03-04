@@ -42,14 +42,14 @@
       <div class="experience-grid">
         <div class="experience-card" 
              v-for="exp in experiences" 
-             :key="exp.id"
+             :key="exp.experienceid"
              :class="{ 'highlight': exp.highlight }"
-             @mouseenter="highlightCard(exp.id)"
-             @mouseleave="removeHighlight(exp.id)">
+             @mouseenter="highlightCard(exp.experienceid)"
+             @mouseleave="removeHighlight(exp.experienceid)">
           <div class="card-inner">
             <div class="card-front">
-              <h3>{{ exp.title }}</h3>
-              <div class="company-logo">{{ getCompanyInitials(exp.company) }}</div>
+              <h3>{{ exp.name }}</h3>
+              <div class="company-logo">{{(exp.company) }}</div>
             </div>
             <div class="card-back">
               <h4>{{ exp.company }}</h4>
@@ -77,52 +77,22 @@
 </template>
 
 <script>
+import axios from 'axios';
 export default {
   name: 'ExperienceView',
   data() {
     return {
-      totalYears: '2+',
+      totalYears: '2+',         // You can update these if you have API endpoints for stats
       totalSkills: '12',
       totalProjects: '15',
-      experiences: [
-        {
-          id: 1,
-          title: 'Software Engineering Intern',
-          company: 'Tech Solutions Inc.',
-          description: 'Developed and maintained web applications using Vue.js and Node.js.',
-          date: 'Jan 2024',
-          skills: ['Vue.js', 'Node.js', 'Git'],
-          highlight: false
-        },
-        {
-          id: 2,
-          title: 'Web Developer',
-          company: 'Creative Agency',
-          description: 'Created responsive websites for various clients.',
-          date: 'Mar 2024',
-          skills: ['HTML', 'CSS', 'JavaScript'],
-          highlight: false
-        },
-        {
-          id: 3,
-          title: 'Research Assistant',
-          company: 'University Lab',
-          description: 'Conducted research on machine learning algorithms.',
-          date: 'Feb 2024',
-          skills: ['Python', 'TensorFlow', 'Data Analysis'],
-          highlight: false
-        }
-      ]
+      experiences: []           // Initially empty; will load from backend
     };
   },
   methods: {
-    getCompanyInitials(company) {
-      return company.split(' ').map(word => word[0]).join('');
-    },
     highlightCard(id) {
       this.experiences = this.experiences.map(exp => ({
         ...exp,
-        highlight: exp.id === id
+        highlight: exp.experienceid === id
       }));
     },
     removeHighlight() {
@@ -132,12 +102,27 @@ export default {
       }));
     },
     showAddExperience() {
-      // Implement add experience functionality
+      // Implement add experience functionality (e.g., open modal or redirect)
       console.log('Add experience clicked');
+    },
+    fetchExperiences() {
+      axios.get('http://localhost:8082/api/experiences', { withCredentials: true })
+        .then(response => {
+          // Assuming your API returns an array of experiences
+          this.experiences = response.data;
+        })
+        .catch(error => {
+          console.error('Error fetching experiences:', error);
+        });
     }
+  },
+  mounted() {
+    this.fetchExperiences();
+    // Initialize any scroll animations if needed...
   }
 };
 </script>
+
 
 <style scoped>
 .experience-page {

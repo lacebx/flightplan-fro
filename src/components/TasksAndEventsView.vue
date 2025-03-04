@@ -19,11 +19,11 @@
       <h1 class="glass-effect">Tasks & Events</h1>
     </div>
 
-    <!-- Tasks Section with Glassmorphism -->
-    <section class="tasks-section glass-effect" data-scroll>
+     <!-- Tasks Section with Glassmorphism -->
+     <section class="tasks-section glass-effect" data-scroll>
       <h2>Current Tasks</h2>
       <div class="tasks-grid">
-        <div class="task-card neumorphic" v-for="task in tasks" :key="task.id">
+        <div class="task-card neumorphic" v-for="task in tasks" :key="task.taskid">
           <h3>{{ task.name }}</h3>
           <p>Due: {{ task.dueDate }}</p>
           <button class="neumorphic-button">Complete</button>
@@ -34,16 +34,16 @@
     <!-- Events Section with Parallax -->
     <section class="events-section">
       <div class="events-container">
-        <div class="event-item" v-for="event in events" :key="event.id" data-scroll>
+        <div class="event-item" v-for="event in events" :key="event.eventid" data-scroll>
           <div class="event-image">
-            <img :src="getEventImage(event.id)" :alt="event.name">
+            <img :src="getEventImage(event.eventid)" :alt="event.name">
           </div>
           <div class="event-content glass-effect">
             <h3>{{ event.name }}</h3>
             <p>{{ event.description }}</p>
             <div class="event-details">
               <span>{{ event.date }}</span>
-              <span>{{ event.time }}</span>
+              <span>{{ event.starttime }} - {{ event.endtime }}</span>
             </div>
             <button class="register-button neumorphic">Register Now</button>
           </div>
@@ -54,48 +54,41 @@
 </template>
 
 <script>
+import axios from 'axios';
 export default {
   name: 'TasksAndEventsView',
   data() {
     return {
-      tasks: [
-        { 
-          id: 1, 
-          name: 'Complete Resume',
-          dueDate: 'March 30, 2024'
-        },
-        { 
-          id: 2, 
-          name: 'Interview Prep',
-          dueDate: 'April 5, 2024'
-        },
-      ],
-      events: [
-        {
-          id: 1,
-          name: 'Resume Writing Workshop',
-          description: 'Learn how to create a professional resume that stands out to employers.',
-          date: 'April 15, 2024',
-          time: '2:00 PM',
-        },
-        {
-          id: 2,
-          name: 'Spring Career Fair',
-          description: 'Meet with representatives from top companies across various industries.',
-          date: 'April 20, 2024',
-          time: '10:00 AM',
-        },
-      ],
+      tasks: [],  // To be fetched from backend
+      events: []  // To be fetched from backend
     };
   },
   methods: {
     getEventImage(id) {
-      // Placeholder images - replace with your own
+      // Optionally, you can return images based on event id, or fetch them from the API
       const images = {
         1: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4',
         2: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87'
       };
-      return images[id];
+      return images[id] || 'default-image-url';
+    },
+    fetchTasksAndEvents() {
+      // Fetch tasks
+      axios.get('http://localhost:8082/api/tasks', { withCredentials: true })
+        .then(response => {
+          this.tasks = response.data;
+        })
+        .catch(error => {
+          console.error('Error fetching tasks:', error);
+        });
+      // Fetch events
+      axios.get('http://localhost:8082/api/events', { withCredentials: true })
+        .then(response => {
+          this.events = response.data;
+        })
+        .catch(error => {
+          console.error('Error fetching events:', error);
+        });
     },
     initScrollAnimations() {
       const scrollElements = document.querySelectorAll('[data-scroll]');
@@ -125,10 +118,12 @@ export default {
     }
   },
   mounted() {
+    this.fetchTasksAndEvents();
     this.initScrollAnimations();
   }
 };
 </script>
+
 
 <style scoped>
 .tasks-events {
