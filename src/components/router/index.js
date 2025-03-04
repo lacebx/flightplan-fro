@@ -7,7 +7,7 @@ import EventsView from '../components/EventsView.vue';
 import ProfileView from '../components/ProfileView.vue';
 
 const routes = [
-  { path: '/', component: HomeView },
+  { path: '/', component: HomeView },// Login view
   { path: '/tasks', component: TasksView },
   { path: '/sw', component: SWView },
   { path: '/experience', component: ExperienceView },

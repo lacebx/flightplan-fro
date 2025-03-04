@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <!-- Header (Navbar) -->
-    <header v-if="isLoggedIn">
+    <header v-if="isLoggedIn && !isLoginRoute && !isHomeView">
       <nav>
         <ul>
           <li><router-link to="/home" class="nav-link">Home</router-link></li>
@@ -19,7 +19,7 @@
     </main>
 
     <!-- Footer -->
-    <footer v-if="isLoggedIn">
+    <footer v-if="isLoggedIn && !isLoginRoute">
       <div class="footer-left">Overview and comments</div>
       <div class="footer-right">Current Points</div>
     </footer>
@@ -27,12 +27,14 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
+import { useRoute } from 'vue-router'; // Import useRoute
 
 export default {
   name: "App",
   setup() {
     const isLoggedIn = ref(false);
+    const route = useRoute(); // Get the current route
 
     // Check localStorage for logged-in state on mount
     onMounted(() => {
@@ -49,7 +51,10 @@ export default {
       localStorage.removeItem('isLoggedIn'); // Remove logged-in state
     };
 
-    return { isLoggedIn, handleLogin, handleLogout };
+    // Determine if the current route is the login route
+    const isLoginRoute = computed(() => route.path === '/');
+
+    return { isLoggedIn, handleLogin, handleLogout, isLoginRoute };
   },
 };
 </script>
