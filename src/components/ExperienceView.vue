@@ -249,6 +249,7 @@ export default {
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 2rem;
   padding: 2rem;
+  overflow-y: hidden;
 }
 
 .experience-card {
