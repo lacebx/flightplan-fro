@@ -1,5 +1,11 @@
 <template>
   <div class="experience-page">
+     <!-- Reuse the floating spheres background -->
+     <div class="animated-bg">
+      <div class="gradient-sphere"></div>
+      <div class="gradient-sphere"></div>
+      <div class="gradient-sphere"></div>
+    </div>
     <!-- 3D Hero Section -->
     <div class="hero-3d">
       <div class="cube-container">

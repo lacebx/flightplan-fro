@@ -1,5 +1,11 @@
 <template>
   <div class="tasks-events">
+     <!-- Reuse the floating spheres background -->
+     <div class="animated-bg">
+      <div class="gradient-sphere"></div>
+      <div class="gradient-sphere"></div>
+      <div class="gradient-sphere"></div>
+    </div>
     <!-- Video Background -->
     <div class="video-background">
       <video autoplay loop muted playsinline>

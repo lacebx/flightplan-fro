@@ -1,5 +1,11 @@
 <template>
   <div class="sw-page">
+     <!-- Reuse the floating spheres background -->
+     <div class="animated-bg">
+      <div class="gradient-sphere"></div>
+      <div class="gradient-sphere"></div>
+      <div class="gradient-sphere"></div>
+    </div>
     <!-- Parallax Hero Section -->
     <div class="parallax-hero">
       <div class="hero-content glass-effect">
