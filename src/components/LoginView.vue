@@ -1,12 +1,26 @@
 <template>
-  <div class="login">
-    <h1>Welcome to Career Services</h1>
-    <p class="tagline">Helping OC students prepare for their future, one step at a time.</p>
-    <img alt="Career Services logo" src="@/assets/google-icon.svg" class="logo" />
-    <button class="google-login" @click="login">
-      Login with Google
-    </button>
-    <p class="note">* Only users with an @oc.edu email can use this app</p>
+  <div class="login-page">
+       <!-- Animated Background -->
+       <div class="animated-bg">
+      <div class="gradient-sphere"></div>
+      <div class="gradient-sphere"></div>
+      <div class="gradient-sphere"></div>
+    </div>
+    <!-- Background Layer -->
+    <div class="login-background"></div>
+    
+    <!-- Centered Login Card -->
+    <div class="login-container">
+      <h1 class="login-title">Eagle FlighPlan</h1>
+      <p class="login-subtitle">
+        Level up your professional appeal. Unlock opportunities and accelerate your career journey.
+      </p>
+      <button class="google-login" @click="login">
+        <i class="fab fa-google"></i>
+        Sign in with Google
+      </button>
+      <p class="login-note">* Must have a valid @oc.edu email.</p>
+    </div>
   </div>
 </template>
 
@@ -15,56 +29,98 @@ export default {
   name: "LoginView",
   methods: {
     login() {
-      // Simulate successful login
-      this.$emit('login'); // Emit login event
-      this.$router.push('/home'); // Redirect to home view
-    },
+      // Simulate a successful login.
+      this.$emit('login');
+      this.$router.push('/home');
+    }
   },
 };
 </script>
 
 <style scoped>
-.login {
-  text-align: center;
-  background-color: #d3d3d3;
+/* Full-page container with dark background */
+.login-page {
+  position: relative;
+  background: #0a0a0a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
   padding: 20px;
-  border-radius: 5px;
+  overflow-y: hidden;
+
 }
 
-.logo {
-  width: 120px;
-  margin-bottom: 20px;
+/* Subtle animated/gradient background layer */
+.login-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at top left, #41b883, #0a0a0a);
+  z-index: -1;
+  opacity: 0.3;
 }
 
-h1 {
-  color: #41b883;
+/* Glassmorphism card for the login form */
+.login-container {
+  position: relative;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 15px;
+  padding: 2rem 3rem;
+  text-align: center;
+  max-width: 400px;
+  width: 100%;
+}
+
+/* Engaging title with our green accent */
+.login-title {
   font-size: 2.5rem;
-  margin: 10px 0;
+  color: #41b883;
+  margin-bottom: 0.5rem;
 }
 
-.tagline {
-  font-size: 1.2rem;
-  color: #3c3c3c;
+/* Clear, motivating subtitle */
+.login-subtitle {
+  font-size: 1.1rem;
+  color: #ffffff;
+  margin-bottom: 1.5rem;
 }
 
+/* Modern Google login button */
 .google-login {
   background-color: #41b883;
   color: #fff;
-  font-size: 1rem;
-  padding: 10px 20px;
   border: none;
-  border-radius: 5px;
+  font-size: 1.1rem;
+  padding: 0.8rem 1.5rem;
+  border-radius: 30px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 250px;
+  margin: 0 auto;
+}
+
+.google-login i {
+  font-size: 1.3rem;
 }
 
 .google-login:hover {
   background-color: #369f6b;
 }
 
-.note {
-  margin-top: 15px;
+/* Informative note below the button */
+.login-note {
+  margin-top: 1rem;
   font-size: 0.9rem;
-  color: #666;
+  color: #cccccc;
 }
-</style> 
+</style>
