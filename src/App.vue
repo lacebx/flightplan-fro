@@ -1,6 +1,7 @@
 <template>
   <div id="app">
-    <header v-if="isLoggedIn" style="position: absolute; top: 0; width: 100%; z-index: 1000;">
+    <!-- Header (Navbar) -->
+    <header v-if="isLoggedIn">
       <nav>
         <ul>
           <li><router-link to="/home" class="nav-link">Home</router-link></li>
@@ -11,9 +12,13 @@
         </ul>
       </nav>
     </header>
+
+    <!-- Main Content -->
     <main>
       <router-view @login="handleLogin" @logout="handleLogout" />
     </main>
+
+    <!-- Footer -->
     <footer v-if="isLoggedIn">
       <div class="footer-left">Overview and comments</div>
       <div class="footer-right">Current Points</div>
@@ -50,112 +55,104 @@ export default {
 </script>
 
 <style>
-#app {
+/* Global Reset / Base */
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; /* Hide horizontal scrollbar if content overflows */
+  background: #0a0a0a; /* Dark global background to match your theme */
+  color: #ffffff;      /* Default text color */
   font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-  background-color: #f6fff0;
+}
+
+#app {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  min-height: 100vh;
 }
 
+/* HEADER (Navbar) */
 header {
-  margin-bottom: 80px;
-  background-color: #d3d3d3;
-  padding: 10px;
+  /* Make the header fixed so it stays at the top */
+  position: fixed;
+  top: 0; 
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+
+  /* Glass Morphism */
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+
+  /* Spacing */
+  padding: 1rem;
 }
 
-.logo {
-  width: 120px;
-  margin-bottom: 20px;
-}
-
-h1 {
-  color: #41b883; /* Vue's green */
-  font-size: 2.5rem;
-  margin: 10px 0;
-}
-
-.tagline {
-  font-size: 1.2rem;
-  color: #3c3c3c;
-}
-
-.google-login {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #41b883;
-  color: #fff;
-  font-size: 1rem;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  margin-left: 580px;
-}
-
-.google-login:hover {
-  background-color: #369f6b;
-}
-
-.google-icon {
-  width: 20px;
-  margin-right: 10px;
-}
-
-.note {
-  margin-top: 15px;
-  font-size: 0.9rem;
-  color: #666;
-}
-
+/* Nav Styles */
 nav ul {
   display: flex;
   list-style-type: none;
-  padding: 0;
   margin: 0;
-  gap: 20px;
+  padding: 0;
+  gap: 1rem;
   justify-content: center;
 }
 
-nav li {
-  cursor: pointer;
-}
-
 .nav-link {
-  display: inline-block;
-  padding: 8px 16px;
-  background-color: #d3d3d3;
-  color: #333;
+  color: #ffffff;
   text-decoration: none;
+  padding: 0.5rem 1rem;
   border-radius: 4px;
+  transition: background 0.3s ease;
 }
 
 .nav-link:hover {
-  background-color: #c0c0c0;
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .router-link-active {
-  background-color: #b0b0b0;
+  background: rgba(255, 255, 255, 0.2);
   font-weight: bold;
 }
 
+/* MAIN CONTENT */
 main {
+  /* Push content below the fixed header’s height */
+  padding-top: 80px; 
   flex-grow: 1;
-  background-color: white;
-  padding: 20px;
+  background: transparent; /* Let the global #0a0a0a show through */
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
+/* FOOTER */
 footer {
+  /* Glass Morphism */
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+
+  /* Layout */
   display: flex;
   justify-content: space-between;
-  background-color: #d3d3d3;
-  padding: 10px;
+  align-items: center;
+
+  /* Spacing */
+  padding: 1rem;
+  color: #fff;
+}
+
+/* Example styling for footer text */
+.footer-left, .footer-right {
+  font-weight: 500;
+}
+
+/* Adjust for responsiveness if needed */
+@media (max-width: 768px) {
+  nav ul {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
 }
 </style>
