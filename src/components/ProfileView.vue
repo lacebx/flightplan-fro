@@ -13,7 +13,13 @@
       <section class="profile-header glass-morphism" data-scroll>
         <div class="profile-avatar-wrapper">
           <div class="profile-avatar">
-            <span class="avatar-text">MK</span>
+            <!-- If user has a photo, show it; otherwise show their initials -->
+            <template v-if="user && user.photos && user.photos.length">
+              <img :src="user.photos[0].value" alt="Avatar" class="avatar-image" />
+            </template>
+            <template v-else>
+              <span class="avatar-text">{{ userInitials }}</span>
+            </template>
             <div class="status-indicator"></div>
           </div>
           <div class="level-badge">
@@ -28,7 +34,8 @@
         </div>
         
         <div class="profile-info">
-          <h1>Mike Kobe</h1>
+          <!-- Display the fetched user's name; fallback to a default if not yet loaded -->
+          <h1>{{ user ? user.displayName : 'Your Name' }}</h1>
           <p class="title">Computer Science Major</p>
           <p class="graduation">Class of 2024</p>
         </div>
@@ -107,10 +114,12 @@
 </template>
 
 <script>
+import axios from 'axios';
 export default {
   name: 'ProfileView',
   data() {
     return {
+      user: null, // Will hold the authenticated user info from backend
       badges: [
         { name: 'Resume Master', icon: 'fas fa-file-alt' },
         { name: 'Interview Pro', icon: 'fas fa-comments' },
@@ -168,6 +177,16 @@ export default {
       ]
     };
   },
+  computed: {
+    // Generate initials from the user's display name as a fallback
+    userInitials() {
+      if (this.user && this.user.displayName) {
+        const names = this.user.displayName.split(' ');
+        return names.map(n => n[0]).join('').toUpperCase();
+      }
+      return 'MK';
+    }
+  },
   methods: {
     editProfile() {
       console.log('Edit profile clicked');
@@ -178,7 +197,14 @@ export default {
     }
   },
   mounted() {
-    // Initialize any animations or interactions
+    // Fetch the authenticated user's data from the backend.
+    axios.get('http://localhost:8082/auth/user', { withCredentials: true })
+      .then(response => {
+        this.user = response.data;
+      })
+      .catch(error => {
+        console.error("Error fetching user:", error);
+      });
   }
 };
 </script>
@@ -285,6 +311,15 @@ export default {
   align-items: center;
   justify-content: center;
   position: relative;
+  overflow: hidden;
+}
+
+/* Style for the image avatar */
+.avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
 }
 
 .avatar-text {

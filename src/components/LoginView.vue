@@ -29,9 +29,8 @@ export default {
   name: "LoginView",
   methods: {
     login() {
-      // Simulate a successful login.
+      window.location.href = "http://localhost:8082/auth/google";
       this.$emit('login');
-      this.$router.push('/home');
     }
   },
 };
