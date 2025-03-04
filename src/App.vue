@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <header style="position: absolute; top: 0; width: 100%; z-index: 1000;" v-if="isLoggedIn">
-      <nav >
+    <header v-if="isLoggedIn" style="position: absolute; top: 0; width: 100%; z-index: 1000;">
+      <nav>
         <ul>
           <li><router-link to="/home" class="nav-link">Home</router-link></li>
           <li><router-link to="/tasks-events" class="nav-link">Tasks & Events</router-link></li>

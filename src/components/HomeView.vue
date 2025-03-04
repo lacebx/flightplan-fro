@@ -98,8 +98,9 @@ export default {
 <style scoped>
 .home {
   overflow-x: hidden;
-  background: #1a1a1a;
-  color: white;
+  background: rgba(255, 255, 255, 0.1); /* Glassmorphism effect */
+  backdrop-filter: blur(10px);
+  color: white; /* Match text color */
 }
 
 /* Hero Section */
