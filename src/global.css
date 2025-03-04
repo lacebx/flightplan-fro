@@ -3,6 +3,7 @@ html, body {
     padding: 0;
     /* If you want full-height pages, also do: */
     height: 100%;
+    overflow-x: hidden;
   }
 
   #app {
