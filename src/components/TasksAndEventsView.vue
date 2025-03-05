@@ -1,7 +1,7 @@
 <template>
   <div class="tasks-events">
-     <!-- Reuse the floating spheres background -->
-     <div class="animated-bg">
+    <!-- Reuse the floating spheres background -->
+    <div class="animated-bg">
       <div class="gradient-sphere"></div>
       <div class="gradient-sphere"></div>
       <div class="gradient-sphere"></div>
@@ -19,19 +19,25 @@
       <h1 class="glass-effect">Tasks & Events</h1>
     </div>
 
-     <!-- Tasks Section with Glassmorphism -->
-     <section class="tasks-section glass-effect" data-scroll>
+    <!-- Tasks Section -->
+    <section class="tasks-section glass-effect" data-scroll>
       <h2>Current Tasks</h2>
       <div class="tasks-grid">
-        <div class="task-card neumorphic" v-for="task in tasks" :key="task.taskid">
+        <div class="task-card neumorphic" v-for="task in tasks" :key="task.Taskid">
           <h3>{{ task.name }}</h3>
-          <p>Due: {{ task.dueDate }}</p>
-          <button class="neumorphic-button">Complete</button>
+          <p><strong>Category:</strong> {{ task.category }} | <strong>Type:</strong> {{ task.type }}</p>
+          <p>{{ task.description }}</p>
+          <p><strong>Points Earned:</strong> {{ task.pointsearned }}</p>
+          <p><strong>Schedule:</strong> {{ task.schedulingtype }}</p>
+          <button class="complete-btn" @click="completeTask(task)" :disabled="task.completed">
+            <span v-if="!task.completed">Complete</span>
+            <span v-else>Completed <i class="fas fa-check"></i></span>
+          </button>
         </div>
       </div>
     </section>
 
-    <!-- Events Section with Parallax -->
+    <!-- Events Section -->
     <section class="events-section">
       <div class="events-container">
         <div class="event-item" v-for="event in events" :key="event.eventid" data-scroll>
@@ -41,10 +47,13 @@
           <div class="event-content glass-effect">
             <h3>{{ event.name }}</h3>
             <p>{{ event.description }}</p>
+            <p><strong>Type:</strong> {{ event.eventtype }}</p>
             <div class="event-details">
               <span>{{ event.date }}</span>
               <span>{{ event.starttime }} - {{ event.endtime }}</span>
             </div>
+            <p><strong>Location:</strong> {{ event.location }}</p>
+            <p><strong>Attendance:</strong> {{ event.attendancetype }}</p>
             <button class="register-button neumorphic">Register Now</button>
           </div>
         </div>
@@ -59,24 +68,25 @@ export default {
   name: 'TasksAndEventsView',
   data() {
     return {
-      tasks: [],  // To be fetched from backend
-      events: []  // To be fetched from backend
+      tasks: [],  // Fetched from backend
+      events: []  // Fetched from backend
     };
   },
   methods: {
     getEventImage(id) {
-      // Optionally, you can return images based on event id, or fetch them from the API
+      // Return images based on event id or fallback to a default URL
       const images = {
         1: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4',
         2: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87'
       };
-      return images[id] || 'default-image-url';
+      return images[id] || 'https://via.placeholder.com/600x400?text=Event+Image';
     },
     fetchTasksAndEvents() {
       // Fetch tasks
       axios.get('http://localhost:8082/api/tasks', { withCredentials: true })
         .then(response => {
-          this.tasks = response.data;
+          // Set a "completed" flag on each task for UI state
+          this.tasks = response.data.map(task => ({ ...task, completed: false }));
         })
         .catch(error => {
           console.error('Error fetching tasks:', error);
@@ -90,29 +100,36 @@ export default {
           console.error('Error fetching events:', error);
         });
     },
+    completeTask(task) {
+      // Mark the task as complete and add a cool effect
+      task.completed = true;
+      // Here you might also send a request to update the task status in the backend.
+      // For now, we'll simply add a class to animate it.
+      this.$nextTick(() => {
+        const el = this.$el.querySelector(`[data-taskid="${task.Taskid}"]`);
+        if (el) {
+          el.classList.add('task-completed');
+        }
+      });
+    },
     initScrollAnimations() {
       const scrollElements = document.querySelectorAll('[data-scroll]');
-      
       const elementInView = (el, percentageScroll = 100) => {
         const elementTop = el.getBoundingClientRect().top;
         return (
-          elementTop <= 
-          ((window.innerHeight || document.documentElement.clientHeight) * (percentageScroll/100))
+          elementTop <= ((window.innerHeight || document.documentElement.clientHeight) * (percentageScroll / 100))
         );
       };
-
       const displayScrollElement = (element) => {
         element.classList.add('scrolled');
       };
-
       const handleScrollAnimation = () => {
-        scrollElements.forEach((el) => {
+        scrollElements.forEach(el => {
           if (elementInView(el, 100)) {
             displayScrollElement(el);
           }
         });
       };
-
       window.addEventListener('scroll', handleScrollAnimation);
       handleScrollAnimation();
     }
@@ -124,14 +141,13 @@ export default {
 };
 </script>
 
-
 <style scoped>
 .tasks-events {
   position: relative;
   min-height: 100vh;
   overflow-x: hidden;
-  background: #1a1a1a; /* Match ExperienceView background */
-  color: white; /* Match text color */
+  background: #1a1a1a;
+  color: white;
 }
 
 /* Video Background */
@@ -163,7 +179,7 @@ export default {
 /* Hero Section */
 .hero-section {
   height: 60vh;
-  display: flex; /* Center content */
+  display: flex;
   align-items: center;
   justify-content: center;
 }
@@ -171,12 +187,12 @@ export default {
 .hero-section h1 {
   font-size: 4rem;
   color: white;
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 /* Glassmorphism Effect */
 .glass-effect {
-  background: rgba(255, 255, 255, 0.1); /* Glassmorphism effect */
+  background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
   border-radius: 15px;
   padding: 20px;
@@ -188,47 +204,59 @@ export default {
   margin: 40px auto;
   max-width: 1200px;
   padding: 40px;
+  z-index: 1;
+  position: relative;
 }
 
 .tasks-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 20px;
   margin-top: 20px;
 }
 
-/* Neumorphic Effect */
-.neumorphic {
-  background: #f0f0f0;
+.task-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(5px);
   border-radius: 15px;
   padding: 20px;
-  box-shadow: 
-    8px 8px 15px rgba(0,0,0,0.1),
-    -8px -8px 15px rgba(255,255,255,0.5);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
-.neumorphic-button {
-  background: #f0f0f0;
-  border: none;
+.task-card:hover {
+  transform: translateY(-5px);
+}
+
+.task-card.task-completed {
+  opacity: 0.6;
+  border: 2px solid #41b883;
+}
+
+.complete-btn {
+  margin-top: 10px;
   padding: 10px 20px;
-  border-radius: 10px;
-  box-shadow: 
-    5px 5px 10px rgba(0,0,0,0.1),
-    -5px -5px 10px rgba(255,255,255,0.5);
+  background: #41b883;
+  border: none;
+  border-radius: 5px;
+  color: white;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: background 0.3s ease;
 }
 
-.neumorphic-button:hover {
-  box-shadow: 
-    inset 5px 5px 10px rgba(0,0,0,0.1),
-    inset -5px -5px 10px rgba(255,255,255,0.5);
+.complete-btn:hover:not([disabled]) {
+  background: #369f6b;
+}
+
+.complete-btn[disabled] {
+  cursor: default;
 }
 
 /* Events Section */
 .events-section {
   padding: 40px 20px;
-  background: rgba(255, 255, 255, 0.1); /* Glassmorphism effect */
+  background: rgba(255, 255, 255, 0.1);
+  margin-top: 40px;
 }
 
 .events-container {
@@ -272,12 +300,23 @@ export default {
   color: white;
 }
 
+.event-details {
+  margin: 10px 0;
+  font-weight: bold;
+}
+
 .register-button {
   margin-top: 20px;
   padding: 10px 20px;
+  background: #41b883;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.register-button:hover {
+  background: #369f6b;
 }
 
 /* Responsive Design */
@@ -290,4 +329,4 @@ export default {
     width: 100%;
   }
 }
-</style> 
+</style>

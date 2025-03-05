@@ -1,11 +1,12 @@
 <template>
   <div class="experience-page">
-     <!-- Reuse the floating spheres background -->
-     <div class="animated-bg">
+    <!-- Reuse the floating spheres background -->
+    <div class="animated-bg">
       <div class="gradient-sphere"></div>
       <div class="gradient-sphere"></div>
       <div class="gradient-sphere"></div>
     </div>
+    
     <!-- 3D Hero Section -->
     <div class="hero-3d">
       <div class="cube-container">
@@ -38,29 +39,18 @@
         </div>
       </div>
 
-      <!-- Experience Cards -->
+      <!-- Experience Cards (Static info now on a single side) -->
       <div class="experience-grid">
         <div class="experience-card" 
              v-for="exp in experiences" 
-             :key="exp.experienceid"
-             :class="{ 'highlight': exp.highlight }"
-             @mouseenter="highlightCard(exp.experienceid)"
-             @mouseleave="removeHighlight(exp.experienceid)">
-          <div class="card-inner">
-            <div class="card-front">
-              <h3>{{ exp.name }}</h3>
-              <div class="company-logo">{{(exp.company) }}</div>
-            </div>
-            <div class="card-back">
-              <h4>{{ exp.company }}</h4>
-              <p>{{ exp.description }}</p>
-              <div class="skills-wrapper">
-                <span class="skill-pill" v-for="skill in exp.skills" :key="skill">
-                  {{ skill }}
-                </span>
-              </div>
-              <span class="date-chip">{{ exp.date }}</span>
-            </div>
+             :key="exp.experienceid">
+          <div class="card-content">
+            <h3>{{ exp.name }}</h3>
+            <p><strong>Category:</strong> {{ exp.category }}</p>
+            <p><strong>Type:</strong> {{ exp.type }}</p>
+            <p>{{ exp.description }}</p>
+            <p><strong>Points Earned:</strong> {{ exp.pointsearned }}</p>
+            <p><strong>Start Date:</strong> {{ formatDate(exp.createdAt) }}</p>
           </div>
         </div>
       </div>
@@ -82,47 +72,35 @@ export default {
   name: 'ExperienceView',
   data() {
     return {
-      totalYears: '2+',         // You can update these if you have API endpoints for stats
+      totalYears: '2+',
       totalSkills: '12',
       totalProjects: '15',
-      experiences: []           // Initially empty; will load from backend
+      experiences: []
     };
   },
   methods: {
-    highlightCard(id) {
-      this.experiences = this.experiences.map(exp => ({
-        ...exp,
-        highlight: exp.experienceid === id
-      }));
-    },
-    removeHighlight() {
-      this.experiences = this.experiences.map(exp => ({
-        ...exp,
-        highlight: false
-      }));
-    },
     showAddExperience() {
-      // Implement add experience functionality (e.g., open modal or redirect)
       console.log('Add experience clicked');
     },
     fetchExperiences() {
       axios.get('http://localhost:8082/api/experiences', { withCredentials: true })
         .then(response => {
-          // Assuming your API returns an array of experiences
           this.experiences = response.data;
         })
         .catch(error => {
           console.error('Error fetching experiences:', error);
         });
+    },
+    formatDate(dateString) {
+      return new Date(dateString).toLocaleDateString();
     }
   },
   mounted() {
     this.fetchExperiences();
-    // Initialize any scroll animations if needed...
+    // Initialize scroll animations if needed...
   }
 };
 </script>
-
 
 <style scoped>
 .experience-page {
@@ -231,87 +209,28 @@ export default {
 /* Experience Grid */
 .experience-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2.5rem; /* Increased gap for extra spacing between cards */
   padding: 2rem;
-  overflow-y: hidden;
 }
 
 .experience-card {
-  height: 300px;
-  perspective: 1000px;
-}
-
-.card-inner {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  transform-style: preserve-3d;
-  transition: transform 0.8s;
-}
-
-.experience-card:hover .card-inner {
-  transform: rotateY(180deg);
-}
-
-.card-front, .card-back {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  backface-visibility: hidden;
-  border-radius: 15px;
-  padding: 2rem;
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(5px);
   border: 1px solid rgba(65, 184, 131, 0.2);
+  border-radius: 15px;
+  padding: 1.5rem;
+  transition: transform 0.3s ease;
 }
 
-.card-front {
+.experience-card:hover {
+  transform: translateY(-5px);
+}
+
+.card-content {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.card-back {
-  transform: rotateY(180deg);
-  overflow: auto;
-}
-
-.company-logo {
-  width: 80px;
-  height: 80px;
-  background: #41b883;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 2em;
-  font-weight: bold;
-}
-
-.skills-wrapper {
-  display: flex;
-  flex-wrap: wrap;
   gap: 0.5rem;
-  margin-top: 1rem;
-}
-
-.skill-pill {
-  background: rgba(65, 184, 131, 0.2);
-  padding: 0.3rem 0.8rem;
-  border-radius: 15px;
-  font-size: 0.8rem;
-}
-
-.date-chip {
-  position: absolute;
-  bottom: 1rem;
-  right: 1rem;
-  background: #41b883;
-  padding: 0.3rem 0.8rem;
-  border-radius: 15px;
-  font-size: 0.8rem;
 }
 
 /* Add Experience Button */
@@ -359,12 +278,10 @@ export default {
   .hero-title {
     font-size: 2.5rem;
   }
-
   .floating-stats {
     flex-direction: column;
     align-items: center;
   }
-
   .stat-bubble {
     width: 100px;
     height: 100px;
