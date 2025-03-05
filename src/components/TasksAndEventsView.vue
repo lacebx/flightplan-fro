@@ -158,7 +158,7 @@ export default {
   width: 100%;
   height: 100%;
   z-index: -1;
-  overflow: hidden;
+  overflow-y: auto;
 }
 
 .video-background video {
@@ -182,6 +182,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow-y: auto;
 }
 
 .hero-section h1 {
