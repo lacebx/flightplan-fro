@@ -6,13 +6,7 @@
       <div class="gradient-sphere"></div>
       <div class="gradient-sphere"></div>
     </div>
-    <!-- Video Background -->
-    <div class="video-background">
-      <video autoplay loop muted playsinline>
-        <source src="https://assets.mixkit.co/videos/preview/mixkit-people-working-in-a-creative-office-environment-42925-large.mp4" type="video/mp4">
-      </video>
-      <div class="overlay"></div>
-    </div>
+   
 
     <!-- Hero Section -->
     <div class="hero-section">
@@ -93,12 +87,21 @@ export default {
         });
       // Fetch events
       axios.get('http://localhost:8082/api/events', { withCredentials: true })
-        .then(response => {
-          this.events = response.data;
-        })
-        .catch(error => {
-          console.error('Error fetching events:', error);
-        });
+  .then(response => {
+    console.log('Events response:', response.data);
+    // If the backend sends { events: [...] } then:
+    const eventsArray = Array.isArray(response.data) ? response.data : response.data.events;
+    this.events = eventsArray.map(event => ({ ...event, completed: false }));
+    this.$nextTick(() => {
+  const eventItems = document.querySelectorAll('.event-item');
+  eventItems.forEach(item => item.classList.add('scrolled'));
+});
+
+  })
+  .catch(error => {
+    console.error('Error fetching events:', error);
+  });
+
     },
     completeTask(task) {
       // Mark the task as complete and add a cool effect
@@ -150,22 +153,9 @@ export default {
   color: white;
 }
 
-/* Video Background */
-.video-background {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-  overflow-y: auto;
-}
 
-.video-background video {
-  min-width: 100%;
-  min-height: 100%;
-  object-fit: cover;
-}
+
+
 
 .overlay {
   position: absolute;
@@ -182,7 +172,6 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow-y: auto;
 }
 
 .hero-section h1 {
