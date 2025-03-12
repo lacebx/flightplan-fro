@@ -53,22 +53,43 @@
         </div>
       </div>
     </section>
+
+    <div class="task-list">
+      <h2>Available Tasks</h2>
+      <ul>
+        <li v-for="task in tasks" :key="task.id">
+          <span>{{ task.name }}</span>
+          <button @click="requestTask(task.id)">Request Task</button>
+        </li>
+      </ul>
+    </div>
+    <div class="badges">
+      <h2>Your Badges</h2>
+      <ul>
+        <li v-for="badge in badges" :key="badge.id">{{ badge.name }}</li>
+      </ul>
+    </div>
+    <div class="points">
+      <h2>Your Points: {{ points }}</h2>
+    </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
+
 export default {
   name: 'TasksAndEventsView',
   data() {
     return {
       tasks: [],  // Fetched from backend
-      events: []  // Fetched from backend
+      events: [],  // Fetched from backend
+      badges: [],
+      points: 0,
     };
   },
   methods: {
     getEventImage(id) {
-      // Return images based on event id or fallback to a default URL
       const images = {
         1: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4',
         2: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87'
@@ -79,7 +100,6 @@ export default {
       // Fetch tasks
       axios.get('http://localhost:8082/api/tasks', { withCredentials: true })
         .then(response => {
-          // Set a "completed" flag on each task for UI state
           this.tasks = response.data.map(task => ({ ...task, completed: false }));
         })
         .catch(error => {
@@ -87,27 +107,20 @@ export default {
         });
       // Fetch events
       axios.get('http://localhost:8082/api/events', { withCredentials: true })
-  .then(response => {
-    console.log('Events response:', response.data);
-    // If the backend sends { events: [...] } then:
-    const eventsArray = Array.isArray(response.data) ? response.data : response.data.events;
-    this.events = eventsArray.map(event => ({ ...event, completed: false }));
-    this.$nextTick(() => {
-  const eventItems = document.querySelectorAll('.event-item');
-  eventItems.forEach(item => item.classList.add('scrolled'));
-});
-
-  })
-  .catch(error => {
-    console.error('Error fetching events:', error);
-  });
-
+        .then(response => {
+          const eventsArray = Array.isArray(response.data) ? response.data : response.data.events;
+          this.events = eventsArray.map(event => ({ ...event, completed: false }));
+          this.$nextTick(() => {
+            const eventItems = document.querySelectorAll('.event-item');
+            eventItems.forEach(item => item.classList.add('scrolled'));
+          });
+        })
+        .catch(error => {
+          console.error('Error fetching events:', error);
+        });
     },
     completeTask(task) {
-      // Mark the task as complete and add a cool effect
       task.completed = true;
-      // Here you might also send a request to update the task status in the backend.
-      // For now, we'll simply add a class to animate it.
       this.$nextTick(() => {
         const el = this.$el.querySelector(`[data-taskid="${task.Taskid}"]`);
         if (el) {
@@ -135,11 +148,18 @@ export default {
       };
       window.addEventListener('scroll', handleScrollAnimation);
       handleScrollAnimation();
-    }
+    },
+    requestTask(taskId) {
+      console.log(`Requesting task with ID: ${taskId}`);
+    },
+    fetchPoints() {
+      // Fetch total points from the backend
+    },
   },
   mounted() {
     this.fetchTasksAndEvents();
     this.initScrollAnimations();
+    this.fetchPoints();
   }
 };
 </script>
@@ -152,10 +172,6 @@ export default {
   background: #1a1a1a;
   color: white;
 }
-
-
-
-
 
 .overlay {
   position: absolute;
@@ -318,5 +334,9 @@ export default {
   .event-image, .event-content {
     width: 100%;
   }
+}
+
+.task-list, .badges, .points {
+  margin-bottom: 20px;
 }
 </style>
