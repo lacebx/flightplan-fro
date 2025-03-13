@@ -7,7 +7,16 @@
           <li><router-link to="/home" class="nav-link">Tasks & Events</router-link></li>
           <li><router-link to="/sw" class="nav-link">S&W</router-link></li>
           <li><router-link to="/experience" class="nav-link">Experience</router-link></li>
-          <li><router-link to="/profile" class="nav-link">Profile</router-link></li>
+          <li class="profile-dropdown">
+            <router-link to="/profile" class="nav-link profile-button">
+              <i class="fa-solid fa-user"></i>
+            </router-link>
+            <div class="dropdown-content">
+              <a href="#" @click.prevent="handleLogout" class="dropdown-item">
+                <i class="fas fa-sign-out-alt"></i> Logout
+              </a>
+            </div>
+          </li>
         </ul>
       </nav>
     </header>
@@ -100,7 +109,12 @@ nav ul {
   margin: 0;
   padding: 0;
   gap: 1rem;
-  justify-content: center;
+  justify-content: flex-start;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  padding: 0 2rem;
 }
 
 .nav-link {
@@ -122,16 +136,25 @@ nav ul {
 
 /* MAIN CONTENT */
 main {
-  /* Push content below the fixed header’s height */
-  padding-top: 80px; 
+  /* Push content below the fixed header's height */
+  padding-top: 80px;
+  /* Add padding at bottom to prevent content from being hidden behind fixed footer */
+  padding-bottom: 100px; /* Increased padding to ensure content isn't hidden */
   flex-grow: 1;
-  background: transparent; /* Let the global #0a0a0a show through */
+  background: transparent;
   padding-left: 20px;
   padding-right: 20px;
 }
 
 /* FOOTER */
 footer {
+  /* Make footer fixed */
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 5; /* Even lower z-index */
+
   /* Glass Morphism */
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
@@ -156,7 +179,79 @@ footer {
 @media (max-width: 768px) {
   nav ul {
     flex-direction: column;
-    gap: 0.5rem;
+    align-items: flex-start;
+    padding: 1rem;
   }
+
+  .profile-dropdown {
+    position: relative;
+    right: auto;
+    align-self: flex-end;
+    margin-top: 1rem;
+  }
+}
+
+/* PROFILE DROPDOWN */
+.profile-dropdown {
+  position: absolute;
+  right: 2rem;
+}
+
+.profile-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  padding: 0; /* Remove padding to ensure proper circle shape */
+}
+
+.profile-button i {
+  font-size: 1.2rem; /* Slightly smaller size for better fit */
+  color: #ffffff;
+}
+
+.profile-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.dropdown-content {
+  margin-top: 8px;
+  background: rgba(30, 30, 30, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  position: absolute;
+  top: 100%;
+  right: 0;
+  min-width: 150px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: all 0.3s ease;
+  z-index: 1100;
+}
+
+.profile-dropdown:hover .dropdown-content {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.dropdown-item {
+  color: #ffffff;
+  text-decoration: none;
+  padding: 0.8rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background 0.3s ease;
+}
+
+.dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.2);
 }
 </style>

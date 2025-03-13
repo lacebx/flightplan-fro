@@ -8,10 +8,7 @@
     </div>
    
 
-    <!-- Hero Section -->
-    <div class="hero-section">
-      <h1 class="glass-effect">Tasks & Events</h1>
-    </div>
+   
 
     <!-- Tasks Section -->
     <section class="tasks-section glass-effect" data-scroll>

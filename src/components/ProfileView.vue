@@ -20,17 +20,9 @@
             <template v-else>
               <span class="avatar-text">{{ userInitials }}</span>
             </template>
-            <div class="status-indicator"></div>
+            
           </div>
-          <div class="level-badge">
-            <span class="level">Level 12</span>
-            <div class="progress-ring">
-              <svg viewBox="0 0 36 36">
-                <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" 
-                      fill="none" stroke="#41b883" stroke-width="2" stroke-dasharray="75, 100"/>
-              </svg>
-            </div>
-          </div>
+         
         </div>
         
         <div class="profile-info">
@@ -41,10 +33,14 @@
         </div>
 
         <div class="achievement-badges">
-          <div class="badge" v-for="(badge, index) in badges" :key="index"
-               :style="{ '--delay': `${index * 0.2}s` }">
-            <i :class="badge.icon"></i>
-            <span class="badge-tooltip">{{ badge.name }}</span>
+          <div class="badge" v-for="badge in badges" :key="badge.id">
+            <div class="badge-icon" :style="{ backgroundColor: badge.color }">
+              <i :class="badge.icon"></i>
+            </div>
+            <div class="badge-tooltip">
+              <h4>{{ badge.name }}</h4>
+              <p>{{ badge.description }}</p>
+            </div>
           </div>
         </div>
       </section>
@@ -121,10 +117,34 @@ export default {
     return {
       user: null, // Will hold the authenticated user info from backend
       badges: [
-        { name: 'Resume Master', icon: 'fas fa-file-alt' },
-        { name: 'Interview Pro', icon: 'fas fa-comments' },
-        { name: 'Network Builder', icon: 'fas fa-network-wired' },
-        { name: 'Skills Champion', icon: 'fas fa-award' }
+        {
+          id: 1,
+          name: 'Resume Master',
+          description: 'Created and refined a professional resume',
+          icon: 'fas fa-file-alt',
+          color: '#2EA043'
+        },
+        {
+          id: 2,
+          name: 'Interview Pro',
+          description: 'Completed 3 mock interviews',
+          icon: 'fas fa-comments',
+          color: '#3178C6'
+        },
+        {
+          id: 3,
+          name: 'Network Builder',
+          description: 'Connected with 10+ professionals',
+          icon: 'fas fa-network-wired',
+          color: '#9B4DCA'
+        },
+        {
+          id: 4,
+          name: 'Skills Champion',
+          description: 'Mastered 5+ professional skills',
+          icon: 'fas fa-award',
+          color: '#F1E05A'
+        }
       ],
       stats: [
         { 
@@ -545,6 +565,106 @@ export default {
 
   .action-buttons {
     flex-direction: column;
+  }
+}
+
+/* Update achievement badges styles */
+.achievement-badges {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Creates 3 equal columns */
+  gap: 2rem;
+  margin: 1rem 0;
+  max-width: 600px; /* Limit the width to maintain proper spacing */
+}
+
+.badge {
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.badge-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.badge-icon i {
+  font-size: 1.5rem;
+  color: white;
+}
+
+.badge:hover .badge-icon {
+  transform: translateY(-5px);
+}
+
+.badge-tooltip {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-10px);
+  background: rgba(30, 30, 30, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  padding: 0.8rem;
+  width: max-content;
+  max-width: 200px;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.badge-tooltip h4 {
+  margin: 0 0 0.5rem 0;
+  color: white;
+  font-size: 0.9rem;
+}
+
+.badge-tooltip p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.badge:hover .badge-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Add a small arrow to the tooltip */
+.badge-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 5px;
+  border-style: solid;
+  border-color: rgba(30, 30, 30, 0.95) transparent transparent transparent;
+}
+
+/* Update media query for responsive design */
+@media (max-width: 768px) {
+  .achievement-badges {
+    grid-template-columns: repeat(2, 1fr); /* 2 columns on smaller screens */
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .achievement-badges {
+    grid-template-columns: 1fr; /* Single column on very small screens */
+    gap: 1rem;
   }
 }
 </style>

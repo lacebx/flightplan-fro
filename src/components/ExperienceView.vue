@@ -58,10 +58,73 @@
       <!-- Add Experience Button -->
       <button class="add-experience-btn" @click="showAddExperience">
         <span class="btn-content">
-          <span class="plus">+</span>
-          <span class="text">Add Experience</span>
+          <span class="default-text">XP+</span>
+          <span class="hover-text">+ Add Experience</span>
         </span>
       </button>
+
+      <!-- Add Experience Modal -->
+      <div class="modal" v-if="showModal">
+        <div class="modal-content glass-morphism">
+          <h2>Add New Experience</h2>
+          <form @submit.prevent="submitExperience">
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input type="text" id="name" v-model="newExperience.name" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="category">Category</label>
+              <select id="category" v-model="newExperience.category" required>
+                <option value="Academic">Academic</option>
+                <option value="Professional">Professional</option>
+                <option value="Leadership">Leadership</option>
+                <option value="Volunteer">Volunteer</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="type">Type</label>
+              <select id="type" v-model="newExperience.type" required>
+                <option value="Project">Project</option>
+                <option value="Internship">Internship</option>
+                <option value="Research">Research</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="description">Description</label>
+              <textarea id="description" v-model="newExperience.description" required></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="points">Points Earned</label>
+              <input type="number" id="points" v-model="newExperience.pointsearned" required min="0">
+            </div>
+
+            <div class="form-group">
+              <label for="scheduling">Scheduling Type</label>
+              <select id="scheduling" v-model="newExperience.schedulingtype" required>
+                <option value="Flexible">Flexible</option>
+                <option value="Fixed">Fixed</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>
+                <input type="checkbox" v-model="newExperience.reflectionrequired">
+                Reflection Required
+              </label>
+            </div>
+
+            <div class="modal-buttons">
+              <button type="submit" class="submit-btn">Add Experience</button>
+              <button type="button" class="cancel-btn" @click="closeModal">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -75,12 +138,49 @@ export default {
       totalYears: '2+',
       totalSkills: '12',
       totalProjects: '15',
-      experiences: []
+      experiences: [],
+      showModal: false,
+      newExperience: {
+        name: '',
+        category: '',
+        type: '',
+        description: '',
+        pointsearned: 0,
+        reflectionrequired: false,
+        schedulingtype: 'Flexible'
+      }
     };
   },
   methods: {
     showAddExperience() {
-      console.log('Add experience clicked');
+      this.showModal = true;
+    },
+    closeModal() {
+      this.showModal = false;
+      // Reset form
+      this.newExperience = {
+        name: '',
+        category: '',
+        type: '',
+        description: '',
+        pointsearned: 0,
+        reflectionrequired: false,
+        schedulingtype: 'Flexible'
+      };
+    },
+    async submitExperience() {
+      try {
+        const response = await axios.post('http://localhost:8082/api/experiences', this.newExperience, {
+          withCredentials: true
+        });
+        // Add the new experience to the list
+        this.experiences.push(response.data);
+        this.closeModal();
+        // You might want to add a success message here
+      } catch (error) {
+        console.error('Error creating experience:', error);
+        // You might want to show an error message to the user
+      }
     },
     fetchExperiences() {
       axios.get('http://localhost:8082/api/experiences', { withCredentials: true })
@@ -246,6 +346,7 @@ export default {
   cursor: pointer;
   transition: all 0.3s ease;
   overflow: hidden;
+  z-index: 100;
 }
 
 .add-experience-btn:hover {
@@ -261,16 +362,21 @@ export default {
   color: white;
 }
 
-.plus {
-  font-size: 2em;
-  margin-right: 10px;
+.default-text {
+  font-size: 1.2em;
+  font-weight: bold;
 }
 
-.text {
+.hover-text {
+  display: none;
+  margin-left: 10px;
+}
+
+.add-experience-btn:hover .default-text {
   display: none;
 }
 
-.add-experience-btn:hover .text {
+.add-experience-btn:hover .hover-text {
   display: inline;
 }
 
@@ -286,5 +392,87 @@ export default {
     width: 100px;
     height: 100px;
   }
+}
+
+/* Modal Styles */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 2rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: white;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.form-group textarea {
+  height: 100px;
+  resize: vertical;
+}
+
+.modal-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+}
+
+.submit-btn,
+.cancel-btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.submit-btn {
+  background: #41b883;
+  color: white;
+}
+
+.cancel-btn {
+  background: #dc3545;
+  color: white;
+}
+
+.submit-btn:hover {
+  background: #3aa876;
+}
+
+.cancel-btn:hover {
+  background: #c82333;
 }
 </style>
