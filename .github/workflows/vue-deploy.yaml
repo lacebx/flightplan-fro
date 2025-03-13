@@ -1,4 +1,4 @@
-name: DEPLOY TO STAGING(real)
+name: DEPLOY TO STAGING(real-word)
 
 on:
   push:
