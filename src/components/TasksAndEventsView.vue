@@ -116,14 +116,13 @@ export default {
           console.error('Error fetching events:', error);
         });
     },
-    completeTask(task) {
-      task.completed = true;
-      this.$nextTick(() => {
-        const el = this.$el.querySelector(`[data-taskid="${task.Taskid}"]`);
-        if (el) {
-          el.classList.add('task-completed');
-        }
-      });
+    async completeTask(task) {
+      try {
+        await axios.put(`http://localhost:8082/api/tasks/${task.Taskid}/complete`, {}, { withCredentials: true });
+        this.tasks = this.tasks.filter(t => t.Taskid !== task.Taskid);
+      } catch (error) {
+        console.error('Error completing task:', error);
+      }
     },
     initScrollAnimations() {
       const scrollElements = document.querySelectorAll('[data-scroll]');
