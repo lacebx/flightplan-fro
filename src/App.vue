@@ -9,7 +9,7 @@
           <li><router-link to="/experience" class="nav-link">Experience</router-link></li>
           <li class="profile-dropdown">
             <router-link to="/profile" class="nav-link profile-button">
-              <i class="fa-solid fa-user"></i>
+              <img :src="userPhoto" alt="Profile Icon" class="profile-icon" />
             </router-link>
             <div class="dropdown-content">
               <a href="#" @click.prevent="handleLogout" class="dropdown-item">
@@ -23,7 +23,7 @@
 
     <!-- Main Content -->
     <main>
-      <router-view @login="handleLogin" @logout="handleLogout" />
+      <router-view @login="handleLogin" @logout="handleLogout" @userPhotoLoaded="setUserPhoto" />
     </main>
 
     <!-- Footer -->
@@ -43,6 +43,7 @@ export default {
   setup() {
     const isLoggedIn = ref(false);
     const route = useRoute(); // Get the current route
+    const userPhoto = ref(''); // Reactive variable for user photo
 
     // Check localStorage for logged-in state on mount
     onMounted(() => {
@@ -59,10 +60,14 @@ export default {
       localStorage.removeItem('isLoggedIn'); // Remove logged-in state
     };
 
+    const setUserPhoto = (photoUrl) => {
+      userPhoto.value = photoUrl; // Set the user photo URL
+    };
+
     // Determine if the current route is the login route
     const isLoginRoute = computed(() => route.path === '/');
 
-    return { isLoggedIn, handleLogin, handleLogout, isLoginRoute };
+    return { isLoggedIn, handleLogin, handleLogout, isLoginRoute, userPhoto, setUserPhoto };
   },
 };
 </script>
@@ -253,5 +258,13 @@ footer {
 
 .dropdown-item:hover {
   background: rgba(255, 255, 255, 0.2);
+}
+
+/* Add styles for the profile icon */
+.profile-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 </style>

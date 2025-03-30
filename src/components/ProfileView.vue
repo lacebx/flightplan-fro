@@ -15,7 +15,7 @@
           <div class="profile-avatar">
             <!-- If user has a photo, show it; otherwise show their initials -->
             <template v-if="user && user.photos && user.photos.length">
-              <img :src="user.photos[0].value" alt="Avatar" class="avatar-image" />
+              <img :src="user.photos[0].value" alt="Avatar" class="avatar-image" @error="handleImageError" />
             </template>
             <template v-else>
               <span class="avatar-text">{{ userInitials }}</span>
@@ -35,7 +35,7 @@
         <div class="achievement-badges">
           <div class="badge" v-for="badge in badges" :key="badge.id">
             <div class="badge-icon" :style="{ backgroundColor: badge.color }">
-              <i :class="badge.icon"></i>
+              <img :src="badge.icon" alt="Badge Icon" class="badge-image" />
             </div>
             <div class="badge-tooltip">
               <h4>{{ badge.name }}</h4>
@@ -111,6 +111,12 @@
 
 <script>
 import axios from 'axios';
+// Import SVG icons
+import ResumeMasterIcon from '@/assets/Media/Badges/2020-Arctic-Code-Vault-Contributor/PNG/2020ArcticCodeVaultBadge.png';
+import InterviewProIcon from '@/assets/Media/Badges/Galaxy-Brain/PNG/GalaxyBrain_Gold.png';
+import NetworkBuilderIcon from '@/assets/Media/Badges/GitHub-Sponsor/PNG/GitHubSponsorBadge.png';
+import SkillsChampionIcon from '@/assets/Media/Badges/Heart-on-your-sleeve/PNG/HeartOnYourSleeve_Gold.png';
+
 export default {
   name: 'ProfileView',
   data() {
@@ -121,29 +127,29 @@ export default {
           id: 1,
           name: 'Resume Master',
           description: 'Created and refined a professional resume',
-          icon: 'fas fa-file-alt',
-          color: '#2EA043'
+          icon: ResumeMasterIcon, 
+          
         },
         {
           id: 2,
           name: 'Interview Pro',
           description: 'Completed 3 mock interviews',
-          icon: 'fas fa-comments',
-          color: '#3178C6'
+          icon: InterviewProIcon, 
+          
         },
         {
           id: 3,
           name: 'Network Builder',
           description: 'Connected with 10+ professionals',
-          icon: 'fas fa-network-wired',
-          color: '#9B4DCA'
+          icon: NetworkBuilderIcon, 
+          
         },
         {
           id: 4,
           name: 'Skills Champion',
           description: 'Mastered 5+ professional skills',
-          icon: 'fas fa-award',
-          color: '#F1E05A'
+          icon: SkillsChampionIcon, 
+          
         }
       ],
       stats: [
@@ -214,6 +220,9 @@ export default {
     logout() {
       this.$emit('logout');
       this.$router.push('/');
+    },
+    handleImageError(event) {
+      event.target.src = '/src/assets/default.png'; // Path to a default image
     }
   },
   mounted() {
@@ -221,10 +230,19 @@ export default {
     axios.get('http://localhost:8082/auth/user', { withCredentials: true })
       .then(response => {
         this.user = response.data;
+        console.log("User data loaded:", this.user);
+        this.$emit('userPhotoLoaded', this.user.photos[0].value); // Emit the photo URL
       })
       .catch(error => {
         console.error("Error fetching user:", error);
       });
+
+    // Log badge icons to verify they are loaded
+    console.log("Badge Icons Loaded:");
+    console.log("ResumeMasterIcon:", ResumeMasterIcon);
+    console.log("InterviewProIcon:", InterviewProIcon);
+    console.log("NetworkBuilderIcon:", NetworkBuilderIcon);
+    console.log("SkillsChampionIcon:", SkillsChampionIcon);
   }
 };
 </script>
@@ -594,6 +612,13 @@ export default {
   justify-content: center;
   transition: transform 0.3s ease;
   border: 2px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+
+.badge-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .badge-icon i {
