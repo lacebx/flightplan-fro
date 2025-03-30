@@ -39,18 +39,23 @@
         </div>
       </div>
 
-      <!-- Experience Cards (Static info now on a single side) -->
+      <!-- Experience Cards -->
       <div class="experience-grid">
         <div class="experience-card" 
              v-for="exp in experiences" 
              :key="exp.experienceid">
           <div class="card-content">
-            <h3>{{ exp.name }}</h3>
-            <p><strong>Category:</strong> {{ exp.category }}</p>
-            <p><strong>Type:</strong> {{ exp.type }}</p>
-            <p>{{ exp.description }}</p>
-            <p><strong>Points Earned:</strong> {{ exp.pointsearned }}</p>
-            <p><strong>Start Date:</strong> {{ formatDate(exp.createdAt) }}</p>
+            <h3 class="experience-name">{{ exp.name }}</h3>
+            <p class="category">{{ exp.category }}</p>
+            <p class="description">{{ exp.description }}</p>
+            <div class="card-footer">
+              <span class="points">
+                <i class="fas fa-star"></i> <strong>{{ exp.pointsearned }} Points</strong>
+              </span>
+              <span class="date">
+                <i class="fas fa-calendar-alt"></i> <small>{{ formatDate(exp.createdAt) }}</small>
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -80,16 +85,6 @@
                 <option value="Professional">Professional</option>
                 <option value="Leadership">Leadership</option>
                 <option value="Volunteer">Volunteer</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label for="type">Type</label>
-              <select id="type" v-model="newExperience.type" required>
-                <option value="Project">Project</option>
-                <option value="Internship">Internship</option>
-                <option value="Research">Research</option>
-                <option value="Other">Other</option>
               </select>
             </div>
 
@@ -331,6 +326,36 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+}
+
+.experience-name {
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+.category {
+  font-size: 1.1em;
+  color: #41b883;
+}
+
+.description {
+  font-size: 1em;
+  color: #ccc;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+.points, .date {
+  font-size: 0.9em;
+  color: #aaa;
+}
+
+.points i, .date i {
+  margin-right: 5px;
 }
 
 /* Add Experience Button */

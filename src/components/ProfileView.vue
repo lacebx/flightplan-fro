@@ -75,6 +75,9 @@
             </div>
           </div>
         </div>
+        <router-link to="/leaderboard" class="leaderboard-link">
+          Go to Leaderboard
+        </router-link>
       </section>
 
       <!-- Skills Matrix -->
@@ -96,10 +99,11 @@
 
       <!-- Action Buttons -->
       <div class="action-buttons">
-        <button class="action-btn edit-btn" @click="editProfile">
+        <!-- Remove or comment out the Edit Profile button -->
+        <!-- <button class="action-btn edit-btn" @click="editProfile">
           <i class="fas fa-edit"></i>
           Edit Profile
-        </button>
+        </button> -->
         <button class="action-btn logout-btn" @click="logout">
           <i class="fas fa-sign-out-alt"></i>
           Logout
@@ -691,5 +695,25 @@ export default {
     grid-template-columns: 1fr; /* Single column on very small screens */
     gap: 1rem;
   }
+}
+
+.career-progress-card {
+  position: relative;
+}
+
+.leaderboard-link {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  padding: 0.5rem 1rem;
+  background-color: #41b883;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.leaderboard-link:hover {
+  background-color: #69d4a4;
 }
 </style>
