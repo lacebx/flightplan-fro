@@ -1,38 +1,13 @@
 <template>
   <div class="leaderboard-page">
     <!-- Overview Section: Personal Performance -->
-    <section class="overview-section glass-morphism">
-      <h2>LEADERBOARD</h2>
-      <div class="personal-stats">
-        <div class="stats">
-          <div class="stat">
-            <span class="value">12,350</span>
-            <span class="label">Total XP</span>
-          </div>
-          <div class="stat">
-            <span class="value">23</span>
-            <span class="label">Tasks</span>
-          </div>
-          <div class="stat">
-            <span class="value">52</span>
-            <span class="label">Completed</span>
-          </div>
-          <div class="stat">
-            <span class="value">12</span>
-            <span class="label">Events</span>
-          </div>
-        </div>
-        <div class="gauge" :style="{ '--rotate': gaugeRotation + 'deg' }">
-          <div class="gauge-cover">25%</div>
-        </div>
-      </div>
-    </section>
+    <!-- Removed 'Your Progress' card section -->
 
     <!-- Flex container for Leaderboard and Percentile Metrics -->
     <div class="flex-container">
       <!-- Leaderboard Section: Top 10 -->
       <section class="leaderboard-section glass-morphism">
-        <h2>TOP 10 XP</h2>
+        <h2>LEADERBOARD</h2>
         <ul class="leaderboard-list">
           <li class="leaderboard-header">
             <span class="name-header">Name</span>
@@ -42,7 +17,7 @@
             <span class="rank">{{ index + 1 }}</span>
             <img :src="entry.avatar" alt="Avatar" class="leaderboard-avatar"/>
             <span class="name">{{ entry.name }}</span>
-            <span class="xp">{{ entry.xp }}</span>
+            <span class="xp">{{ entry.xp.toLocaleString() }}</span>
           </li>
         </ul>
       </section>
@@ -70,7 +45,7 @@
             </div>
             <!-- Activity Graph Placeholder -->
             <div class="activity-graph">
-              <img src="/img/placeholder-activity-graph.png" alt="Activity Graph" class="activity-graph-image"/>
+              <ActivityChart :chartData="activityData" />
             </div>
           </div>
         </div>
@@ -94,8 +69,14 @@
 </template>
 
 <script>
+import ActivityChart from './ActivityChart.vue';
+import axios from 'axios';
+
 export default {
   name: "LeaderboardView",
+  components: {
+    ActivityChart
+  },
   data() {
     return {
       user: {
@@ -121,7 +102,20 @@ export default {
         { id: 1, name: "Achiever", icon: require('@/assets/Media/Badges/YOLO/PNG/YOLO_Badge.png'), progress: 75 },
         { id: 2, name: "Hustler", icon: require('@/assets/Media/Badges/Star-Struck/PNG/StarStruck_Gold.png'), progress: 40 },
         { id: 3, name: "Scholar", icon: require('@/assets/Media/Badges/Pull-Shark/GIF/PullShark_Animated.gif'), progress: 0 }
-      ]
+      ],
+      activityData: {
+        labels: [],
+        datasets: [
+          {
+            label: 'Activity Points',
+            data: [120, 190, 30, 250, 85, 130, 160],
+            fill: false,
+            borderColor: '#41b883',
+            tension: 0.4,
+            backgroundColor: 'rgba(65, 184, 131, 0.5)'
+          }
+        ]
+      }
     };
   },
   computed: {
@@ -129,6 +123,33 @@ export default {
     gaugeRotation() {
       return (this.user.percentile / 100) * 360;
     }
+  },
+  methods: {
+    // Helper method to generate last 7 days for labels
+    getLastSevenDays() {
+      const days = [];
+      for (let i = 6; i >= 0; i--) {
+        const date = new Date();
+        date.setDate(date.getDate() - i);
+        days.push(date.toLocaleDateString('en-US', { weekday: 'short' }));
+      }
+      return days;
+    },
+    async fetchActivityData() {
+      try {
+        const response = await axios.get('your-api-endpoint/activity-data');
+        this.activityData.datasets[0].data = response.data.points;
+        this.activityData.labels = response.data.dates;
+      } catch (error) {
+        console.error('Error fetching activity data:', error);
+        // Use default data if API call fails
+        this.activityData.labels = this.getLastSevenDays();
+      }
+    }
+  },
+  mounted() {
+    this.activityData.labels = this.getLastSevenDays();
+    this.fetchActivityData();
   }
 };
 </script>
@@ -385,11 +406,10 @@ export default {
 
 .activity-graph {
   margin-top: 1rem;
-}
-
-.activity-graph-image {
+  height: 200px;
   width: 100%;
-  height: auto;
-  object-fit: cover;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 1rem;
 }
 </style>

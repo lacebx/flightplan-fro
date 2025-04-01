@@ -13,16 +13,14 @@
       <section class="profile-header glass-morphism" data-scroll>
         <div class="profile-avatar-wrapper">
           <div class="profile-avatar">
-            <!-- If user has a photo, show it; otherwise show their initials -->
+            <!-- If user has a photo, show it; otherwise show default image -->
             <template v-if="user && user.photos && user.photos.length">
               <img :src="user.photos[0].value" alt="Avatar" class="avatar-image" @error="handleImageError" />
             </template>
             <template v-else>
-              <span class="avatar-text">{{ userInitials }}</span>
+              <img src="@/assets/default.png" alt="Default Avatar" class="avatar-image" />
             </template>
-            
           </div>
-         
         </div>
         
         <div class="profile-info">
@@ -226,7 +224,7 @@ export default {
       this.$router.push('/');
     },
     handleImageError(event) {
-      event.target.src = '/src/assets/default.png'; // Path to a default image
+      event.target.src = require('@/assets/default.png'); // Use require for dynamic paths
     }
   },
   mounted() {

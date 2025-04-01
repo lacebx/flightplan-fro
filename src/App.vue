@@ -11,11 +11,7 @@
             <router-link to="/profile" class="nav-link profile-button">
               <img :src="userPhoto" alt="Profile Icon" class="profile-icon" />
             </router-link>
-            <div class="dropdown-content">
-              <a href="#" @click.prevent="handleLogout" class="dropdown-item">
-                <i class="fas fa-sign-out-alt"></i> Logout
-              </a>
-            </div>
+            
           </li>
         </ul>
       </nav>
