@@ -68,18 +68,23 @@
 
 <script>
 import axios from 'axios';
+
+
 export default {
   name: 'ExperienceView',
   data() {
     return {
-      totalYears: '2+',
-      totalSkills: '12',
+      totalYears: '3+',
+      totalSkills: '13',
       totalProjects: '15',
       experiences: []
     };
   },
   methods: {
     showAddExperience() {
+     
+      this.$router.push('/add-experience');
+
       console.log('Add experience clicked');
     },
     fetchExperiences() {
