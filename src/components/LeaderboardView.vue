@@ -45,7 +45,7 @@
             </div>
             <!-- Activity Graph Placeholder -->
             <div class="activity-graph">
-              <ActivityChart :chartData="activityData" />
+              <ActivityChart :pieChartData="chartData" />
             </div>
           </div>
         </div>
@@ -103,19 +103,17 @@ export default {
         { id: 2, name: "Hustler", icon: require('@/assets/Media/Badges/Star-Struck/PNG/StarStruck_Gold.png'), progress: 40 },
         { id: 3, name: "Scholar", icon: require('@/assets/Media/Badges/Pull-Shark/GIF/PullShark_Animated.gif'), progress: 0 }
       ],
-      activityData: {
-        labels: [],
-        datasets: [
-          {
-            label: 'Activity Points',
-            data: [120, 190, 30, 250, 85, 130, 160],
-            fill: false,
-            borderColor: '#41b883',
-            tension: 0.4,
-            backgroundColor: 'rgba(65, 184, 131, 0.5)'
-          }
-        ]
-      }
+      chartData: [
+        {
+          labels: ['XP', 'Tasks', 'Events'],
+          datasets: [
+            {
+              data: [12350, 23, 12],
+              backgroundColor: ['#41b883', '#ff6384', '#36a2eb']
+            }
+          ]
+        }
+      ]
     };
   },
   computed: {

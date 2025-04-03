@@ -1,42 +1,37 @@
 <template>
-  <Line
-    :data="chartData"
-    :options="chartOptions"
-    :style="{ height: '200px' }"
-  />
+  <div class="bar-chart">
+    <Bar
+      v-for="(data, index) in chartData"
+      :key="index"
+      :data="data"
+      :options="chartOptions"
+      :style="{ height: '200px', margin: '10px' }"
+    />
+  </div>
 </template>
 
 <script>
-import { Line } from 'vue-chartjs';
+import { Bar } from 'vue-chartjs';
 import {
   Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
+  CategoryScale,
+  LinearScale,
+  BarElement
 } from 'chart.js';
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
-);
+ChartJS.register(Title, Tooltip, Legend, CategoryScale, LinearScale, BarElement);
 
 export default {
   name: 'ActivityChart',
   components: {
-    Line
+    Bar
   },
   props: {
     chartData: {
-      type: Object,
+      type: Array,
       required: true
     }
   },
@@ -45,16 +40,14 @@ export default {
       chartOptions: {
         responsive: true,
         maintainAspectRatio: true,
-        scales: {
-          y: {
-            beginAtZero: true,
-            grid: {
-              color: 'rgba(255, 255, 255, 0.1)'
-            },
-            ticks: {
+        plugins: {
+          legend: {
+            labels: {
               color: '#ffffff'
             }
-          },
+          }
+        },
+        scales: {
           x: {
             grid: {
               color: 'rgba(255, 255, 255, 0.1)'
@@ -62,11 +55,13 @@ export default {
             ticks: {
               color: '#ffffff'
             }
-          }
-        },
-        plugins: {
-          legend: {
-            labels: {
+          },
+          y: {
+            beginAtZero: true,
+            grid: {
+              color: 'rgba(255, 255, 255, 0.1)'
+            },
+            ticks: {
               color: '#ffffff'
             }
           }
