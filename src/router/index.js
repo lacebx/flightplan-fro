@@ -17,7 +17,7 @@ const routes = [
   { path: '/sw', component: SWView },
   { path: '/experience', component: ExperienceView },
   { path: '/profile', component: ProfileView },
-  { path: '/leaderboard', component: LeaderboardView},
+  { path: '/leaderboard', component: LeaderboardView },
   {
     path: '/admin/login',
     name: 'AdminLogin',
@@ -27,25 +27,25 @@ const routes = [
     path: '/admin/manage-students',
     name: 'ManageStudents',
     component: ManageStudents,
-    meta: { requiresAdmin: true },
+    // meta: { requiresAdmin: true }, // Comment out or remove this line
   },
   {
     path: '/admin/manage-events',
     name: 'ManageEvents',
     component: ManageEvents,
-    meta: { requiresAdmin: true },
+    // meta: { requiresAdmin: true }, // Comment out or remove this line
   },
   {
     path: '/admin/manage-points',
     name: 'ManagePoints',
     component: ManagePoints,
-    meta: { requiresAdmin: true },
+    // meta: { requiresAdmin: true }, // Comment out or remove this line
   },
   {
     path: '/admin/view-student-plans',
     name: 'ViewStudentPlans',
     component: ViewStudentPlans,
-    meta: { requiresAdmin: true },
+    // meta: { requiresAdmin: true }, // Comment out or remove this line
   },
 ];
 
@@ -54,14 +54,14 @@ const router = createRouter({
   routes,
 });
 
-// Navigation guard to check if the user is an admin
-router.beforeEach((to, from, next) => {
-  const isAdmin = localStorage.getItem('userRole') === 'admin';
-  if (to.matched.some(record => record.meta.requiresAdmin) && !isAdmin) {
-    next('/admin/login'); // Redirect to admin login if not an admin
-  } else {
-    next(); // Proceed to the route
-  }
-});
+// Comment out or remove the navigation guard
+// router.beforeEach((to, from, next) => {
+//   const isAdmin = localStorage.getItem('userRole') === 'admin';
+//   if (to.matched.some(record => record.meta.requiresAdmin) && !isAdmin) {
+//     next('/admin/login'); // Redirect to admin login if not an admin
+//   } else {
+//     next(); // Proceed to the route
+//   }
+// });
 
 export default router; 

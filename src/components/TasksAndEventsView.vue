@@ -31,9 +31,9 @@
     <!-- Events Section -->
     <section class="events-section">
       <div class="events-container">
-        <div class="event-item" v-for="event in events" :key="event.eventid" data-scroll>
+        <div class="event-item" v-for="event in events" :key="event.id" data-scroll>
           <div class="event-image">
-            <img :src="getEventImage(event.eventid)" :alt="event.name">
+            <img :src="getEventImage(event.id)" :alt="event.name">
           </div>
           <div class="event-content glass-effect">
             <h3>{{ event.name }}</h3>
@@ -45,7 +45,7 @@
             </div>
             <p><strong>Location:</strong> {{ event.location }}</p>
             <p><strong>Attendance:</strong> {{ event.attendancetype }}</p>
-            <button class="register-button neumorphic">Register Now</button>
+            <button class="register-button neumorphic" @click="openRegistrationModal(event.id)">Register Now</button>
           </div>
         </div>
       </div>
@@ -69,20 +69,55 @@
     <div class="points">
       <h2>Your Points: {{ points }}</h2>
     </div>
+
+    <!-- Registration Modal -->
+    <div v-if="showRegistrationModal" class="modal">
+      <div class="modal-content glass-effect">
+        <h2>Register for Event</h2>
+        <form @submit.prevent="registerForEvent">
+          <div class="form-group">
+            <label>
+              <input type="checkbox" v-model="registrationForm.isVisible">
+              Make my attendance visible to others
+            </label>
+          </div>
+          <div class="modal-buttons">
+            <button type="submit" class="submit-btn">Register</button>
+            <button type="button" class="cancel-btn" @click="closeModal">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Notification -->
+    <div v-if="notification" class="notification">
+      {{ notification }}
+    </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
+import { eventBus } from '../eventBus';
 
 export default {
   name: 'TasksAndEventsView',
   data() {
     return {
       tasks: [],  // Fetched from backend
-      events: [],  // Fetched from backend
+      events: eventBus.value.events,
       badges: [],
       points: 0,
+      showRegistrationModal: false,
+      registrationForm: {
+        isVisible: false,
+      },
+      selectedEventId: null,
+      userProfile: {
+        name: '',
+        email: '',
+      },
+      notification: null,
     };
   },
   methods: {
@@ -151,11 +186,48 @@ export default {
     fetchPoints() {
       // Fetch total points from the backend
     },
+    openRegistrationModal(eventId) {
+      this.selectedEventId = eventId;
+      this.showRegistrationModal = true;
+    },
+    closeModal() {
+      this.showRegistrationModal = false;
+      this.registrationForm = { isVisible: false };
+    },
+    async registerForEvent() {
+      try {
+        const registrationData = {
+          name: this.userProfile.name,
+          email: this.userProfile.email,
+          isVisible: this.registrationForm.isVisible
+        };
+
+        const response = await axios.post(
+          `http://localhost:8082/api/events/${this.selectedEventId}/register`,
+          registrationData,
+          { withCredentials: true }
+        );
+
+        console.log('Registration successful:', response.data);
+
+        this.closeModal();
+      } catch (error) {
+        console.error('Error registering for event:', error);
+      }
+    }
   },
   mounted() {
     this.fetchTasksAndEvents();
     this.initScrollAnimations();
     this.fetchPoints();
+
+    // Listen for eventAdded event
+    this.$on('eventAdded', (event) => {
+      this.notification = `Event "${event.name}" added successfully!`;
+      setTimeout(() => {
+        this.notification = null;
+      }, 3000);
+    });
   }
 };
 </script>
@@ -334,5 +406,92 @@ export default {
 
 .task-list, .badges, .points {
   margin-bottom: 20px;
+}
+
+/* Add styles for the modal */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  width: 90%;
+  max-width: 500px;
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 10px;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: white;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.submit-btn,
+.cancel-btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.submit-btn {
+  background: #41b883;
+  color: white;
+}
+
+.cancel-btn {
+  background: #e74c3c;
+  color: white;
+}
+
+.submit-btn:hover {
+  background: #3aa876;
+}
+
+.cancel-btn:hover {
+  background: #c82333;
+}
+
+.notification {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background: #41b883;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
 }
 </style>
