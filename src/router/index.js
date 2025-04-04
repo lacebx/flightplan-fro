@@ -5,6 +5,11 @@ import SWView from '../components/SWView.vue';
 import ExperienceView from '../components/ExperienceView.vue';
 import ProfileView from '../components/ProfileView.vue';
 import LeaderboardView from '../components/LeaderboardView.vue';
+import AdminLogin from '../components/AdminLogin.vue';
+import ManageStudents from '../components/ManageStudents.vue';
+import ManageEvents from '../components/ManageEvents.vue';
+import ManagePoints from '../components/ManagePoints.vue';
+import ViewStudentPlans from '../components/ViewStudentPlans.vue';
 
 const routes = [
   { path: '/', component: LoginView },
@@ -13,11 +18,50 @@ const routes = [
   { path: '/experience', component: ExperienceView },
   { path: '/profile', component: ProfileView },
   { path: '/leaderboard', component: LeaderboardView},
+  {
+    path: '/admin/login',
+    name: 'AdminLogin',
+    component: AdminLogin,
+  },
+  {
+    path: '/admin/manage-students',
+    name: 'ManageStudents',
+    component: ManageStudents,
+    meta: { requiresAdmin: true },
+  },
+  {
+    path: '/admin/manage-events',
+    name: 'ManageEvents',
+    component: ManageEvents,
+    meta: { requiresAdmin: true },
+  },
+  {
+    path: '/admin/manage-points',
+    name: 'ManagePoints',
+    component: ManagePoints,
+    meta: { requiresAdmin: true },
+  },
+  {
+    path: '/admin/view-student-plans',
+    name: 'ViewStudentPlans',
+    component: ViewStudentPlans,
+    meta: { requiresAdmin: true },
+  },
 ];
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(process.env.BASE_URL),
   routes,
+});
+
+// Navigation guard to check if the user is an admin
+router.beforeEach((to, from, next) => {
+  const isAdmin = localStorage.getItem('userRole') === 'admin';
+  if (to.matched.some(record => record.meta.requiresAdmin) && !isAdmin) {
+    next('/admin/login'); // Redirect to admin login if not an admin
+  } else {
+    next(); // Proceed to the route
+  }
 });
 
 export default router; 
