@@ -11,23 +11,27 @@
    
 
    
-<h1>Available Awards</h1>
+ <h1>Available Rewards</h1>
     <div v-if="loading" class="loading">Loading rewards...</div>
     <div v-else class="rewards-grid">
       <div v-for="reward in sortedRewards" :key="reward.id" class="reward-card">
+        <img :src="reward.image" :alt="reward.item_name" class="reward-image" />
         <h2>{{ reward.item_name }}</h2>
         <p>{{ reward.description }}</p>
         <p>Cost: {{ reward.points_cost }} points</p>
-        <p v-if="!reward.availability" class="unavailable">Out of Stock</p>
+        <p v-if="!reward.availability" class="unavailable">Out of Stock </p>
         <button
           :disabled="!reward.availability || userPoints < reward.points_cost"
-          @click="redeemReward(reward)"
+          @click="redeemReward(reward)" class="redeem-btn"
         >
           Redeem
         </button>
+        
       </div>
     </div>
     <p class="user-points">Your Points: {{ userPoints }}</p>
+
+
 
 </div>
 </div>
@@ -38,12 +42,96 @@
 
 
 <script>
-export default {
+import waterBottle from '@/assets/images/water-bottle.png';
+import coffeeMug from '@/assets/images/coffee-mug.png';
+import stationerySet from '@/assets/images/stationery-set.png';
+import giftCard from '@/assets/images/giftcard.png';
+import ebookVoucher from '@/assets/images/ebookvoucher.png';
+import deskOrganizer from '@/assets/images/deskorganizer.png';
+import courseDiscount from '@/assets/images/coursediscount.png';
+import backPack from '@/assets/images/backpack.png';
+import wirelessHeadPhones from '@/assets/images/wirelessheadphones.png';
+
+
+     export default {
   name: 'RedemptionPage',
   data() {
     return {
       userPoints: 1500, // Example starting points
-      rewardsList: [],
+      rewardsList: [
+        {
+          id: 1,
+          item_name: 'Gift Card',
+          description: 'A $50 gift card.',
+          points_cost: 500,
+          availability: true,
+          image: giftCard,
+        },
+        {
+          id: 2,
+          item_name: 'Wireless Headphones',
+          description: 'Noise-cancelling over-ear headphones.',
+          points_cost: 1200,
+          availability: true,
+          image: wirelessHeadPhones,
+        },
+        {
+          id: 3,
+          item_name: 'Coffee Mug',
+          description: 'A branded coffee mug.',
+          points_cost: 300,
+          availability: false,
+          image: coffeeMug,
+        },
+        {
+          id: 4,
+          item_name: 'E-Book Voucher',
+          description: 'Voucher for an e-book of your choice.',
+          points_cost: 400,
+          availability: true,
+          image: ebookVoucher,
+        },
+        {
+          id: 5,
+          item_name: 'Online Course Discount',
+          description: 'Discount on an online course.',
+          points_cost: 800,
+          availability: true,
+          image: courseDiscount,
+        },
+        {
+          id: 6,
+          item_name: 'Stationery Set',
+          description: 'A set of notebooks, pens, and more.',
+          points_cost: 350,
+          availability: true,
+          image: stationerySet,
+        },
+        {
+          id: 7,
+          item_name: 'Backpack',
+          description: 'A durable and stylish backpack.',
+          points_cost: 1000,
+          availability: true,
+          image: backPack,
+        },
+        {
+          id: 8,
+          item_name: 'Water Bottle',
+          description: 'A reusable water bottle.',
+          points_cost: 250,
+          availability: true,
+         image: waterBottle,
+        },
+        {
+          id: 9,
+          item_name: 'Desk Organizer',
+          description: 'Keep your workspace neat and tidy.',
+          points_cost: 450,
+          availability: true,
+          image: deskOrganizer,
+        },
+      ],
       loading: false,
     };
   },
@@ -52,81 +140,9 @@ export default {
       return this.rewardsList.slice().sort((a, b) => a.points_cost - b.points_cost);
     },
   },
-  created() {
-    this.fetchRewards();
-  },
   methods: {
-    fetchRewards() {
-      this.loading = true;
-      // Simulate API call delay and add 9 sample rewards for a 3x3 grid.
-      setTimeout(() => {
-        this.rewardsList = [
-          {
-            id: 1,
-            item_name: 'Gift Card',
-            description: 'A $50 gift card.',
-            points_cost: 500,
-            availability: true,
-          },
-          {
-            id: 2,
-            item_name: 'Wireless Headphones',
-            description: 'Noise-cancelling over-ear headphones.',
-            points_cost: 1200,
-            availability: true,
-          },
-          {
-            id: 3,
-            item_name: 'Coffee Mug',
-            description: 'A branded coffee mug.',
-            points_cost: 300,
-            availability: false,
-          },
-          {
-            id: 4,
-            item_name: 'E-Book Voucher',
-            description: 'Voucher for an e-book of your choice.',
-            points_cost: 400,
-            availability: true,
-          },
-          {
-            id: 5,
-            item_name: 'Online Course Discount',
-            description: 'Discount on an online course.',
-            points_cost: 800,
-            availability: true,
-          },
-          {
-            id: 6,
-            item_name: 'Stationery Set',
-            description: 'A set of notebooks, pens, and more.',
-            points_cost: 350,
-            availability: true,
-          },
-          {
-            id: 7,
-            item_name: 'Backpack',
-            description: 'A durable and stylish backpack.',
-            points_cost: 1000,
-            availability: true,
-          },
-          {
-            id: 8,
-            item_name: 'Water Bottle',
-            description: 'A reusable water bottle.',
-            points_cost: 250,
-            availability: true,
-          },
-          {
-            id: 9,
-            item_name: 'Desk Organizer',
-            description: 'Keep your workspace neat and tidy.',
-            points_cost: 450,
-            availability: true,
-          },
-        ];
-        this.loading = false;
-      }, 500); // Simulated delay
+    getImageUrl(imagePath) {
+      return new URL(`../assets/${imagePath}`, import.meta.url).href;
     },
     redeemReward(reward) {
       if (this.userPoints >= reward.points_cost && reward.availability) {
@@ -139,6 +155,7 @@ export default {
     },
   },
 };
+
 </script>
 
 
@@ -150,14 +167,14 @@ export default {
 
 .redemption-page {
   font-family: Arial, sans-serif;
-  margin: 20px auto;
-  max-width: 1200px;
-  padding: 20px;
+  margin: 0px auto;
+  max-width: 2500px;
+  padding: 0px;
   text-align: center;
 }
 
 .loading {
-  font-size: 18px;
+  font-size: 10px;
   text-align: center;
 }
 
@@ -165,28 +182,29 @@ export default {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-auto-rows: auto;
-  gap: 20px;
-  margin-bottom: 20px;
+  gap: 10px;
+  margin-bottom: 0px;
 }
 
 .reward-card {
   border: 1px solid #ccc;
-  padding: 15px;
-  border-radius: 5px;
+  padding: 0px;
+  border-radius: 10px;
+  height: 210px;
   text-align: center;
 }
 
 .reward-card h2 {
-  margin: 0 0 10px;
+  margin: 0 0 5px;
 }
 
 .reward-card p {
-  margin: 5px 0;
+  margin: 0px 0;
 }
 
 .reward-card button {
-  padding: 5px 10px;
-  font-size: 16px;
+  padding: 10px px;
+  font-size: 5px;
   cursor: pointer;
 }
 
@@ -196,21 +214,43 @@ export default {
 }
 
 .unavailable {
-  color: red;
-  font-weight: bold;
+  color: #ff0000;
+  font-size:small;
+ 
+
 }
 
 .user-points {
-  font-size: 18px;
+  font-size: 10px;
   font-weight: bold;
   text-align: center;
 }
 
+.redeem-btn {
+  background-color: #28a745; 
+  color: white; 
+  padding: 10px 20px; 
+
+  font-size: 16px !important; 
+  font-weight: bold;
+  border: none; 
+  border-radius: 5px; 
+  width: 100px;
+  cursor: pointer; 
+  transition: background-color 0.3s ease; 
+}
+
+.redeem-btn:hover {
+  background-color: #218838; 
+}
 
 
 
 
-@media (max-width: 768px) {
+
+
+
+@media (max-width: 668px) {
   .hero-title {
     font-size: 2.5rem;
   }
@@ -219,8 +259,8 @@ export default {
     align-items: center;
   }
   .stat-bubble {
-    width: 100px;
-    height: 100px;
+    width: 10px;
+    height: 10px;
   }
 }
 </style>
