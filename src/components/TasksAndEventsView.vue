@@ -98,14 +98,14 @@
 
 <script>
 import axios from 'axios';
-import { eventBus } from '../eventBus';
+import eventBus from '../eventBus';
 
 export default {
   name: 'TasksAndEventsView',
   data() {
     return {
       tasks: [],  // Fetched from backend
-      events: eventBus.value.events,
+      events: [], // Initialize as an empty array
       badges: [],
       points: 0,
       showRegistrationModal: false,
@@ -221,13 +221,17 @@ export default {
     this.initScrollAnimations();
     this.fetchPoints();
 
-    // Listen for eventAdded event
-    this.$on('eventAdded', (event) => {
+    // Listen for eventAdded event using mitt
+    eventBus.on('eventAdded', (event) => {
       this.notification = `Event "${event.name}" added successfully!`;
       setTimeout(() => {
         this.notification = null;
       }, 3000);
     });
+  },
+  beforeUnmount() {
+    // Clean up the event listener
+    eventBus.off('eventAdded');
   }
 };
 </script>

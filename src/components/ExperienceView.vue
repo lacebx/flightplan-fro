@@ -7,20 +7,8 @@
       <div class="gradient-sphere"></div>
     </div>
     
-    <!-- 3D Hero Section -->
-    <div class="hero-3d">
-      <div class="cube-container">
-        <div class="cube">
-          <div class="cube-face front">Experience</div>
-          <div class="cube-face back">Journey</div>
-          <div class="cube-face right">Skills</div>
-          <div class="cube-face left">Growth</div>
-          <div class="cube-face top">Career</div>
-          <div class="cube-face bottom">Path</div>
-        </div>
-      </div>
-      <h1 class="hero-title">Professional Journey</h1>
-    </div>
+    <!-- Centered Hero Title -->
+    <h1 class="hero-title centered">Professional Journey</h1>
 
     <div class="content-wrapper">
       <!-- Floating Stats -->
@@ -256,9 +244,10 @@ export default {
 }
 
 .hero-title {
-  position: absolute;
   font-size: 4rem;
   text-shadow: 0 0 10px rgba(65, 184, 131, 0.5);
+  text-align: center;
+  margin-top: 20px;
 }
 
 /* Floating Stats */

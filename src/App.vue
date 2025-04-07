@@ -1,7 +1,17 @@
 <template>
   <div id="app">
-    <!-- Header (Navbar) -->
-    <header v-if="isLoggedIn && !isLoginRoute">
+    <!-- Conditional Navbar -->
+    <header v-if="isAdminRoute">
+      <nav>
+        <ul>
+          <li><router-link to="/admin/manage-roles" class="nav-link">Manage Roles</router-link></li>
+          <li><router-link to="/admin/manage-events" class="nav-link">Manage Events</router-link></li>
+          <li><router-link to="/admin/manage-students" class="nav-link">Manage Students</router-link></li>
+          <li><router-link to="/admin/manage-points" class="nav-link">Manage Points</router-link></li>
+        </ul>
+      </nav>
+    </header>
+    <header v-else-if="isLoggedIn && !isLoginRoute">
       <nav>
         <ul>
           <li><router-link to="/home" class="nav-link">Tasks & Events</router-link></li>
@@ -11,7 +21,6 @@
             <router-link to="/profile" class="nav-link profile-button">
               <img :src="userPhoto" alt="Profile Icon" class="profile-icon" />
             </router-link>
-            
           </li>
         </ul>
       </nav>
@@ -32,50 +41,49 @@
 
 <script>
 import { ref, onMounted, computed } from 'vue';
-import { useRoute } from 'vue-router'; // Import useRoute
+import { useRoute } from 'vue-router';
 
 export default {
   name: "App",
   setup() {
     const isLoggedIn = ref(false);
-    const route = useRoute(); // Get the current route
-    const userPhoto = ref(''); // Reactive variable for user photo
+    const route = useRoute();
+    const userPhoto = ref('');
 
-    // Check localStorage for logged-in state on mount
     onMounted(() => {
       isLoggedIn.value = localStorage.getItem('isLoggedIn') === 'true';
     });
 
     const handleLogin = () => {
       isLoggedIn.value = true;
-      localStorage.setItem('isLoggedIn', 'true'); // Save logged-in state
+      localStorage.setItem('isLoggedIn', 'true');
     };
 
     const handleLogout = () => {
       isLoggedIn.value = false;
-      localStorage.removeItem('isLoggedIn'); // Remove logged-in state
+      localStorage.removeItem('isLoggedIn');
     };
 
     const setUserPhoto = (photoUrl) => {
-      userPhoto.value = photoUrl; // Set the user photo URL
+      userPhoto.value = photoUrl;
     };
 
-    // Determine if the current route is the login route
     const isLoginRoute = computed(() => route.path === '/');
+    const isAdminRoute = computed(() => route.path.startsWith('/admin'));
 
-    return { isLoggedIn, handleLogin, handleLogout, isLoginRoute, userPhoto, setUserPhoto };
+    return { isLoggedIn, handleLogin, handleLogout, isLoginRoute, isAdminRoute, userPhoto, setUserPhoto };
   },
 };
 </script>
 
 <style>
-/* Global Reset / Base */
+/* Existing styles for the navbar */
 html, body {
   margin: 0;
   padding: 0;
-  overflow-x: hidden; /* Hide horizontal scrollbar if content overflows */
-  background: #0a0a0a; /* Dark global background to match your theme */
-  color: #ffffff;      /* Default text color */
+  overflow-x: hidden;
+  background: #0a0a0a;
+  color: #ffffff;
   font-family: Avenir, Helvetica, Arial, sans-serif;
 }
 
@@ -87,19 +95,14 @@ html, body {
 
 /* HEADER (Navbar) */
 header {
-  /* Make the header fixed so it stays at the top */
   position: fixed;
   top: 0; 
   left: 0;
   width: 100%;
   z-index: 1000;
-
-  /* Glass Morphism */
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-
-  /* Spacing */
   padding: 1rem;
 }
 
@@ -137,10 +140,8 @@ nav ul {
 
 /* MAIN CONTENT */
 main {
-  /* Push content below the fixed header's height */
   padding-top: 80px;
-  /* Add padding at bottom to prevent content from being hidden behind fixed footer */
-  padding-bottom: 100px; /* Increased padding to ensure content isn't hidden */
+  padding-bottom: 100px;
   flex-grow: 1;
   background: transparent;
   padding-left: 20px;
@@ -149,34 +150,25 @@ main {
 
 /* FOOTER */
 footer {
-  /* Make footer fixed */
   position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
-  z-index: 5; /* Even lower z-index */
-
-  /* Glass Morphism */
+  z-index: 5;
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
   border-top: 1px solid rgba(255, 255, 255, 0.2);
-
-  /* Layout */
   display: flex;
   justify-content: space-between;
   align-items: center;
-
-  /* Spacing */
   padding: 1rem;
   color: #fff;
 }
 
-/* Example styling for footer text */
 .footer-left, .footer-right {
   font-weight: 500;
 }
 
-/* Adjust for responsiveness if needed */
 @media (max-width: 768px) {
   nav ul {
     flex-direction: column;
@@ -192,7 +184,6 @@ footer {
   }
 }
 
-/* PROFILE DROPDOWN */
 .profile-dropdown {
   position: absolute;
   right: 2rem;
@@ -207,11 +198,11 @@ footer {
   background: rgba(255, 255, 255, 0.1);
   border-radius: 50%;
   transition: all 0.3s ease;
-  padding: 0; /* Remove padding to ensure proper circle shape */
+  padding: 0;
 }
 
 .profile-button i {
-  font-size: 1.2rem; /* Slightly smaller size for better fit */
+  font-size: 1.2rem;
   color: #ffffff;
 }
 
@@ -256,7 +247,6 @@ footer {
   background: rgba(255, 255, 255, 0.2);
 }
 
-/* Add styles for the profile icon */
 .profile-icon {
   width: 40px;
   height: 40px;

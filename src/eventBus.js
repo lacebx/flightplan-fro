@@ -1,11 +1,5 @@
-import { ref } from 'vue';
+import mitt from 'mitt';
 
-export const eventBus = ref({
-  events: [],
-  addEvent(event) {
-    this.events.push(event);
-  },
-  deleteEvent(eventId) {
-    this.events = this.events.filter(event => event.id !== eventId);
-  }
-});
+const eventBus = mitt();
+
+export default eventBus;

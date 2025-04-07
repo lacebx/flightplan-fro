@@ -10,6 +10,8 @@ import ManageStudents from '../components/ManageStudents.vue';
 import ManageEvents from '../components/ManageEvents.vue';
 import ManagePoints from '../components/ManagePoints.vue';
 import ViewStudentPlans from '../components/ViewStudentPlans.vue';
+import ManageRoles from '../components/ManageRoles.vue';
+import AdminHomePage from '../components/AdminHomePage.vue';
 
 const routes = [
   { path: '/', component: LoginView },
@@ -27,25 +29,31 @@ const routes = [
     path: '/admin/manage-students',
     name: 'ManageStudents',
     component: ManageStudents,
-    // meta: { requiresAdmin: true }, // Comment out or remove this line
   },
   {
     path: '/admin/manage-events',
     name: 'ManageEvents',
     component: ManageEvents,
-    // meta: { requiresAdmin: true }, // Comment out or remove this line
   },
   {
     path: '/admin/manage-points',
     name: 'ManagePoints',
     component: ManagePoints,
-    // meta: { requiresAdmin: true }, // Comment out or remove this line
   },
   {
     path: '/admin/view-student-plans',
     name: 'ViewStudentPlans',
     component: ViewStudentPlans,
-    // meta: { requiresAdmin: true }, // Comment out or remove this line
+  },
+  {
+    path: '/roles',
+    name: 'ManageRoles',
+    component: ManageRoles,
+    },
+  {
+    path: '/admin',
+    name: 'AdminHomePage',
+    component: AdminHomePage,
   },
 ];
 
@@ -54,13 +62,12 @@ const router = createRouter({
   routes,
 });
 
-// Comment out or remove the navigation guard
 // router.beforeEach((to, from, next) => {
 //   const isAdmin = localStorage.getItem('userRole') === 'admin';
 //   if (to.matched.some(record => record.meta.requiresAdmin) && !isAdmin) {
-//     next('/admin/login'); // Redirect to admin login if not an admin
+//     next('/admin/login');
 //   } else {
-//     next(); // Proceed to the route
+//     next();
 //   }
 // });
 
