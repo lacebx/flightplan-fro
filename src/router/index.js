@@ -26,34 +26,34 @@ const routes = [
     component: AdminLogin,
   },
   {
+    path: '/admin',
+    name: 'AdminHomePage',
+    component: AdminHomePage
+  },
+  {
     path: '/admin/manage-students',
     name: 'ManageStudents',
-    component: ManageStudents,
+    component: ManageStudents
   },
   {
     path: '/admin/manage-events',
     name: 'ManageEvents',
-    component: ManageEvents,
+    component: ManageEvents
   },
   {
     path: '/admin/manage-points',
     name: 'ManagePoints',
-    component: ManagePoints,
+    component: ManagePoints
   },
   {
     path: '/admin/view-student-plans',
     name: 'ViewStudentPlans',
-    component: ViewStudentPlans,
+    component: ViewStudentPlans
   },
   {
     path: '/roles',
     name: 'ManageRoles',
-    component: ManageRoles,
-    },
-  {
-    path: '/admin',
-    name: 'AdminHomePage',
-    component: AdminHomePage,
+    component: ManageRoles
   },
 ];
 
@@ -61,14 +61,5 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
 });
-
-// router.beforeEach((to, from, next) => {
-//   const isAdmin = localStorage.getItem('userRole') === 'admin';
-//   if (to.matched.some(record => record.meta.requiresAdmin) && !isAdmin) {
-//     next('/admin/login');
-//   } else {
-//     next();
-//   }
-// });
 
 export default router; 
