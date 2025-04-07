@@ -8,9 +8,7 @@ import LeaderboardView from '../components/LeaderboardView.vue';
 import AdminLogin from '../components/AdminLogin.vue';
 import ManageStudents from '../components/ManageStudents.vue';
 import ManageEvents from '../components/ManageEvents.vue';
-import ManagePoints from '../components/ManagePoints.vue';
 import ViewStudentPlans from '../components/ViewStudentPlans.vue';
-import ManageRoles from '../components/ManageRoles.vue';
 import AdminHomePage from '../components/AdminHomePage.vue';
 
 const routes = [
@@ -41,20 +39,10 @@ const routes = [
     component: ManageEvents
   },
   {
-    path: '/admin/manage-points',
-    name: 'ManagePoints',
-    component: ManagePoints
-  },
-  {
     path: '/admin/view-student-plans',
     name: 'ViewStudentPlans',
     component: ViewStudentPlans
-  },
-  {
-    path: '/roles',
-    name: 'ManageRoles',
-    component: ManageRoles
-  },
+  }
 ];
 
 const router = createRouter({
