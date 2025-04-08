@@ -1,5 +1,14 @@
 <template>
   <div class="manage-events">
+    <div class="admin-nav">
+      <ul>
+        <li><router-link to="/admin/manage-students" class="nav-btn">Manage Students</router-link></li>
+        <li><router-link to="/admin/manage-events" class="nav-btn">Manage Events</router-link></li>
+        <li><router-link to="/admin/view-student-plans" class="nav-btn">View Plans</router-link></li>
+        <li><button @click="logout" class="logout-btn">Logout</button></li>
+      </ul>
+    </div>
+
     <h1>Manage Events</h1>
     <div class="action-buttons">
       <button @click="toggleForm">{{ isFormVisible ? 'Cancel' : 'Add Event' }}</button>
@@ -184,6 +193,14 @@ export default {
         this.resetForm();
       }
     },
+    logout() {
+      // Clear user data from localStorage
+      localStorage.removeItem('userRole');
+      localStorage.removeItem('userData');
+      
+      // Redirect to login page
+      this.$router.push('/admin-login');
+    },
   },
   mounted() {
     this.fetchEvents();
@@ -194,8 +211,71 @@ export default {
 <style scoped>
 .manage-events {
   padding: 20px;
-  max-width: 600px;
+  max-width: 1200px;
   margin: auto;
+  color: white;
+  background: #1a1a1a;
+}
+
+.admin-nav {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 5px;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.admin-nav ul {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  gap: 20px;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.admin-nav li {
+  margin: 0;
+}
+
+.nav-btn, .admin-nav a {
+  display: inline-block;
+  background-color: #41b883;
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 8px 16px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.nav-btn:hover, .admin-nav a:hover {
+  background-color: #3aa876;
+  transform: translateY(-2px);
+}
+
+.nav-btn.router-link-active, .admin-nav a.router-link-active {
+  background-color: #2c805c;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.logout-btn {
+  background-color: #e74c3c !important;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.logout-btn:hover {
+  background-color: #c0392b !important;
+  transform: translateY(-2px);
 }
 
 .action-buttons {
@@ -204,8 +284,24 @@ export default {
   margin-bottom: 20px;
 }
 
+.action-buttons button {
+  padding: 8px 16px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  background-color: #41b883;
+  color: white;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.action-buttons button:hover {
+  background-color: #3aa876;
+  transform: translateY(-2px);
+}
+
 .refresh-btn {
-  background-color: #4CAF50;
+  background-color: #41b883;
   color: white;
 }
 

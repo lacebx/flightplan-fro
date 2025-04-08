@@ -1,12 +1,18 @@
 <template>
-  <div class="admin-login">
-    <h1>Admin Login</h1>
-    <form @submit.prevent="login">
-      <input type="email" v-model="email" placeholder="Email" required />
-      <input type="password" v-model="password" placeholder="Password" required />
-      <button type="submit">Login</button>
-      <p v-if="error" class="error-message">{{ error }}</p>
-    </form>
+  <div class="admin-login-page">
+    <div class="admin-header">
+      <h1>Admin Portal</h1>
+    </div>
+    
+    <div class="admin-login">
+      <h2>Login</h2>
+      <form @submit.prevent="login">
+        <input type="email" v-model="email" placeholder="Email" required />
+        <input type="password" v-model="password" placeholder="Password" required />
+        <button type="submit">Login</button>
+        <p v-if="error" class="error-message">{{ error }}</p>
+      </form>
+    </div>
   </div>
 </template>
 
@@ -42,9 +48,27 @@ export default {
 </script>
 
 <style scoped>
+.admin-login-page {
+  min-height: 100vh;
+  background: #1a1a1a;
+}
+
+.admin-header {
+  background: rgba(0, 0, 0, 0.3);
+  padding: 15px;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.admin-header h1 {
+  color: white;
+  margin: 0;
+  font-size: 2rem;
+}
+
 .admin-login {
   max-width: 400px;
-  margin: 100px auto;
+  margin: 0 auto;
   padding: 2rem;
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
@@ -52,7 +76,7 @@ export default {
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.admin-login h1 {
+.admin-login h2 {
   text-align: center;
   margin-bottom: 2rem;
   color: white;
@@ -80,11 +104,12 @@ export default {
   border-radius: 5px;
   cursor: pointer;
   font-size: 1rem;
-  transition: background-color 0.3s;
+  transition: all 0.3s ease;
 }
 
 .admin-login button:hover {
   background: #3aa876;
+  transform: translateY(-2px);
 }
 
 .error-message {

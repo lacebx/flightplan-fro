@@ -1,5 +1,14 @@
 <template>
   <div class="manage-students">
+    <div class="admin-nav">
+      <ul>
+        <li><router-link to="/admin/manage-students" class="nav-btn">Manage Students</router-link></li>
+        <li><router-link to="/admin/manage-events" class="nav-btn">Manage Events</router-link></li>
+        <li><router-link to="/admin/view-student-plans" class="nav-btn">View Plans</router-link></li>
+        <li><button @click="logout" class="logout-btn">Logout</button></li>
+      </ul>
+    </div>
+    
     <h1>Manage Students</h1>
     <div class="search-container">
       <input 
@@ -236,6 +245,14 @@ export default {
       if (!dateString) return 'No date';
       const date = new Date(dateString);
       return date.toLocaleDateString();
+    },
+    logout() {
+      // Clear user data from localStorage
+      localStorage.removeItem('userRole');
+      localStorage.removeItem('userData');
+      
+      // Redirect to login page
+      this.$router.push('/admin-login');
     }
   },
   mounted() {
@@ -249,6 +266,57 @@ export default {
   max-width: 1200px;
   margin: auto;
   color: white;
+}
+
+.admin-nav {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 5px;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.admin-nav ul {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  gap: 20px;
+}
+
+.admin-nav li {
+  margin: 0;
+}
+
+.admin-nav a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.admin-nav a:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.admin-nav a.router-link-active {
+  background-color: rgba(65, 184, 131, 0.3);
+  border-left: 4px solid #41b883;
+}
+
+.logout-btn {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.logout-btn:hover {
+  background-color: #c0392b;
 }
 
 .content-container {

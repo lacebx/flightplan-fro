@@ -1,6 +1,14 @@
 <template>
   <div class="admin-homepage">
-  
+    <!-- Admin Navigation -->
+    <div class="admin-nav">
+      <ul>
+        <li><router-link to="/admin/manage-students" class="nav-btn">Manage Students</router-link></li>
+        <li><router-link to="/admin/manage-events" class="nav-btn">Manage Events</router-link></li>
+        <li><router-link to="/admin/view-student-plans" class="nav-btn">View Plans</router-link></li>
+        <li><button @click="logout" class="logout-btn">Logout</button></li>
+      </ul>
+    </div>
 
     <!-- Dashboard Overview -->
     <div class="dashboard-overview">
@@ -148,8 +156,12 @@ export default {
       }
     },
     logout() {
+      // Clear user data from localStorage
+      localStorage.removeItem('userRole');
+      localStorage.removeItem('userData');
+      
       // Redirect to login page
-      this.$router.push('/admin/login');
+      this.$router.push('/admin-login');
     }
   },
   mounted() {
@@ -166,34 +178,63 @@ export default {
   color: white;
 }
 
-.admin-navbar {
-  background: rgba(255, 255, 255, 0.1);
-  padding: 1rem 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+.admin-nav {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 5px;
+  padding: 15px;
+  margin: 20px;
 }
 
-.nav-links {
+.admin-nav ul {
   display: flex;
-  gap: 2rem;
   list-style: none;
-  margin: 0;
   padding: 0;
+  margin: 0;
+  gap: 20px;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
-.nav-links a {
+.admin-nav li {
+  margin: 0;
+}
+
+.nav-btn {
+  display: inline-block;
+  background-color: #41b883;
   color: white;
   text-decoration: none;
-  padding: 0.5rem 1rem;
-  border-radius: 5px;
-  transition: background-color 0.3s;
+  font-weight: bold;
+  padding: 8px 16px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
 }
 
-.nav-links a:hover {
-  background: rgba(255, 255, 255, 0.1);
+.nav-btn:hover {
+  background-color: #3aa876;
+  transform: translateY(-2px);
+}
+
+.nav-btn.router-link-active {
+  background-color: #2c805c;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.logout-btn {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.logout-btn:hover {
+  background-color: #c0392b;
+  transform: translateY(-2px);
 }
 
 .dashboard-overview {
@@ -352,18 +393,5 @@ export default {
 .cancel-btn {
   background: rgba(255, 255, 255, 0.1);
   color: white;
-}
-
-.logout-btn {
-  background: #ff4444;
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.logout-btn:hover {
-  background: #ff6666;
 }
 </style> 
