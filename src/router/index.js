@@ -8,6 +8,7 @@ import LeaderboardView from '../components/LeaderboardView.vue';
 import AdminLogin from '../components/AdminLogin.vue';
 import ManageStudents from '../components/ManageStudents.vue';
 import ManageEvents from '../components/ManageEvents.vue';
+import ManageTasks from '../components/ManageTasks.vue';
 import ViewStudentPlans from '../components/ViewStudentPlans.vue';
 import AdminHomePage from '../components/AdminHomePage.vue';
 
@@ -19,7 +20,7 @@ const routes = [
   { path: '/profile', component: ProfileView },
   { path: '/leaderboard', component: LeaderboardView },
   {
-    path: '/admin/login',
+    path: '/admin-login',
     name: 'AdminLogin',
     component: AdminLogin,
   },
@@ -37,6 +38,11 @@ const routes = [
     path: '/admin/manage-events',
     name: 'ManageEvents',
     component: ManageEvents
+  },
+  {
+    path: '/admin/manage-tasks',
+    name: 'ManageTasks',
+    component: ManageTasks
   },
   {
     path: '/admin/view-student-plans',
