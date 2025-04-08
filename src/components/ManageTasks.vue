@@ -69,21 +69,17 @@ export default {
   methods: {
     fetchTasks() {
       console.log('Fetching tasks...');
-      const token = localStorage.getItem('token');
-      
       axios
-        .get('http://localhost:8082/api/admin/tasks', { 
-          withCredentials: true,
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
+        .get('http://localhost:8082/api/tasks', { 
+          withCredentials: true
         })
         .then((response) => {
           console.log('Tasks fetched successfully:', response.data);
           if (Array.isArray(response.data)) {
-            this.tasks = response.data;
-          } else if (response.data && response.data.tasks) {
-            this.tasks = response.data.tasks;
+            this.tasks = response.data.map(task => ({
+              ...task,
+              taskid: task.Taskid
+            }));
           } else {
             console.warn('Unexpected response format:', response.data);
             this.tasks = [];
@@ -91,16 +87,10 @@ export default {
         })
         .catch((error) => {
           console.error('Error fetching tasks:', error);
-          if (error.response?.status === 403) {
-            alert('You do not have permission to access tasks. Please log in again.');
-            this.logout();
-          } else {
-            alert(`Error fetching tasks: ${error.response?.data?.message || error.message}`);
-          }
+          alert(`Error fetching tasks: ${error.response?.data?.message || error.message}`);
         });
     },
     addTask() {
-      const token = localStorage.getItem('token');
       const formattedDate = this.taskDueDate ? new Date(this.taskDueDate).toISOString().split('T')[0] : '';
       
       const newTask = {
@@ -115,32 +105,24 @@ export default {
       console.log('Sending task data:', newTask);
       
       axios
-        .post('http://localhost:8082/api/admin/tasks', newTask, { 
+        .post('http://localhost:8082/api/tasks', newTask, { 
           withCredentials: true,
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
+            'Content-Type': 'application/json'
           }
         })
         .then((response) => {
           console.log('Task added successfully:', response.data);
-          eventBus.emit('taskAdded', response.data);
-          
-          if (response.data && response.data.taskid) {
-            this.tasks.push(response.data);
-          }
-          
+          const taskWithId = {
+            ...response.data,
+            taskid: response.data.Taskid
+          };
+          this.tasks.push(taskWithId);
           this.resetForm();
-          this.fetchTasks();
         })
         .catch((error) => {
           console.error('Error adding task:', error);
-          if (error.response?.status === 403) {
-            alert('You do not have permission to add tasks. Please log in again.');
-            this.logout();
-          } else {
-            alert(`Error adding task: ${error.response?.data?.message || error.message}`);
-          }
+          alert(`Error adding task: ${error.response?.data?.message || error.message}`);
         });
     },
     editTask(task) {
@@ -155,7 +137,6 @@ export default {
       this.isFormVisible = true;
     },
     updateTask() {
-      const token = localStorage.getItem('token');
       if (!this.currentTaskId) {
         console.error('No task ID provided for update');
         return;
@@ -171,52 +152,49 @@ export default {
       };
 
       axios
-        .put(`http://localhost:8082/api/admin/tasks/${this.currentTaskId}`, updatedTask, { 
+        .put(`http://localhost:8082/api/tasks/${this.currentTaskId}`, updatedTask, { 
           withCredentials: true,
           headers: {
-            'Authorization': `Bearer ${token}`
+            'Content-Type': 'application/json'
           }
         })
         .then((response) => {
-          eventBus.emit('taskUpdated', response.data);
+          console.log('Task updated successfully:', response.data);
+          const index = this.tasks.findIndex(t => t.taskid === this.currentTaskId);
+          if (index !== -1) {
+            this.tasks[index] = {
+              ...response.data,
+              taskid: response.data.Taskid
+            };
+          }
           this.resetForm();
-          this.fetchTasks();
         })
         .catch((error) => {
           console.error('Error updating task:', error);
-          if (error.response?.status === 403) {
-            alert('You do not have permission to update tasks. Please log in again.');
-            this.logout();
-          } else {
-            alert(`Error updating task: ${error.response?.data?.message || error.message}`);
-          }
+          alert(`Error updating task: ${error.response?.data?.message || error.message}`);
         });
     },
     deleteTask(taskId) {
-      const token = localStorage.getItem('token');
       if (!taskId) {
         console.error('No task ID provided for deletion');
         return;
       }
 
+      if (!confirm('Are you sure you want to delete this task?')) {
+        return;
+      }
+
       axios
-        .delete(`http://localhost:8082/api/admin/tasks/${taskId}`, { 
-          withCredentials: true,
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
+        .delete(`http://localhost:8082/api/tasks/${taskId}`, { 
+          withCredentials: true
         })
         .then(() => {
+          console.log('Task deleted successfully');
           this.tasks = this.tasks.filter((task) => task.taskid !== taskId);
         })
         .catch((error) => {
           console.error('Error deleting task:', error);
-          if (error.response?.status === 403) {
-            alert('You do not have permission to delete tasks. Please log in again.');
-            this.logout();
-          } else {
-            alert(`Error deleting task: ${error.response?.data?.message || error.message}`);
-          }
+          alert(`Error deleting task: ${error.response?.data?.message || error.message}`);
         });
     },
     resetForm() {
