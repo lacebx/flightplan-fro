@@ -9,7 +9,7 @@
   
     
    
-
+<nav align="right"><router-link to="/transactionhistory" class="nav-link">Transaction History</router-link></nav>
    
  <h1>Available Rewards</h1>
     <div v-if="loading" class="loading">Loading rewards...</div>
@@ -42,6 +42,9 @@
 
 
 <script>
+// RedemptionPage.vue
+import eventBus from '../eventBus';
+
 import waterBottle from '@/assets/images/water-bottle.png';
 import coffeeMug from '@/assets/images/coffee-mug.png';
 import stationerySet from '@/assets/images/stationery-set.png';
@@ -120,7 +123,7 @@ import wirelessHeadPhones from '@/assets/images/wirelessheadphones.png';
           item_name: 'Water Bottle',
           description: 'A reusable water bottle.',
           points_cost: 250,
-          availability: true,
+          availability: true,   
          image: waterBottle,
         },
         {
@@ -147,7 +150,10 @@ import wirelessHeadPhones from '@/assets/images/wirelessheadphones.png';
     redeemReward(reward) {
       if (this.userPoints >= reward.points_cost && reward.availability) {
         this.userPoints -= reward.points_cost;
+        eventBus.emit('itemRedeemed', reward);
+         console.log(`Event 'itemRedeemed' emitted with item:`,  reward);
         alert(`You have redeemed: ${reward.item_name}`);
+        
         // Additional logic (e.g., update reward availability) can be added here.
       } else {
         alert('Insufficient points or item not available.');
@@ -166,7 +172,7 @@ import wirelessHeadPhones from '@/assets/images/wirelessheadphones.png';
 <style scoped>
 
 .redemption-page {
-  font-family: Arial, sans-serif;
+  font-family: Arial, sans-serif;  
   margin: 0px auto;
   max-width: 2500px;
   padding: 0px;

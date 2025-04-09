@@ -6,6 +6,7 @@ import ExperienceView from '../components/ExperienceView.vue';
 import ProfileView from '../components/ProfileView.vue';
 import AddExperience from '../components/AddExperience.vue';
 import Shop from '../components/ShopView.vue';
+import TransactionHistory from '../components/TransactionHistory.vue';
 
 
 const routes = [
@@ -15,7 +16,8 @@ const routes = [
   { path: '/experience', component: ExperienceView },
   { path: '/profile', component: ProfileView },
   { path: '/add-experience', component: AddExperience },
-    { path: '/shop', component: Shop }
+  { path: '/shop', component: Shop },
+     { path: '/transactionhistory', component: TransactionHistory }
   
 ];
 
