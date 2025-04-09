@@ -1,9 +1,13 @@
+<<<<<<< HEAD
 name: DEPLOY TO STAGING(real or fake)
+=======
+name: DEPLOY TO STAGING(real-word)
+>>>>>>> origin/demo2.2
 
 on:
   push:
     branches:
-      - dev
+      - new
 
 jobs:
   aws-deploy:
@@ -11,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: dev
+          ref: new
       - uses: actions/setup-node@v2
       - run: npm install
       - run: npm run build
@@ -23,4 +27,8 @@ jobs:
           SOURCE: "dist/"
           REMOTE_HOST: "project2.eaglesoftwareteam.com"
           REMOTE_USER: ubuntu
+<<<<<<< HEAD
           TARGET: "/var/www/html/2025/flight-plan/t8/"
+=======
+          TARGET: "/home/ubuntu/nodeapps/2025/flight-plan/t8/"
+>>>>>>> origin/demo2.2
