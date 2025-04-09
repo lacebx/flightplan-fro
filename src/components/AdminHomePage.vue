@@ -1,19 +1,6 @@
 <template>
   <div class="admin-homepage">
-    <!-- Admin Navigation -->
-    <nav class="admin-navbar">
-      <div class="logo">
-        <h1>Admin Dashboard</h1>
-      </div>
-      <ul class="nav-links">
-        <li><router-link to="/admin/manage-students">Manage Students</router-link></li>
-        <li><router-link to="/admin/manage-events">Manage Events</router-link></li>
-        <li><router-link to="/admin/manage-points">Manage Points</router-link></li>
-        <li><router-link to="/admin/view-student-plans">View Plans</router-link></li>
-        <li><router-link to="/roles">Manage Roles</router-link></li>
-        <li><button @click="logout" class="logout-btn">Logout</button></li>
-      </ul>
-    </nav>
+  
 
     <!-- Dashboard Overview -->
     <div class="dashboard-overview">

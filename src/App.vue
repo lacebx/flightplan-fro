@@ -4,10 +4,8 @@
     <header v-if="isAdminRoute">
       <nav>
         <ul>
-          <li><router-link to="/admin/manage-roles" class="nav-link">Manage Roles</router-link></li>
           <li><router-link to="/admin/manage-events" class="nav-link">Manage Events</router-link></li>
           <li><router-link to="/admin/manage-students" class="nav-link">Manage Students</router-link></li>
-          <li><router-link to="/admin/manage-points" class="nav-link">Manage Points</router-link></li>
         </ul>
       </nav>
     </header>

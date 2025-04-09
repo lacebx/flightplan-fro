@@ -40,11 +40,7 @@ const routes = [
     name: 'ManageEvents',
     component: ManageEvents
   },
-  {
-    path: '/admin/manage-points',
-    name: 'ManagePoints',
-    component: ManagePoints
-  },
+ 
   {
     path: '/admin/view-student-plans',
     name: 'ViewStudentPlans',
