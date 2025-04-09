@@ -15,11 +15,9 @@
           <li><router-link to="/home" class="nav-link">Tasks & Events</router-link></li>
           <li><router-link to="/sw" class="nav-link">S&W</router-link></li>
           <li><router-link to="/experience" class="nav-link">Experience</router-link></li>
-          <li class="profile-dropdown">
-            <router-link to="/profile" class="nav-link profile-button">
-              <img :src="userPhoto" alt="Profile Icon" class="profile-icon" />
-            </router-link>
-          </li>
+          <li><router-link to="/shop" class="nav-link">Shop</router-link></li>
+
+          <li><router-link to="/profile" class="nav-link">Profile</router-link></li>
         </ul>
       </nav>
     </header>
@@ -42,7 +40,7 @@ import { ref, onMounted, computed } from 'vue';
 import { useRoute } from 'vue-router';
 
 export default {
-  name: "App",
+  name: "App",     
   setup() {
     const isLoggedIn = ref(false);
     const route = useRoute();

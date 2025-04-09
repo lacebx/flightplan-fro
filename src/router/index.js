@@ -4,6 +4,7 @@ import TasksAndEventsView from '../components/TasksAndEventsView.vue';
 import SWView from '../components/SWView.vue';
 import ExperienceView from '../components/ExperienceView.vue';
 import ProfileView from '../components/ProfileView.vue';
+<<<<<<< HEAD
 import LeaderboardView from '../components/LeaderboardView.vue';
 import AdminLogin from '../components/AdminLogin.vue';
 import ManageStudents from '../components/ManageStudents.vue';
@@ -12,6 +13,12 @@ import ManagePoints from '../components/ManagePoints.vue';
 import ViewStudentPlans from '../components/ViewStudentPlans.vue';
 import ManageRoles from '../components/ManageRoles.vue';
 import AdminHomePage from '../components/AdminHomePage.vue';
+=======
+import AddExperience from '../components/AddExperience.vue';
+import Shop from '../components/ShopView.vue';
+import TransactionHistory from '../components/TransactionHistory.vue';
+
+>>>>>>> origin/kibret
 
 const routes = [
   { path: '/', component: LoginView },
@@ -19,6 +26,7 @@ const routes = [
   { path: '/sw', component: SWView },
   { path: '/experience', component: ExperienceView },
   { path: '/profile', component: ProfileView },
+<<<<<<< HEAD
   { path: '/leaderboard', component: LeaderboardView },
   {
     path: '/admin/login',
@@ -51,6 +59,12 @@ const routes = [
     name: 'ManageRoles',
     component: ManageRoles
   },
+=======
+  { path: '/add-experience', component: AddExperience },
+  { path: '/shop', component: Shop },
+     { path: '/transactionhistory', component: TransactionHistory }
+  
+>>>>>>> origin/kibret
 ];
 
 const router = createRouter({

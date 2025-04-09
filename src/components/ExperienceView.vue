@@ -114,12 +114,14 @@
 
 <script>
 import axios from 'axios';
+
+
 export default {
   name: 'ExperienceView',
   data() {
     return {
-      totalYears: '2+',
-      totalSkills: '12',
+      totalYears: '3+',
+      totalSkills: '13',
       totalProjects: '15',
       experiences: [],
       showModal: false,
@@ -136,6 +138,7 @@ export default {
   },
   methods: {
     showAddExperience() {
+<<<<<<< HEAD
       this.showModal = true;
     },
     closeModal() {
@@ -164,6 +167,12 @@ export default {
         console.error('Error creating experience:', error);
         // You might want to show an error message to the user
       }
+=======
+     
+      this.$router.push('/add-experience');
+
+      console.log('Add experience clicked');
+>>>>>>> origin/kibret
     },
     fetchExperiences() {
       axios.get('http://localhost:8082/api/experiences', { withCredentials: true })
