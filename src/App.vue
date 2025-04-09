@@ -1,5 +1,9 @@
 <template>
   <div id="app">
+    <div style="display:none;">
+    <RedemptionPage />
+    <TransactionHistory />
+  </div>
     <!-- Header (Navbar) -->
     <header v-if="isLoggedIn && !isLoginRoute">
       <nav>
@@ -28,14 +32,44 @@
 </template>
 
 <script>
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed,  provide} from 'vue';
 import { useRoute } from 'vue-router'; // Import useRoute
 
+import RedemptionPage from './components/ShopView.vue';
+import TransactionHistory from './components/TransactionHistory.vue';
+//import { ESLint } from 'eslint';
+
 export default {
-  name: "App",     
+  name: "App",
+    components: {
+    RedemptionPage,
+    TransactionHistory,
+  },     
   setup() {
     const isLoggedIn = ref(false);
     const route = useRoute(); // Get the current route
+    RedemptionPage;
+
+    // Create a reactive array to store redeemed items
+    
+    const redeemedItems = ref([]);
+
+    // Provide the reactive array to descendant components
+    provide('redeemedItems', redeemedItems);
+
+    // Method to add a redeemed item
+    const addRedeemedItem = (item) => {
+      redeemedItems.value.push({
+        ...item,
+        date: new Date().toLocaleString(),
+      });
+    };
+
+    // Provide the reactive array and the method
+    
+    provide('redeemedItems', redeemedItems);
+    provide('addRedeemedItem', addRedeemedItem);
+
 
     // Check localStorage for logged-in state on mount
     onMounted(() => {
@@ -54,8 +88,9 @@ export default {
 
     // Determine if the current route is the login route
     const isLoginRoute = computed(() => route.path === '/');
+    console.log(redeemedItems);
 
-    return { isLoggedIn, handleLogin, handleLogout, isLoginRoute };
+    return { isLoggedIn, handleLogin, handleLogout, isLoginRoute,  redeemedItems, addRedeemedItem};
   },
 };
 </script>

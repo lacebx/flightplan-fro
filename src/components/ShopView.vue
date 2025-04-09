@@ -43,7 +43,7 @@
 
 <script>
 // RedemptionPage.vue
-import eventBus from '../eventBus';
+import { inject } from 'vue';
 
 import waterBottle from '@/assets/images/water-bottle.png';
 import coffeeMug from '@/assets/images/coffee-mug.png';
@@ -58,7 +58,12 @@ import wirelessHeadPhones from '@/assets/images/wirelessheadphones.png';
 
      export default {
   name: 'RedemptionPage',
+
+
   data() {
+      // Inject the reactive array of redeemed items
+    const redeemedItems = inject('redeemedItems');
+     console.log(redeemedItems)
     return {
       userPoints: 1500, // Example starting points
       rewardsList: [
@@ -139,10 +144,13 @@ import wirelessHeadPhones from '@/assets/images/wirelessheadphones.png';
     };
   },
   computed: {
+    
     sortedRewards() {
       return this.rewardsList.slice().sort((a, b) => a.points_cost - b.points_cost);
     },
   },
+   inject: ['addRedeemedItem'],
+
   methods: {
     getImageUrl(imagePath) {
       return new URL(`../assets/${imagePath}`, import.meta.url).href;
@@ -150,8 +158,8 @@ import wirelessHeadPhones from '@/assets/images/wirelessheadphones.png';
     redeemReward(reward) {
       if (this.userPoints >= reward.points_cost && reward.availability) {
         this.userPoints -= reward.points_cost;
-        eventBus.emit('itemRedeemed', reward);
-         console.log(`Event 'itemRedeemed' emitted with item:`,  reward);
+        this.addRedeemedItem(reward);
+     
         alert(`You have redeemed: ${reward.item_name}`);
         
         // Additional logic (e.g., update reward availability) can be added here.
