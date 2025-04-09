@@ -113,7 +113,16 @@ export default {
             }
           ]
         }
-      ]
+      ],
+      activityData: {
+        labels: [],
+        datasets: [
+          {
+            data: [],
+            backgroundColor: []
+          }
+        ]
+      }
     };
   },
   computed: {
