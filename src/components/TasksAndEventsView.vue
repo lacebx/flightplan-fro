@@ -1,4 +1,3 @@
-
 <template>
   <div class="tasks-events">
     <!-- Reuse the floating spheres background -->
@@ -57,8 +56,7 @@
             </div>
             <p><strong>Location:</strong> {{ event.location }}</p>
             <p><strong>Attendance:</strong> {{ event.attendancetype }}</p>
-            <button class="register-button neumorphic" @click="openRegistrationModal(event.id)">Register Now</button>
-          </div>
+            <button class="register-button neumorphic" @click="openRegistrationModal(event.id)">Register Now</button>          </div>
         </div>
       </div>
     </section>
@@ -150,6 +148,7 @@ export default {
         .then(response => {
           const eventsArray = Array.isArray(response.data) ? response.data : response.data.events;
           this.events = eventsArray.map(event => ({ ...event, completed: false }));
+          console.log('Events fetched:', this.events);
           this.$nextTick(() => {
             const eventItems = document.querySelectorAll('.event-item');
             eventItems.forEach(item => item.classList.add('scrolled'));
@@ -186,6 +185,11 @@ export default {
       }
     },
     openRegistrationModal(eventId) {
+      console.log("Opening registration modal for event ID:", eventId);
+      if (!eventId) {
+        console.error("Event ID is undefined. Cannot open registration modal.");
+        return;
+      }
       this.selectedEventId = eventId;
       this.showRegistrationModal = true;
     },
@@ -194,27 +198,27 @@ export default {
       this.registrationForm = { isVisible: false };
     },
     async registerForEvent() {
-      try {
-        const registrationData = {
-          name: this.userProfile.name,
-          email: this.userProfile.email,
-          isVisible: this.registrationForm.isVisible
-        };
+     try {
+       const registrationData = {
+         name: this.userProfile.name,
+         email: this.userProfile.email,
+         isVisible: this.registrationForm.isVisible
+       };
 
-        const response = await axios.post(
-          `http://localhost:8082/api/events/${this.selectedEventId}/register`,
-          registrationData,
-          { withCredentials: true }
-        );
+       const response = await axios.post(
+         `http://localhost:8082/api/events/${this.selectedEventId}/register`,
+         registrationData,
+         { withCredentials: true }
+       );
 
-        console.log('Registration successful:', response.data);
+       console.log('Registration successful:', response.data);
 
-        this.closeModal();
-        this.fetchRegisteredEvents();
-      } catch (error) {
-        console.error('Error registering for event:', error);
-      }
-    },
+       this.closeModal();
+       this.fetchRegisteredEvents();
+     } catch (error) {
+       console.error('Error registering for event:', error);
+     }
+   },
 
     
     initScrollAnimations() {

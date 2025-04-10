@@ -1,8 +1,12 @@
 <template>
   <div class="leaderboard-page">
     <!-- Overview Section: Personal Performance -->
-    <!-- Removed 'Your Progress' card section -->
-
+<!-- Animated Background -->
+<div class="animated-bg">
+      <div class="gradient-sphere"></div>
+      <div class="gradient-sphere"></div>
+      <div class="gradient-sphere"></div>
+    </div>
     <!-- Flex container for Leaderboard and Percentile Metrics -->
     <div class="flex-container">
       <!-- Leaderboard Section: Top 10 -->

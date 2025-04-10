@@ -17,10 +17,7 @@
           <h3>Pending Tasks</h3>
           <p class="stat-number">{{ stats.pendingTasks }}</p>
         </div>
-        <div class="stat-card">
-          <h3>Total Points Awarded</h3>
-          <p class="stat-number">{{ stats.totalPoints }}</p>
-        </div>
+       
       </div>
 
       <!-- Quick Actions -->
@@ -93,52 +90,15 @@ export default {
   },
   methods: {
     async fetchDashboardStats() {
+      console.log('Fetching dashboard stats...');
       try {
         const response = await axios.get('http://localhost:8082/api/admin/stats', { withCredentials: true });
+        console.log('Dashboard stats fetched successfully:', response.data);
         this.stats = response.data;
       } catch (error) {
         console.error('Error fetching dashboard stats:', error);
       }
     },
-    async fetchRecentActivities() {
-      try {
-        const response = await axios.get('http://localhost:8082/api/admin/activities', { withCredentials: true });
-        this.recentActivities = response.data;
-      } catch (error) {
-        console.error('Error fetching recent activities:', error);
-      }
-    },
-    getActivityIcon(type) {
-      const icons = {
-        task: 'fas fa-tasks',
-        event: 'fas fa-calendar',
-        student: 'fas fa-user',
-        points: 'fas fa-star'
-      };
-      return icons[type] || 'fas fa-info-circle';
-    },
-    async createTask() {
-      try {
-        const response = await axios.post('http://localhost:8082/api/tasks', this.newTask, {
-          withCredentials: true
-        });
-        console.log('Task created:', response.data);
-        this.showTaskForm = false;
-        this.newTask = { name: '', description: '', points: 0 };
-        await this.fetchDashboardStats();
-        await this.fetchRecentActivities();
-      } catch (error) {
-        console.error('Error creating task:', error);
-      }
-    },
-    logout() {
-      // Clear user data from localStorage
-      localStorage.removeItem('userRole');
-      localStorage.removeItem('userData');
-      
-      // Redirect to login page
-      this.$router.push('/admin-login');
-    }
   },
   mounted() {
     this.fetchDashboardStats();

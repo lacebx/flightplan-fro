@@ -201,11 +201,16 @@ import wirelessHeadPhones from '@/assets/images/wirelessheadphones.png';
 }
 
 .reward-card {
-  border: 1px solid #ccc;
-  padding: 0px;
-  border-radius: 10px;
-  height: 210px;
-  text-align: center;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(65, 184, 131, 0.2);
+  border-radius: 15px;
+  padding: 1.5rem;
+  transition: transform 0.3s ease;
+}
+
+.reward-card:hover {
+  transform: translateY(-5px);
 }
 
 .reward-card h2 {

@@ -25,9 +25,10 @@
         
         <div class="profile-info">
           <!-- Display the fetched user's name; fallback to a default if not yet loaded -->
-          <h1>{{ user ? user.displayName : 'Your Name' }}</h1>
-          <p class="title">Computer Science Major</p>
-          <p class="graduation">Class of 2024</p>
+          <h1  class="NAME">{{ user ? user.lastname : 'Your Name' }}</h1>
+          <p class="title">Major: {{ user ? user.major : 'Your Major' }}</p>
+          <p class="graduation">ID Number: {{ user ? user.idNumber : 'N/A' }}</p>
+          <p class="graduation">Semester: {{ user ? user.semester : 'N/A' }}</p>
         </div>
 
         <div class="achievement-badges">
@@ -80,8 +81,8 @@
 
       <!-- Skills Matrix -->
       <section class="skills-matrix glass-morphism" data-scroll>
-        <h2>Skills & Expertise</h2>
-        <div class="skills-grid">
+        <h2>Your Top Strengths</h2>
+                <div class="skills-grid">
           <div class="skill-card" v-for="skill in skills" :key="skill.name"
                :style="{ '--progress': skill.level + '%' }">
             <div class="skill-info">
@@ -233,9 +234,10 @@ export default {
       .then(response => {
         this.user = response.data;
         console.log("User data loaded:", this.user);
-        this.$emit('userPhotoLoaded', this.user.photos[0].value); // Emit the photo URL
+        // Check if photos exist and have at least one entry
+        const photoUrl = this.user.photos && this.user.photos.length > 0 ? this.user.photos[0].value : 'default-photo-url';
+        this.$emit('userPhotoLoaded', photoUrl); // Emit the photo URL
         this.updateStats(); // Update stats after loading user data
-
       })
       .catch(error => {
         console.error("Error fetching user:", error);

@@ -56,7 +56,7 @@
 
       <!-- Results Section with Scroll Animation -->
       <section class="results-section" data-scroll>
-        <h2>Your Top Strengths</h2>
+        
         <div class="strengths-container">
           <div class="strength-card neumorphic" v-for="(strength, index) in strengths" :key="index">
             <div class="strength-header">
