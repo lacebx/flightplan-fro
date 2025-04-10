@@ -1,13 +1,6 @@
 <template>
   <div class="manage-students">
-    <div class="admin-nav">
-      <ul>
-        <li><router-link to="/admin/manage-students" class="nav-btn">Manage Students</router-link></li>
-        <li><router-link to="/admin/manage-events" class="nav-btn">Manage Events</router-link></li>
-        <li><router-link to="/admin/view-student-plans" class="nav-btn">View Plans</router-link></li>
-        <li><button @click="logout" class="logout-btn">Logout</button></li>
-      </ul>
-    </div>
+   
     
     <h1>Manage Students</h1>
     <div class="search-container">

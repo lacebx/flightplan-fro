@@ -1,14 +1,6 @@
 <template>
   <div class="admin-homepage">
-    <!-- Admin Navigation -->
-    <div class="admin-nav">
-      <ul>
-        <li><router-link to="/admin/manage-students" class="nav-btn">Manage Students</router-link></li>
-        <li><router-link to="/admin/manage-events" class="nav-btn">Manage Events</router-link></li>
-        <li><router-link to="/admin/view-student-plans" class="nav-btn">View Plans</router-link></li>
-        <li><button @click="logout" class="logout-btn">Logout</button></li>
-      </ul>
-    </div>
+   
 
     <!-- Dashboard Overview -->
     <div class="dashboard-overview">
@@ -41,27 +33,11 @@
           <button @click="showEventForm = true" class="action-btn">
             <i class="fas fa-calendar-plus"></i> Add Event
           </button>
-          <button @click="showStudentForm = true" class="action-btn">
-            <i class="fas fa-user-plus"></i> Add Student
-          </button>
+          
         </div>
       </div>
 
-      <!-- Recent Activity -->
-      <div class="recent-activity">
-        <h2>Recent Activity</h2>
-        <div class="activity-list">
-          <div v-for="activity in recentActivities" :key="activity.id" class="activity-item">
-            <span class="activity-icon" :class="activity.type">
-              <i :class="getActivityIcon(activity.type)"></i>
-            </span>
-            <div class="activity-details">
-              <p class="activity-text">{{ activity.description }}</p>
-              <span class="activity-time">{{ activity.time }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
+      
     </div>
 
     <!-- Task Creation Modal -->

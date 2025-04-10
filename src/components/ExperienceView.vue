@@ -11,22 +11,6 @@
     <h1 class="hero-title centered">Professional Journey</h1>
 
     <div class="content-wrapper">
-      <!-- Floating Stats -->
-      <div class="floating-stats" data-scroll>
-        <div class="stat-bubble">
-          <span class="stat-value">{{ totalYears }}</span>
-          <span class="stat-label">Years</span>
-        </div>
-        <div class="stat-bubble">
-          <span class="stat-value">{{ totalSkills }}</span>
-          <span class="stat-label">Skills</span>
-        </div>
-        <div class="stat-bubble">
-          <span class="stat-value">{{ totalProjects }}</span>
-          <span class="stat-label">Projects</span>
-        </div>
-      </div>
-
       <!-- Experience Cards -->
       <div class="experience-grid">
         <div class="experience-card" 

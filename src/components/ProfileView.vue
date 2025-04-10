@@ -157,20 +157,20 @@ export default {
       stats: [
         { 
           label: 'Total Points', 
-          value: '850',
+          value: this.user ? this.user.points : '0',
           icon: 'fas fa-star',
           highlight: true,
           wavePath: 'M 0 20 Q 25 5, 50 20 T 100 20 V 25 H 0 Z'
         },
         { 
           label: 'Events Attended', 
-          value: '12',
+          value: this.user ? this.user.eventsAttended : '0',
           icon: 'fas fa-calendar-check',
           wavePath: 'M 0 15 Q 25 25, 50 15 T 100 15 V 25 H 0 Z'
         },
         { 
           label: 'Tasks Completed', 
-          value: '24',
+          value: this.user ? this.user.tasksCompleted : '0',
           icon: 'fas fa-tasks',
           wavePath: 'M 0 20 Q 25 15, 50 20 T 100 20 V 25 H 0 Z'
         }
@@ -234,6 +234,8 @@ export default {
         this.user = response.data;
         console.log("User data loaded:", this.user);
         this.$emit('userPhotoLoaded', this.user.photos[0].value); // Emit the photo URL
+        this.updateStats(); // Update stats after loading user data
+
       })
       .catch(error => {
         console.error("Error fetching user:", error);
@@ -245,6 +247,15 @@ export default {
     console.log("InterviewProIcon:", InterviewProIcon);
     console.log("NetworkBuilderIcon:", NetworkBuilderIcon);
     console.log("SkillsChampionIcon:", SkillsChampionIcon);
+  },
+  methods: {
+    updateStats() {
+      if (this.user) {
+        this.stats[0].value = this.user.points;
+        this.stats[1].value = this.user.eventsAttended;
+        this.stats[2].value = this.user.tasksCompleted;
+      }
+    }
   }
 };
 </script>

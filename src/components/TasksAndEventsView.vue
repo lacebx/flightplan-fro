@@ -1,3 +1,4 @@
+
 <template>
   <div class="tasks-events">
     <!-- Reuse the floating spheres background -->
@@ -6,9 +7,6 @@
       <div class="gradient-sphere"></div>
       <div class="gradient-sphere"></div>
     </div>
-   
-
-   
 
     <!-- Tasks Section -->
     <section class="tasks-section glass-effect" data-scroll>
@@ -18,12 +16,26 @@
           <h3>{{ task.name }}</h3>
           <p><strong>Category:</strong> {{ task.category }} | <strong>Type:</strong> {{ task.type }}</p>
           <p>{{ task.description }}</p>
-          <p><strong>Points Earned:</strong> {{ task.pointsearned }}</p>
+          <p><strong>Earnable Points:</strong> {{ task.earnablepoints }}</p>
           <p><strong>Schedule:</strong> {{ task.schedulingtype }}</p>
           <button class="complete-btn" @click="completeTask(task)" :disabled="task.completed">
             <span v-if="!task.completed">Complete</span>
             <span v-else>Completed <i class="fas fa-check"></i></span>
           </button>
+        </div>
+      </div>
+    </section>
+
+     <!-- Registered Events Section -->
+     <section class="registered-events-section glass-effect" data-scroll>
+      <h2>Registered Events</h2>
+      <div class="registered-events-grid">
+        <div class="registered-event-card neumorphic" v-for="event in registeredEvents" :key="event.id">
+          <h3>{{ event.name }}</h3>
+          <p>{{ event.description }}</p>
+          <p><strong>Type:</strong> {{ event.eventtype }}</p>
+          <p><strong>Date:</strong> {{ event.date }}</p>
+          <p><strong>Attendance:</strong> {{ event.attended ? 'Attended' : 'Not Attended' }}</p>
         </div>
       </div>
     </section>
@@ -50,25 +62,6 @@
         </div>
       </div>
     </section>
-
-    <div class="task-list">
-      <h2>Available Tasks</h2>
-      <ul>
-        <li v-for="task in tasks" :key="task.id">
-          <span>{{ task.name }}</span>
-          <button @click="requestTask(task.id)">Request Task</button>
-        </li>
-      </ul>
-    </div>
-    <div class="badges">
-      <h2>Your Badges</h2>
-      <ul>
-        <li v-for="badge in badges" :key="badge.id">{{ badge.name }}</li>
-      </ul>
-    </div>
-    <div class="points">
-      <h2>Your Points: {{ points }}</h2>
-    </div>
 
     <!-- Registration Modal -->
     <div v-if="showRegistrationModal" class="modal">
@@ -102,10 +95,12 @@ import eventBus from '../eventBus';
 
 export default {
   name: 'TasksAndEventsView',
+  
   data() {
     return {
       tasks: [],  // Fetched from backend
       events: [], // Initialize as an empty array
+      registeredEvents: [], // Initialize as an empty array
       badges: [],
       points: 0,
       showRegistrationModal: false,
@@ -116,6 +111,7 @@ export default {
       userProfile: {
         name: '',
         email: '',
+        semester: '',
       },
       notification: null,
     };
@@ -128,12 +124,24 @@ export default {
       };
       return images[id] || 'https://via.placeholder.com/600x400?text=Event+Image';
     },
+    
     fetchTasksAndEvents() {
-      // Fetch tasks
-      axios.get('http://localhost:8082/api/tasks', { withCredentials: true })
+     // Fetch tasks
+     axios.get('http://localhost:8082/api/tasks', { withCredentials: true })
         .then(response => {
-          this.tasks = response.data.map(task => ({ ...task, completed: false }));
-        })
+          console.log('Raw tasks response:', response.data);
+          const userSemester = this.userProfile.semester; // Assume userProfile contains semester info
+          if (!userSemester) {
+            console.error('User semester is not set.');
+            return;
+          }
+
+          this.tasks = response.data
+            .filter(task => task.semester === parseInt(userSemester, 10)) // Filter tasks by semester
+            .map(task => ({ ...task, completed: false }));
+            console.log('Tasks fetched:', this.tasks);
+          })
+
         .catch(error => {
           console.error('Error fetching tasks:', error);
         });
@@ -150,41 +158,32 @@ export default {
         .catch(error => {
           console.error('Error fetching events:', error);
         });
+        
+    },
+
+    fetchRegisteredEvents() {
+      const userId = this.userProfile.id; // Assume userProfile contains user ID
+      if (!userId) {
+        console.error('User ID is not set.');
+        return;
+      }
+
+      axios.get(`http://localhost:8082/api/users/${userId}/registered-events`, { withCredentials: true })
+        .then(response => {
+          this.registeredEvents = response.data;
+          console.log('Registered events fetched:', this.registeredEvents);
+        })
+        .catch(error => {
+          console.error('Error fetching registered events:', error);
+        });
     },
     async completeTask(task) {
       try {
-        await axios.put(`http://localhost:8082/api/tasks/${task.Taskid}/complete`, {}, { withCredentials: true });
+        await axios.put(`http://localhost:8082/api/tasks/${task.Taskid}/complete`, { userId: this.userProfile.id }, { withCredentials: true });
         this.tasks = this.tasks.filter(t => t.Taskid !== task.Taskid);
       } catch (error) {
         console.error('Error completing task:', error);
       }
-    },
-    initScrollAnimations() {
-      const scrollElements = document.querySelectorAll('[data-scroll]');
-      const elementInView = (el, percentageScroll = 100) => {
-        const elementTop = el.getBoundingClientRect().top;
-        return (
-          elementTop <= ((window.innerHeight || document.documentElement.clientHeight) * (percentageScroll / 100))
-        );
-      };
-      const displayScrollElement = (element) => {
-        element.classList.add('scrolled');
-      };
-      const handleScrollAnimation = () => {
-        scrollElements.forEach(el => {
-          if (elementInView(el, 100)) {
-            displayScrollElement(el);
-          }
-        });
-      };
-      window.addEventListener('scroll', handleScrollAnimation);
-      handleScrollAnimation();
-    },
-    requestTask(taskId) {
-      console.log(`Requesting task with ID: ${taskId}`);
-    },
-    fetchPoints() {
-      // Fetch total points from the backend
     },
     openRegistrationModal(eventId) {
       this.selectedEventId = eventId;
@@ -211,30 +210,72 @@ export default {
         console.log('Registration successful:', response.data);
 
         this.closeModal();
+        this.fetchRegisteredEvents();
       } catch (error) {
         console.error('Error registering for event:', error);
       }
-    }
+    },
+
+    
+    initScrollAnimations() {
+      // Example: Add scroll animations or initializations here
+      console.log('Scroll animations initialized');
+    },
+    fetchPoints() {
+      // Example: Fetch points logic here
+      console.log('Fetching points...');
+    },
+    fetchUserProfile() {
+  const email = this.userProfile.email; // Ensure this is set before calling
+  if (!email) {
+    console.error('User email is not set.');
+    return;
+  }
+  axios.get(`http://localhost:8082/api/users/profile/${encodeURIComponent(email)}`, { withCredentials: true })
+    .then(response => {
+      this.userProfile = response.data;
+      console.log('User profile fetched:', this.userProfile);
+      this.fetchTasksAndEvents(); // Fetch tasks and events after getting the user profile
+      this.fetchRegisteredEvents(); // Fetch registered events after getting the user profile
+
+    })
+    .catch(error => {
+      console.error('Error fetching user profile:', error);
+    });
+}
   },
   mounted() {
-    this.fetchTasksAndEvents();
-    this.initScrollAnimations();
-    this.fetchPoints();
-
-    // Listen for eventAdded event using mitt
-    eventBus.on('eventAdded', (event) => {
-      this.notification = `Event "${event.name}" added successfully!`;
-      setTimeout(() => {
-        this.notification = null;
-      }, 3000);
+  // Fetch user profile from the backend
+  axios.get('http://localhost:8082/auth/user', { withCredentials: true })
+    .then(response => {
+      if (response.data && response.data.email) {
+        this.userProfile.email = response.data.email;
+        this.fetchUserProfile();
+      } else {
+        console.error('User email is not set.');
+      }
+    })
+    .catch(error => {
+      console.error('Error fetching authenticated user:', error);
     });
-  },
+
+  this.initScrollAnimations();
+  this.fetchPoints();
+
+  // Listen for eventAdded event using mitt
+  eventBus.on('eventAdded', (event) => {
+    this.notification = `Event "${event.name}" added successfully!`;
+    setTimeout(() => {
+      this.notification = null;
+    }, 3000);
+  });
+},
   beforeUnmount() {
     // Clean up the event listener
     eventBus.off('eventAdded');
   }
 };
-</script>
+</script> 
 
 <style scoped>
 .tasks-events {

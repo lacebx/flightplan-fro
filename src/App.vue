@@ -26,12 +26,6 @@
     <main>
       <router-view @login="handleLogin" @logout="handleLogout" @userPhotoLoaded="setUserPhoto" />
     </main>
-
-    <!-- Footer -->
-    <footer v-if="isLoggedIn && !isLoginRoute">
-      <div class="footer-left">Overview and comments</div>
-      <div class="footer-right">Current Points</div>
-    </footer>
   </div>
 </template>
 
@@ -142,27 +136,6 @@ main {
   background: transparent;
   padding-left: 20px;
   padding-right: 20px;
-}
-
-/* FOOTER */
-footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  z-index: 5;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem;
-  color: #fff;
-}
-
-.footer-left, .footer-right {
-  font-weight: 500;
 }
 
 @media (max-width: 768px) {
