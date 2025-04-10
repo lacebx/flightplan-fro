@@ -23,6 +23,9 @@ const routes = [
   { path: '/sw', component: SWView },
   { path: '/experience', component: ExperienceView },
   { path: '/profile', component: ProfileView },
+  { path: '/transactionhistory', component: TransactionHistory },
+  { path: '/shop', component: Shop },
+
 
   { path: '/leaderboard', component: LeaderboardView },
   {
@@ -45,6 +48,7 @@ const routes = [
     name: 'ManageEvents',
     component: ManageEvents
   },
+
   {
     path: '/admin/manage-tasks',
     name: 'ManageTasks',
