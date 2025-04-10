@@ -11,7 +11,8 @@
    
 <nav align="right"><router-link to="/transactionhistory" class="nav-link">Transaction History</router-link></nav>
    
- <h1>Available Rewards</h1>
+<!-- Centered Hero Title -->
+<h1 class="hero-title centered">Available Rewards</h1>
     <div v-if="loading" class="loading">Loading rewards...</div>
     <div v-else class="rewards-grid">
       <div v-for="reward in sortedRewards" :key="reward.id" class="reward-card">
@@ -177,6 +178,13 @@ import wirelessHeadPhones from '@/assets/images/wirelessheadphones.png';
   max-width: 2500px;
   padding: 0px;
   text-align: center;
+}
+
+.hero-title {
+  font-size: 4rem;
+  text-shadow: 0 0 10px rgba(65, 184, 131, 0.5);
+  text-align: center;
+  margin-top: 40px;
 }
 
 .loading {
