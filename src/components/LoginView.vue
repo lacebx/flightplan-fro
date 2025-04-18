@@ -20,6 +20,13 @@
         Sign in with Google
       </button>
       <p class="login-note">* Must have a valid @oc.edu email.</p>
+      <!-- New Button to Show Login Form -->
+      <button class="show-login" @click="showLoginForm = true">Already a user? Login</button>
+      <!-- New Email Login Form for Magic Link -->
+      <form v-if="showLoginForm" @submit.prevent="sendMagicLink">
+        <input type="email" v-model="email" placeholder="Enter your email" required />
+        <button type="submit" class="email-login">Send Magic Link</button>
+      </form>
     </div>
   </div>
 </template>
@@ -27,11 +34,44 @@
 <script>
 export default {
   name: "LoginView",
+  data() {
+    return {
+      email: '',
+      showLoginForm: false
+    };
+  },
   methods: {
     login() {
       window.location.href = "http://localhost:8082/auth/google";
       this.$emit('login');
+    },
+    async sendMagicLink() {
+  if (!this.email) {
+    alert('Please enter a valid email.');
+    return;
+  }
+
+  try {
+    const response = await fetch('http://localhost:8082/auth/magic-link', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email: this.email }),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      alert('A magic link has been sent to your email. Please check your inbox.');
+    } else {
+      alert(data.message);
     }
+  } catch (error) {
+    console.error('Error sending magic link:', error);
+    alert('An error occurred. Please try again.');
+  }
+}
   },
 };
 </script>
@@ -121,5 +161,34 @@ export default {
   margin-top: 1rem;
   font-size: 0.9rem;
   color: #cccccc;
+}
+
+.email-login {
+  background-color: #41b883;
+  color: #fff;
+  border: none;
+  font-size: 1.1rem;
+  padding: 0.8rem 1.5rem;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  display: block;
+  width: 100%;
+  max-width: 250px;
+  margin: 1rem auto;
+}
+.email-login:hover {
+  background-color: #369f6b;
+}
+
+/* New Button to Show Login Form */
+.show-login {
+  background: none;
+  color: #ffffff;
+  border: none;
+  font-size: 1rem;
+  text-decoration: underline;
+  cursor: pointer;
+  margin-top: 1rem;
 }
 </style>

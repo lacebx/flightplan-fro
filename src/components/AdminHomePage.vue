@@ -93,8 +93,9 @@ export default {
       console.log('Fetching dashboard stats...');
       try {
         const response = await axios.get('http://localhost:8082/api/admin/stats', { withCredentials: true });
-        console.log('Dashboard stats fetched successfully:', response.data);
         this.stats = response.data;
+        console.log('Dashboard stats fetched successfully:', response.data);
+        
       } catch (error) {
         console.error('Error fetching dashboard stats:', error);
       }

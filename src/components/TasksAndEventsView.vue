@@ -56,7 +56,8 @@
             </div>
             <p><strong>Location:</strong> {{ event.location }}</p>
             <p><strong>Attendance:</strong> {{ event.attendancetype }}</p>
-            <button class="register-button neumorphic" @click="openRegistrationModal(event.id)">Register Now</button>          </div>
+            <button class="register-button neumorphic" @click="openRegistrationModal(event.id)">Register Now</button>
+          </div>
         </div>
       </div>
     </section>
@@ -147,7 +148,11 @@ export default {
       axios.get('http://localhost:8082/api/events', { withCredentials: true })
         .then(response => {
           const eventsArray = Array.isArray(response.data) ? response.data : response.data.events;
-          this.events = eventsArray.map(event => ({ ...event, completed: false }));
+          this.events = eventsArray.map(event => ({
+            ...event,
+            id: event.id || event.eventid, // Ensure id is assigned
+            completed: false
+          }));
           console.log('Events fetched:', this.events);
           this.$nextTick(() => {
             const eventItems = document.querySelectorAll('.event-item');
@@ -205,6 +210,7 @@ export default {
          isVisible: this.registrationForm.isVisible
        };
 
+       
        const response = await axios.post(
          `http://localhost:8082/api/events/${this.selectedEventId}/register`,
          registrationData,
@@ -230,50 +236,53 @@ export default {
       console.log('Fetching points...');
     },
     fetchUserProfile() {
-  const email = this.userProfile.email; // Ensure this is set before calling
-  if (!email) {
-    console.error('User email is not set.');
-    return;
-  }
-  axios.get(`http://localhost:8082/api/users/profile/${encodeURIComponent(email)}`, { withCredentials: true })
-    .then(response => {
-      this.userProfile = response.data;
-      console.log('User profile fetched:', this.userProfile);
-      this.fetchTasksAndEvents(); // Fetch tasks and events after getting the user profile
-      this.fetchRegisteredEvents(); // Fetch registered events after getting the user profile
+      const email = this.userProfile.email; // Ensure this is set before calling
+      console.log('User email before fetching profile:', email); // Log the email
 
-    })
-    .catch(error => {
-      console.error('Error fetching user profile:', error);
-    });
-}
+      if (!email) {
+        console.error('User email is not set.');
+        return;
+      }
+
+      axios.get(`http://localhost:8082/api/users/profile/${encodeURIComponent(email)}`, { withCredentials: true })
+        .then(response => {
+          this.userProfile = response.data;
+          console.log('User profile fetched:', this.userProfile);
+          this.fetchTasksAndEvents(); // Fetch tasks and events after getting the user profile
+          this.fetchRegisteredEvents(); // Fetch registered events after getting the user profile
+        })
+        .catch(error => {
+          console.error('Error fetching user profile:', error);
+        });
+    }
   },
   mounted() {
-  // Fetch user profile from the backend
-  axios.get('http://localhost:8082/auth/user', { withCredentials: true })
-    .then(response => {
-      if (response.data && response.data.email) {
-        this.userProfile.email = response.data.email;
-        this.fetchUserProfile();
-      } else {
-        console.error('User email is not set.');
-      }
-    })
-    .catch(error => {
-      console.error('Error fetching authenticated user:', error);
+    // Fetch user profile from the backend
+    axios.get('http://localhost:8082/auth/user', { withCredentials: true })
+      .then(response => {
+        if (response.data && response.data.email) {
+          this.userProfile.email = response.data.email;
+          console.log('User email set in mounted:', this.userProfile.email); // Log the email
+          this.fetchUserProfile();
+        } else {
+          console.error('User email is not set.');
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching authenticated user:', error);
+      });
+
+    this.initScrollAnimations();
+    this.fetchPoints();
+
+    // Listen for eventAdded event using mitt
+    eventBus.on('eventAdded', (event) => {
+      this.notification = `Event "${event.name}" added successfully!`;
+      setTimeout(() => {
+        this.notification = null;
+      }, 3000);
     });
-
-  this.initScrollAnimations();
-  this.fetchPoints();
-
-  // Listen for eventAdded event using mitt
-  eventBus.on('eventAdded', (event) => {
-    this.notification = `Event "${event.name}" added successfully!`;
-    setTimeout(() => {
-      this.notification = null;
-    }, 3000);
-  });
-},
+  },
   beforeUnmount() {
     // Clean up the event listener
     eventBus.off('eventAdded');
@@ -421,6 +430,15 @@ export default {
   flex: 1;
   padding: 40px;
   color: white;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.event-content:hover {
+  transform: translateY(-5px);
 }
 
 .event-details {
