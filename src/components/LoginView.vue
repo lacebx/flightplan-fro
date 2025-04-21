@@ -12,21 +12,25 @@
     <!-- Centered Login Card -->
     <div class="login-container">
       <h1 class="login-title">Eagle FlighPlan</h1>
-      <p class="login-subtitle">
-        Level up your professional appeal. Unlock opportunities and accelerate your career journey.
-      </p>
-      <button class="google-login" @click="login">
-        <i class="fab fa-google"></i>
-        Sign in with Google
-      </button>
-      <p class="login-note">* Must have a valid @oc.edu email.</p>
-      <!-- New Button to Show Login Form -->
-      <button class="show-login" @click="showLoginForm = true">Already a user? Login</button>
-      <!-- New Email Login Form for Magic Link -->
-      <form v-if="showLoginForm" @submit.prevent="sendMagicLink">
-        <input type="email" v-model="email" placeholder="Enter your email" required />
-        <button type="submit" class="email-login">Send Magic Link</button>
-      </form>
+      <transition name="fade">
+        <div v-if="!showLoginForm" key="initial-content">
+          <p class="login-subtitle">
+            Level up your professional appeal. Unlock opportunities and accelerate your career journey.
+          </p>
+          <button class="google-login" @click="login">
+            <i class="fab fa-google"></i>
+            Sign in with Google
+          </button>
+          <p class="login-note">* Must have a valid @oc.edu email.</p>
+        </div>
+      </transition>
+      <button class="show-login" @click="toggleLoginForm">Already a user? Login</button>
+      <transition name="fade">
+        <form v-if="showLoginForm" @submit.prevent="sendMagicLink" key="login-form">
+          <input type="email" v-model="email" placeholder="Enter your email" required />
+          <button type="submit" class="email-login">Send Magic Link</button>
+        </form>
+      </transition>
     </div>
   </div>
 </template>
@@ -45,33 +49,36 @@ export default {
       window.location.href = "http://localhost:8082/auth/google";
       this.$emit('login');
     },
+    toggleLoginForm() {
+      this.showLoginForm = !this.showLoginForm;
+    },
     async sendMagicLink() {
-  if (!this.email) {
-    alert('Please enter a valid email.');
-    return;
-  }
+      if (!this.email) {
+        alert('Please enter a valid email.');
+        return;
+      }
 
-  try {
-    const response = await fetch('http://localhost:8082/auth/magic-link', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email: this.email }),
-    });
+      try {
+        const response = await fetch('http://localhost:8082/auth/magic-link', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email: this.email }),
+        });
 
-    const data = await response.json();
+        const data = await response.json();
 
-    if (response.ok) {
-      alert('A magic link has been sent to your email. Please check your inbox.');
-    } else {
-      alert(data.message);
+        if (response.ok) {
+          alert('A magic link has been sent to your email. Please check your inbox.');
+        } else {
+          alert(data.message);
+        }
+      } catch (error) {
+        console.error('Error sending magic link:', error);
+        alert('An error occurred. Please try again.');
+      }
     }
-  } catch (error) {
-    console.error('Error sending magic link:', error);
-    alert('An error occurred. Please try again.');
-  }
-}
   },
 };
 </script>
@@ -190,5 +197,13 @@ export default {
   text-decoration: underline;
   cursor: pointer;
   margin-top: 1rem;
+}
+
+/* Fade transition for login form */
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
+  opacity: 0;
 }
 </style>
