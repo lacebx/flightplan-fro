@@ -1,5 +1,9 @@
 <template>
   <div id="app">
+    <div style="display:none;">
+      <RedemptionPage />
+      <TransactionHistory />
+    </div>
     <!-- Conditional Navbar -->
     <header v-if="isAdminRoute">
       <nav>
@@ -11,6 +15,7 @@
           </li>
           <li><router-link to="/admin/manage-events" class="nav-link">Manage Events</router-link></li>
           <li><router-link to="/admin/manage-students" class="nav-link">Manage Students</router-link></li>
+          <li><router-link to="/admin/reports" class="nav-link">Reports</router-link></li>
         </ul>
       </nav>
     </header>
@@ -35,15 +40,51 @@
 </template>
 
 <script>
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, provide } from 'vue';
+
 import { useRoute } from 'vue-router';
+import RedemptionPage from './components/ShopView.vue';
+import TransactionHistory from './components/TransactionHistory.vue';
 
 export default {
-  name: "App",     
+
+  name: "App",  
+  name: "App",
+  components: {
+    RedemptionPage,
+    TransactionHistory,
+  },    
   setup() {
     const isLoggedIn = ref(false);
     const route = useRoute();
+
+    RedemptionPage;
+
+    // Create a reactive array to store redeemed items
+
+    const redeemedItems = ref([]);
+    // Provide the reactive array to descendant components
+    provide('redeemedItems', redeemedItems);
+
+   
+  
+    // Method to add a redeemed item
+    const addRedeemedItem = (item) => {
+      redeemedItems.value.push({
+        ...item,
+        date: new Date().toLocaleString(),
+      });
+    };
+
+    // Provide the reactive array and the method
+
+    provide('redeemedItems', redeemedItems);
+    provide('addRedeemedItem', addRedeemedItem);
+
+
+
     const userPhoto = ref('');
+    
 
     onMounted(() => {
       isLoggedIn.value = localStorage.getItem('isLoggedIn') === 'true';

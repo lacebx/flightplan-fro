@@ -1,7 +1,7 @@
 <template>
 
 
- <div class="transaction-history">
+  <div class="transaction-history">
     <!-- Reuse the floating spheres background -->
     <div class="animated-bg">
 
@@ -16,27 +16,34 @@
 
 
 
-    <h2>Transaction History</h2>
+      <h2>Transaction History</h2>
+
+    </div>
+
+
+
+
     <table>
       <thead>
         <tr>
           <th>Date</th>
-          <th>Description</th>
-          <th>Amount</th>
-          <th>Type</th>
+          <th>Student Name</th>
+          <th>Item Name</th>
+          <th>Points Cost</th>
+
         </tr>
       </thead>
       <tbody>
-        <tr v-for="transaction in transactions" :key="transaction.id">
-          <td>{{ transaction.date }}</td>
-          <td>{{ transaction.description }}</td>
-          <td>{{ transaction.amount }}</td>
-          <td>{{ transaction.type }}</td>
+        <tr v-for="(item, index) in redeemedItems" :key="index">
+
+          <td>{{ item.date }}</td>
+          <td>{{ item.student_name }}</td>
+          <td>{{ item.item_name }}</td>
+          <td>{{ item.points_cost }}</td>
+
         </tr>
       </tbody>
     </table>
-  </div>
-
   </div>
 </template>
 
@@ -44,21 +51,14 @@
 
 export default {
   name: 'TransactionHistory',
-  data() {
-    return {
-      transactions: [
-        { id: 1, date: '2025-04-01', description: 'Gift Card Redemption', amount: 50, type: 'debit' },
-        { id: 2, date: '2025-04-05', description: 'Points Earned from Purchase', amount: 20, type: 'credit' },
-        // Add more transactions as needed
-      ],
-    };
-  },
+  inject: ['redeemedItems'],
 };
+
 </script>
 
 <style scoped>
 .transaction-history {
-   font-family: Arial, sans-serif;  
+  font-family: Arial, sans-serif;
   margin: 0px auto;
   max-width: 2500px;
   padding: 0px;
@@ -72,11 +72,10 @@ table {
   margin-top: 10px;
 }
 
-th, td {
+th,
+td {
   border: 1px solid #ccc;
   padding: 10px;
   text-align: left;
 }
-
-
 </style>
