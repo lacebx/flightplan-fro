@@ -554,27 +554,57 @@ export default {
   cursor: pointer;
 }
 
-.role-change-section {
-  margin-top: 20px;
-  padding: 15px;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 5px;
-}
-
 .role-select {
-  padding: 10px;
-  border-radius: 5px;
+  padding: 0.8rem;
   border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 5px;
   background: rgba(255, 255, 255, 0.1);
   color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  margin: 10px 0;
+  width: 200px;
+}
+
+.role-select option {
+  background: #1a1a1a;
+  color: white;
+  padding: 10px;
+}
+
+.role-change-section {
+  margin-top: 20px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.role-change-section h3 {
+  margin: 0;
+  color: #41b883;
+}
+
+.role-change-section p {
+  margin: 5px 0;
 }
 
 .change-role-btn {
-  padding: 10px 15px;
-  background-color: #41b883;
+  padding: 0.8rem 1.5rem;
+  background-color: #2c805c;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  width: fit-content;
+}
+
+.change-role-btn:hover {
+  background-color: #41b883;
+  transform: translateY(-2px);
 }
 </style> 

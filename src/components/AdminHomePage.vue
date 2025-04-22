@@ -82,27 +82,82 @@ export default {
       stats: {
         totalStudents: 0,
         activeEvents: 0,
-        pendingTasks: 0,
-        totalPoints: 0
-      },
-      recentActivities: []
+        pendingTasks: 0
+      }
     };
   },
   methods: {
     async fetchDashboardStats() {
-      console.log('Fetching dashboard stats...');
       try {
-        const response = await axios.get('http://localhost:8082/api/admin/stats', { withCredentials: true });
-        this.stats = response.data;
-        console.log('Dashboard stats fetched successfully:', response.data);
-        
+        // Fetch total students
+        const studentsResponse = await axios.get('http://localhost:8082/api/users', {
+          withCredentials: true
+        });
+        this.stats.totalStudents = Array.isArray(studentsResponse.data) ? studentsResponse.data.length : 0;
+
+        // Fetch active events
+        const eventsResponse = await axios.get('http://localhost:8082/api/events', {
+          withCredentials: true
+        });
+        this.stats.activeEvents = Array.isArray(eventsResponse.data) ? 
+          eventsResponse.data.filter(event => new Date(event.date) >= new Date()).length : 0;
+
+        // Fetch pending tasks
+        const tasksResponse = await axios.get('http://localhost:8082/api/tasks', {
+          withCredentials: true
+        });
+        this.stats.pendingTasks = Array.isArray(tasksResponse.data) ? 
+          tasksResponse.data.filter(task => task.status === 'pending').length : 0;
+
+        console.log('Dashboard stats updated:', this.stats);
       } catch (error) {
         console.error('Error fetching dashboard stats:', error);
+        alert('Error loading dashboard statistics. Please try refreshing the page.');
       }
     },
+    async createTask() {
+      try {
+        const response = await axios.post('http://localhost:8082/api/tasks', this.newTask, {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        console.log('Task created:', response.data);
+        this.showTaskForm = false;
+        this.newTask = {
+          name: '',
+          description: '',
+          points: 0
+        };
+        // Refresh stats after creating a task
+        this.fetchDashboardStats();
+      } catch (error) {
+        console.error('Error creating task:', error);
+        alert('Error creating task. Please try again.');
+      }
+    },
+    navigateToManageEvents() {
+      this.$router.push('/admin/manage-events');
+    },
+    logout() {
+      localStorage.removeItem('userRole');
+      localStorage.removeItem('userData');
+      this.$router.push('/admin-login');
+    }
   },
   mounted() {
     this.fetchDashboardStats();
+    // Set up auto-refresh every 30 seconds
+    this.statsInterval = setInterval(() => {
+      this.fetchDashboardStats();
+    }, 30000);
+  },
+  beforeUnmount() {
+    // Clear the interval when component is destroyed
+    if (this.statsInterval) {
+      clearInterval(this.statsInterval);
+    }
   }
 };
 </script>
@@ -193,6 +248,19 @@ export default {
   text-align: center;
   backdrop-filter: blur(5px);
   border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.stat-card h3 {
+  color: #ffffff;
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  opacity: 0.9;
 }
 
 .stat-number {
@@ -200,6 +268,7 @@ export default {
   font-weight: bold;
   color: #41b883;
   margin: 0.5rem 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .quick-actions {
@@ -222,11 +291,16 @@ export default {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  transition: transform 0.3s;
+  transition: all 0.3s ease;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .action-btn:hover {
   transform: translateY(-2px);
+  background: #3aa876;
+  box-shadow: 0 2px 8px rgba(65, 184, 131, 0.4);
 }
 
 .recent-activity {
