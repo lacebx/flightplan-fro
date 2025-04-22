@@ -103,7 +103,6 @@ export default {
   },
   mounted() {
     this.fetchDashboardStats();
-    this.fetchRecentActivities();
   }
 };
 </script>

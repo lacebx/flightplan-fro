@@ -13,7 +13,7 @@
     <div class="login-container">
       <h1 class="login-title">Eagle FlighPlan</h1>
       <transition name="fade">
-        <div v-if="!showLoginForm" key="initial-content">
+        <div v-if="!showLoginForm && !showPasswordSetup" key="initial-content">
           <p class="login-subtitle">
             Level up your professional appeal. Unlock opportunities and accelerate your career journey.
           </p>
@@ -24,11 +24,18 @@
           <p class="login-note">* Must have a valid @oc.edu email.</p>
         </div>
       </transition>
-      <button class="show-login" @click="toggleLoginForm">Already a user? Login</button>
+      <button class="show-login" @click="toggleLoginForm">Login wih password.</button>
       <transition name="fade">
-        <form v-if="showLoginForm" @submit.prevent="sendMagicLink" key="login-form">
-          <input type="email" v-model="email" placeholder="Enter your email" required />
-          <button type="submit" class="email-login">Send Magic Link</button>
+        <form v-if="showLoginForm && !showPasswordSetup" @submit.prevent="loginWithEmail" key="login-form">
+          <input type="email" v-model="email" placeholder="Enter your email" required /><br>
+          <input type="password" v-model="password" placeholder="Enter your password" required />
+          <button type="submit" class="email-login">Login</button>
+        </form>
+      </transition>
+      <transition name="fade">
+        <form v-if="showPasswordSetup" @submit.prevent="setPassword" key="password-setup-form">
+          <input type="password" v-model="newPassword" placeholder="Set your new password" required />
+          <button type="submit" class="email-login">Set Password</button>
         </form>
       </transition>
     </div>
@@ -41,7 +48,10 @@ export default {
   data() {
     return {
       email: '',
-      showLoginForm: false
+      password: '',
+      newPassword: '',
+      showLoginForm: false,
+      showPasswordSetup: false
     };
   },
   methods: {
@@ -52,30 +62,75 @@ export default {
     toggleLoginForm() {
       this.showLoginForm = !this.showLoginForm;
     },
-    async sendMagicLink() {
-      if (!this.email) {
-        alert('Please enter a valid email.');
+    async loginWithEmail() {
+      if (!this.email || !this.password) {
+        alert('Please enter your email and password.');
         return;
       }
 
       try {
-        const response = await fetch('http://localhost:8082/auth/magic-link', {
+        const response = await fetch('http://localhost:8082/auth/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ email: this.email }),
+          body: JSON.stringify({ email: this.email, password: this.password }),
         });
 
         const data = await response.json();
 
         if (response.ok) {
-          alert('A magic link has been sent to your email. Please check your inbox.');
+          const userInfoResponse = await fetch('http://localhost:8082/auth/user', {
+            method: 'GET',
+            credentials: 'include',
+          });
+          const userInfo = await userInfoResponse.json();
+
+          if (userInfoResponse.ok) {
+            
+            // Redirect based on user role
+            if (userInfo.role === 'admin') {
+              this.$router.push('/admin');
+            } else {
+              this.$router.push('/home');
+            }
+          } else {
+            alert('Failed to fetch user info.');
+          }
         } else {
           alert(data.message);
         }
       } catch (error) {
-        console.error('Error sending magic link:', error);
+        console.error('Error during login:', error);
+        alert('An error occurred. Please try again.');
+      }
+    },
+    async setPassword() {
+      if (!this.newPassword) {
+        alert('Please enter a new password.');
+        return;
+      }
+
+      try {
+        const response = await fetch('http://localhost:8082/auth/set-password', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ password: this.newPassword }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          alert('Password set successfully!');
+          this.showPasswordSetup = false;
+          // Redirect to the appropriate page
+        } else {
+          alert(data.message);
+        }
+      } catch (error) {
+        console.error('Error setting password:', error);
         alert('An error occurred. Please try again.');
       }
     }

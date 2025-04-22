@@ -14,7 +14,7 @@ import AdminHomePage from '../components/AdminHomePage.vue';
 import AddExperience from '../components/AddExperience.vue';
 import Shop from '../components/ShopView.vue';
 import TransactionHistory from '../components/TransactionHistory.vue';
-
+import SetupPasswordView from '../components/SetupPasswordView.vue';
 
 
 const routes = [
@@ -58,6 +58,11 @@ const routes = [
     path: '/admin/view-student-plans',
     name: 'ViewStudentPlans',
     component: ViewStudentPlans
+  },
+  {
+    path: '/setup-password',
+    name: 'SetupPasswordView',
+    component: SetupPasswordView
   }
 ];
 

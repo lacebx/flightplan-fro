@@ -111,6 +111,17 @@
             </li>
           </ul>
         </div>
+
+        <div class="role-change-section">
+          <h3>Change Role</h3>
+          <p>Current Role: <strong>{{ selectedStudent.role }}</strong></p>
+          <select v-model="selectedRole" class="role-select">
+            <option value="student">Student</option>
+            <option value="admin">Admin</option>
+            <option value="student staff">Student Staff</option>
+          </select>
+          <button @click="changeRole" class="change-role-btn">Change Role</button>
+        </div>
       </div>
     </div>
   </div>
@@ -128,7 +139,8 @@ export default {
       selectedStudent: null,
       loading: false,
       error: null,
-      notificationMessage: ''
+      notificationMessage: '',
+      selectedRole: ''
     };
   },
   methods: {
@@ -246,6 +258,33 @@ export default {
       
       // Redirect to login page
       this.$router.push('/admin-login');
+    },
+    async changeRole() {
+      if (!this.selectedStudent) {
+        alert('Please select a student first');
+        return;
+      }
+
+      if (!this.selectedRole) {
+        alert('Please select a role');
+        return;
+      }
+
+      try {
+        const response = await axios.put(`http://localhost:8082/api/users/${this.selectedStudent.id}/role`, {
+          role: this.selectedRole
+        }, { withCredentials: true });
+
+        if (response.status === 200) {
+          alert('Role updated successfully');
+          this.selectedStudent.role = this.selectedRole;
+        } else {
+          alert('Failed to update role');
+        }
+      } catch (error) {
+        console.error('Error updating role:', error);
+        alert('An error occurred. Please try again.');
+      }
     }
   },
   mounted() {
@@ -507,6 +546,30 @@ export default {
 }
 
 .send-btn {
+  padding: 10px 15px;
+  background-color: #41b883;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.role-change-section {
+  margin-top: 20px;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 5px;
+}
+
+.role-select {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.change-role-btn {
   padding: 10px 15px;
   background-color: #41b883;
   color: white;

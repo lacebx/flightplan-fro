@@ -4,6 +4,11 @@
     <header v-if="isAdminRoute">
       <nav>
         <ul>
+          <li>
+            <router-link to="/admin" class="nav-link">
+              &#x1F3E0;
+            </router-link>
+          </li>
           <li><router-link to="/admin/manage-events" class="nav-link">Manage Events</router-link></li>
           <li><router-link to="/admin/manage-students" class="nav-link">Manage Students</router-link></li>
         </ul>
@@ -221,5 +226,12 @@ main {
   height: 40px;
   border-radius: 50%;
   object-fit: cover;
+}
+
+.home-icon {
+  font-size: 1.5rem; /* Adjust size as needed */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>
