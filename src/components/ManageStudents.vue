@@ -1,6 +1,7 @@
 <template>
   <div class="manage-students">
-   
+    <!-- Admin Navigation Bar -->
+
     
     <h1>Manage Students</h1>
     <div class="search-container">

@@ -1,6 +1,5 @@
 <template>
   <div class="admin-homepage">
-   
 
     <!-- Dashboard Overview -->
     <div class="dashboard-overview">

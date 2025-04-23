@@ -11,6 +11,10 @@
           </li>
           <li><router-link to="/admin/manage-events" class="nav-link">Manage Events</router-link></li>
           <li><router-link to="/admin/manage-students" class="nav-link">Manage Students</router-link></li>
+          <li><router-link to="/admin/manage-tasks" class="nav-link">Manage Tasks</router-link></li>
+          <li class="logout-container">
+            <button @click="handleLogout" class="logout-btn">Logout</button>
+          </li>
         </ul>
       </nav>
     </header>
@@ -36,13 +40,14 @@
 
 <script>
 import { ref, onMounted, computed } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 export default {
   name: "App",     
   setup() {
     const isLoggedIn = ref(false);
     const route = useRoute();
+    const router = useRouter();
     const userPhoto = ref('');
 
     onMounted(() => {
@@ -57,7 +62,11 @@ export default {
     const handleLogout = () => {
       isLoggedIn.value = false;
       localStorage.removeItem('isLoggedIn');
+      localStorage.removeItem('userRole');
+      localStorage.removeItem('userData');
+      router.push('/');
     };
+    
 
     const setUserPhoto = (photoUrl) => {
       userPhoto.value = photoUrl;
@@ -67,7 +76,7 @@ export default {
     const isAdminRoute = computed(() => route.path.startsWith('/admin'));
 
     return { isLoggedIn, handleLogin, handleLogout, isLoginRoute, isAdminRoute, userPhoto, setUserPhoto };
-  },
+  }
 };
 </script>
 
@@ -121,16 +130,56 @@ nav ul {
   text-decoration: none;
   padding: 0.5rem 1rem;
   border-radius: 4px;
-  transition: background 0.3s ease;
+  transition: all 0.3s ease;
+  font-weight: 500;
 }
 
 .nav-link:hover {
   background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
 }
 
 .router-link-active {
   background: rgba(255, 255, 255, 0.2);
   font-weight: bold;
+}
+
+.logout-container {
+  margin-left: auto; /* This pushes the logout button to the right */
+}
+
+.logout-btn {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.logout-btn:hover {
+  background-color: #c0392b;
+  transform: translateY(-2px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  nav ul {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 1rem;
+  }
+
+  .logout-container {
+    margin-left: 0;
+    margin-top: 1rem;
+  }
+
+  .logout-btn {
+    width: 100%;
+  }
 }
 
 /* MAIN CONTENT */
