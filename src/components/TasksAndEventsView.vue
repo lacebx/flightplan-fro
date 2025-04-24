@@ -74,7 +74,7 @@
             </label>
           </div>
           <div class="modal-buttons">
-            <button type="submit" class="submit-btn">Register</button>
+            <button type="submit" class="submit-btn" @click="printhello">Register</button>
             <button type="button" class="cancel-btn" @click="closeModal">Cancel</button>
           </div>
         </form>
@@ -164,6 +164,9 @@ export default {
         });
         
     },
+    printhello(){
+       console.log("hello");
+    },
 
     fetchRegisteredEvents() {
       const userId = this.userProfile.id; // Assume userProfile contains user ID
@@ -211,28 +214,34 @@ export default {
       this.registrationForm = { isVisible: false };
     },
     async registerForEvent() {
-     try {
-       const registrationData = {
-         name: this.userProfile.name,
-         email: this.userProfile.email,
-         isVisible: this.registrationForm.isVisible
-       };
+      try {
+        const registrationData = {
+          name: this.userProfile.name,
+          email: this.userProfile.email,
+          eventId: this.selectedEventId,
+          isVisible: this.registrationForm.isVisible
+        };
+        console.log(registrationData);
+        const response = await axios.post(
+          `http://localhost:8082/api/events/${this.selectedEventId}/register`,
+          registrationData,
+          { withCredentials: true }
+        );
 
-       
-       const response = await axios.post(
-         `http://localhost:8082/api/events/${this.selectedEventId}/register`,
-         registrationData,
-         { withCredentials: true }
-       );
+        console.log('Registration successful:', response.data);
 
-       console.log('Registration successful:', response.data);
+        // Add the registered event to the registeredEvents array
+        const registeredEvent = this.events.find(event => event.id === this.selectedEventId);
+        if (registeredEvent) {
+          this.registeredEvents.push(registeredEvent);
+        }
 
-       this.closeModal();
-       this.fetchRegisteredEvents();
-     } catch (error) {
-       console.error('Error registering for event:', error);
-     }
-   },
+        this.closeModal();
+        this.fetchRegisteredEvents(); // Refresh the registered events list
+      } catch (error) {
+        console.error('Error registering for event:', error);
+      }
+    },
 
     
     initScrollAnimations() {
