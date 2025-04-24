@@ -92,16 +92,18 @@
 import { inject } from 'vue';
 import axios from 'axios';
 
-import waterBottle from '@/assets/images/water-bottle.png';
-import coffeeMug from '@/assets/images/coffee-mug.png';
-import stationerySet from '@/assets/images/stationery-set.png';
-import giftCard from '@/assets/images/giftcard.png';
-import ebookVoucher from '@/assets/images/ebookvoucher.png';
-import deskOrganizer from '@/assets/images/deskorganizer.png';
-import courseDiscount from '@/assets/images/coursediscount.png';
-import backPack from '@/assets/images/backpack.png';
-import wirelessHeadPhones from '@/assets/images/wirelessheadphones.png';
-
+// Updated image URLs
+const IMAGES = {
+  giftCard: 'https://images.unsplash.com/photo-1556742502-ec7c0e9f34b1?q=80&w=500&auto=format&fit=crop',
+  wirelessHeadphones: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=500&auto=format&fit=crop',
+  coffeeMug: 'https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?q=80&w=500&auto=format&fit=crop',
+  ebookVoucher: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=500&auto=format&fit=crop',
+  courseDiscount: 'https://images.unsplash.com/photo-1501504905252-473c47e087f8?q=80&w=500&auto=format&fit=crop',
+  stationerySet: 'https://images.unsplash.com/photo-1608889825103-eb5ed706fc64?q=80&w=500&auto=format&fit=crop',
+  backpack: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?q=80&w=500&auto=format&fit=crop',
+  waterBottle: 'https://images.unsplash.com/photo-1602143407151-7111542de6e8?q=80&w=500&auto=format&fit=crop',
+  deskOrganizer: 'https://images.unsplash.com/photo-1587467512961-120760940315?q=80&w=500&auto=format&fit=crop',
+};
 
 export default {
   name: 'RedemptionPage',
@@ -121,82 +123,82 @@ export default {
           id: 1,
           student_name: "Jane",
           item_name: 'Gift Card',
-          description: 'A $50 gift card.',
+          description: 'A $50 gift card for your favorite stores.',
           points_cost: 500,
           availability: true,
-          image: giftCard,
+          image: IMAGES.giftCard,
         },
         {
           id: 2,
           student_name: "Kibret",
           item_name: 'Wireless Headphones',
-          description: 'Noise-cancelling over-ear headphones.',
+          description: 'Premium noise-cancelling over-ear headphones.',
           points_cost: 1200,
           availability: true,
-          image: wirelessHeadPhones,
+          image: IMAGES.wirelessHeadphones,
         },
         {
           id: 3,
           student_name: "Ehit",
           item_name: 'Coffee Mug',
-          description: 'A branded coffee mug.',
+          description: 'Stylish ceramic coffee mug with university branding.',
           points_cost: 300,
           availability: false,
-          image: coffeeMug,
+          image: IMAGES.coffeeMug,
         },
         {
           id: 4,
           student_name: "Helen",
           item_name: 'E-Book Voucher',
-          description: 'Voucher for an e-book of your choice.',
+          description: 'Digital voucher for any e-book of your choice.',
           points_cost: 400,
           availability: true,
-          image: ebookVoucher,
+          image: IMAGES.ebookVoucher,
         },
         {
           id: 5,
           student_name: "Mike",
           item_name: 'Online Course Discount',
-          description: 'Discount on an online course.',
+          description: '50% discount on selected online courses.',
           points_cost: 800,
           availability: true,
-          image: courseDiscount,
+          image: IMAGES.courseDiscount,
         },
         {
           id: 6,
           student_name: "Arsene",
           item_name: 'Stationery Set',
-          description: 'A set of notebooks, pens, and more.',
+          description: 'Premium set including notebook, pens, and accessories.',
           points_cost: 350,
           availability: true,
-          image: stationerySet,
+          image: IMAGES.stationerySet,
         },
         {
           id: 7,
           student_name: "Gaby",
           item_name: 'Backpack',
-          description: 'A durable and stylish backpack.',
+          description: 'High-quality laptop backpack with multiple compartments.',
           points_cost: 1000,
           availability: true,
-          image: backPack,
+          image: IMAGES.backpack,
         },
         {
           id: 8,
           student_name: "Tade",
           item_name: 'Water Bottle',
-          description: 'A reusable water bottle.',
+          description: 'Insulated stainless steel water bottle, 20oz capacity.',
           points_cost: 250,
           availability: true,
-          image: waterBottle,
+          image: IMAGES.waterBottle,
         },
         {
           id: 9,
           student_name: "Fanta",
           item_name: 'Desk Organizer',
-          description: 'Keep your workspace neat and tidy.',
+          description: 'Modern desk organizer for a tidy workspace.',
           points_cost: 450,
           availability: true,
-          image: deskOrganizer,
+          image: IMAGES.deskOrganizer,
         },
       ],
     };
@@ -293,7 +295,7 @@ export default {
   color: white;
   position: relative;
   overflow: hidden;
-  padding: 2rem;
+  padding: 4rem 2rem 2rem;
 }
 
 .animated-bg {
@@ -350,16 +352,21 @@ export default {
 
 .shop-container {
   max-width: 1400px;
-  margin: 0 auto;
+  margin: 2rem auto 0;
   position: relative;
   z-index: 1;
+  padding-top: 1rem;
 }
 
 .shop-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
+  margin: 3rem 0 2rem;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 15px;
+  backdrop-filter: blur(10px);
 }
 
 .points-display {
@@ -370,11 +377,12 @@ export default {
   background: rgba(65, 184, 131, 0.1);
   border: 1px solid rgba(65, 184, 131, 0.2);
   border-radius: 15px;
-  padding: 1.5rem;
+  padding: 1.5rem 2rem;
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.5rem;
   max-width: 300px;
+  backdrop-filter: blur(10px);
 }
 
 .points-icon {
@@ -422,9 +430,21 @@ export default {
 .shop-title {
   font-size: 3rem;
   color: #41b883;
-  margin-bottom: 3rem;
+  margin: 4rem 0 3rem;
   text-align: center;
   font-weight: 300;
+  position: relative;
+}
+
+.shop-title::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 2px;
+  background: linear-gradient(to right, transparent, #41b883, transparent);
 }
 
 .loading-container {
@@ -452,8 +472,9 @@ export default {
 .rewards-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 1.5rem;
-  padding: 1rem;
+  gap: 2rem;
+  padding: 2rem;
+  margin-top: 2rem;
 }
 
 .reward-card {
@@ -474,8 +495,9 @@ export default {
 .reward-image-container {
   position: relative;
   width: 100%;
-  height: 160px;
+  height: 200px;
   overflow: hidden;
+  background: #2a2a2a;
 }
 
 .reward-image {
@@ -483,10 +505,12 @@ export default {
   height: 100%;
   object-fit: cover;
   transition: transform 0.3s ease;
+  filter: brightness(0.95);
 }
 
 .reward-card:hover .reward-image {
   transform: scale(1.05);
+  filter: brightness(1);
 }
 
 .out-of-stock-overlay {
@@ -527,11 +551,41 @@ export default {
 
 .points-cost {
   font-size: 1.1rem;
+  color: #41b883;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.points-cost i {
+  color: #2c5f4c;
 }
 
 .redeem-btn {
   padding: 0.6rem 1.2rem;
   font-size: 0.9rem;
+  background: #2c5f4c;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  min-width: 120px;
+  box-shadow: 0 2px 8px rgba(44, 95, 76, 0.2);
+}
+
+.redeem-btn:hover:not(:disabled) {
+  background: #1e4435;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(44, 95, 76, 0.3);
+}
+
+.redeem-btn:disabled {
+  background: #1a1a1a;
+  color: #666;
+  cursor: not-allowed;
+  border: 1px solid #333;
 }
 
 .unavailable {
@@ -540,20 +594,23 @@ export default {
 
 @media (max-width: 768px) {
   .shop-page {
-    padding: 1rem;
+    padding: 3rem 1rem 1rem;
   }
 
   .shop-header {
+    margin: 2rem 0 1.5rem;
     flex-direction: column;
     gap: 1rem;
   }
 
-  .points-card {
-    max-width: 100%;
-  }
-
   .shop-title {
     font-size: 2rem;
+    margin: 3rem 0 2rem;
+  }
+
+  .points-card {
+    padding: 1.2rem;
+    width: 100%;
   }
 
   .rewards-grid {
@@ -624,5 +681,16 @@ export default {
 
 .fade-enter-from, .fade-leave-to {
   opacity: 0;
+}
+
+.reward-image-container::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(to top, rgba(0,0,0,0.4), transparent);
+  pointer-events: none;
 }
 </style>

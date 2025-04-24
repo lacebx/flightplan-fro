@@ -28,28 +28,73 @@
 
       <!-- New Card: Percentile Metrics -->
       <section class="percentile-metrics glass-morphism">
-        <h2>Percentile Metrics</h2>
+        <div class="metrics-header">
+          <h2>Performance Analytics</h2>
+          <p class="subtitle">Your progress insights and achievements</p>
+        </div>
+
         <div class="metrics-content">
-          <div class="chart">
-            <!-- Placeholder for chart -->
-            <img src="/img/placeholder-chart.png" alt="Chart" class="chart-image"/>
+          <!-- Performance Overview -->
+          <div class="performance-overview">
+            <div class="rank-card">
+              <div class="rank-indicator">
+                <i class="fas fa-crown"></i>
+                <span class="rank-label">Current Rank</span>
+                <span class="rank-value">Diamond</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress" :style="{ width: '75%' }"></div>
+              </div>
+              <span class="progress-text">75% to next rank</span>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+              <div class="stat-item">
+                <i class="fas fa-chart-line"></i>
+                <div class="stat-details">
+                  <span class="stat-value">95th</span>
+                  <span class="stat-label">Percentile</span>
+                </div>
+              </div>
+              <div class="stat-item">
+                <i class="fas fa-trophy"></i>
+                <div class="stat-details">
+                  <span class="stat-value">Top 5%</span>
+                  <span class="stat-label">Overall</span>
+                </div>
+              </div>
+              <div class="stat-item">
+                <i class="fas fa-star"></i>
+                <div class="stat-details">
+                  <span class="stat-value">500</span>
+                  <span class="stat-label">XP to Next</span>
+                </div>
+              </div>
+              <div class="stat-item">
+                <i class="fas fa-tasks"></i>
+                <div class="stat-details">
+                  <span class="stat-value">23</span>
+                  <span class="stat-label">Tasks Done</span>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="metrics">
-            <div class="metric">
-              <span class="label">Current Percentile:</span>
-              <span class="value">25%</span>
-            </div>
-            <div class="metric">
-              <span class="label">Rank Progress:</span>
-              <span class="value">Top 25%</span>
-            </div>
-            <div class="metric">
-              <span class="label">XP Needed for Next Rank:</span>
-              <span class="value">500 XP</span>
-            </div>
-            <!-- Activity Graph Placeholder -->
-            <div class="activity-graph">
-              <ActivityChart :pieChartData="chartData" />
+
+          <!-- Activity Timeline -->
+          <div class="activity-timeline">
+            <h3>Recent Activity</h3>
+            <div class="timeline">
+              <div class="timeline-item" v-for="(activity, index) in recentActivities" :key="index">
+                <div class="timeline-icon">
+                  <i :class="activity.icon"></i>
+                </div>
+                <div class="timeline-content">
+                  <h4>{{ activity.title }}</h4>
+                  <p>{{ activity.description }}</p>
+                  <span class="timeline-date">{{ activity.date }}</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -126,7 +171,27 @@ export default {
             backgroundColor: []
           }
         ]
-      }
+      },
+      recentActivities: [
+        {
+          icon: 'fas fa-award',
+          title: 'Achievement Unlocked',
+          description: 'Earned "Code Master" badge',
+          date: '2 hours ago'
+        },
+        {
+          icon: 'fas fa-tasks',
+          title: 'Task Completed',
+          description: 'Finished "Advanced JavaScript" module',
+          date: 'Yesterday'
+        },
+        {
+          icon: 'fas fa-users',
+          title: 'Event Participation',
+          description: 'Attended "Tech Talk: AI in Modern World"',
+          date: '3 days ago'
+        }
+      ]
     };
   },
   computed: {
@@ -422,5 +487,199 @@ export default {
   background: rgba(255, 255, 255, 0.05);
   border-radius: 8px;
   padding: 1rem;
+}
+
+/* Enhanced Percentile Metrics Styles */
+.metrics-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.metrics-header h2 {
+  font-size: 2em;
+  color: #41b883;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  color: #888;
+  font-size: 1rem;
+}
+
+.performance-overview {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.rank-card {
+  background: rgba(65, 184, 131, 0.1);
+  border-radius: 15px;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.rank-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.rank-indicator i {
+  font-size: 2.5rem;
+  color: #ffd700;
+}
+
+.rank-label {
+  color: #888;
+  font-size: 0.9rem;
+}
+
+.rank-value {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #41b883;
+}
+
+.progress-bar {
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 1rem 0;
+}
+
+.progress {
+  height: 100%;
+  background: linear-gradient(90deg, #41b883, #3aa876);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  color: #888;
+  font-size: 0.9rem;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.stat-item {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: transform 0.3s ease;
+}
+
+.stat-item:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.stat-item i {
+  font-size: 1.5rem;
+  color: #41b883;
+}
+
+.stat-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-value {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: white;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: #888;
+}
+
+.activity-timeline {
+  margin-top: 2rem;
+}
+
+.activity-timeline h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  color: #41b883;
+}
+
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.timeline-item {
+  display: flex;
+  gap: 1rem;
+  position: relative;
+}
+
+.timeline-icon {
+  width: 40px;
+  height: 40px;
+  background: rgba(65, 184, 131, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.timeline-icon i {
+  color: #41b883;
+  font-size: 1.2rem;
+}
+
+.timeline-content {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 1rem;
+  flex-grow: 1;
+}
+
+.timeline-content h4 {
+  margin: 0 0 0.5rem 0;
+  color: white;
+}
+
+.timeline-content p {
+  margin: 0;
+  color: #888;
+  font-size: 0.9rem;
+}
+
+.timeline-date {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  color: #666;
+}
+
+@media (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .timeline-item {
+    flex-direction: column;
+  }
+
+  .timeline-icon {
+    margin-bottom: 0.5rem;
+  }
 }
 </style>

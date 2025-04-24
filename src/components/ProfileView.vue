@@ -109,10 +109,6 @@
           <i class="fas fa-edit"></i>
           Edit Profile
         </button> -->
-        <button class="action-btn logout-btn" @click="logout">
-          <i class="fas fa-sign-out-alt"></i>
-          Logout
-        </button>
       </div>
     </div>
   </div>
@@ -569,11 +565,6 @@ export default {
 
 .edit-btn {
   background: #41b883;
-  color: white;
-}
-
-.logout-btn {
-  background: #e74c3c;
   color: white;
 }
 

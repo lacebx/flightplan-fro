@@ -23,6 +23,11 @@
               <li @click="switchToStudentView">Student View</li>
             </ul>
           </li>
+          <li class="logout-container">
+            <button @click="handleLogout" class="logout-btn">
+              <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+          </li>
         </ul>
       </nav>
     </header>
@@ -47,6 +52,11 @@
                 </li>
               </ul>
             </div>
+          </li>
+          <li class="logout-container">
+            <button @click="handleLogout" class="logout-btn">
+              <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
           </li>
         </ul>
       </nav>
@@ -222,7 +232,7 @@ nav ul {
   gap: 1rem;
   justify-content: flex-start;
   align-items: center;
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
   position: relative;
   padding: 0 2rem;
@@ -249,23 +259,31 @@ nav ul {
 }
 
 .logout-container {
-  margin-left: auto; /* This pushes the logout button to the right */
+  margin-left: auto;
 }
 
 .logout-btn {
-  background-color: #e74c3c;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #e74c3c;
   color: white;
   border: none;
   padding: 0.5rem 1rem;
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: pointer;
   font-weight: 500;
   transition: all 0.3s ease;
 }
 
 .logout-btn:hover {
-  background-color: #c0392b;
+  background: #c0392b;
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.2);
+}
+
+.logout-btn i {
+  font-size: 1rem;
 }
 
 /* Responsive adjustments */
@@ -283,6 +301,7 @@ nav ul {
 
   .logout-btn {
     width: 100%;
+    justify-content: center;
   }
 }
 
