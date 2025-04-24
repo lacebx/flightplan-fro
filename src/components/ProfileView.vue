@@ -221,6 +221,18 @@ export default {
     },
     handleImageError(event) {
       event.target.src = require('@/assets/default.png'); // Use require for dynamic paths
+    },
+    updateStats() {
+      if (this.user) {
+        axios.get(`http://localhost:8082/api/users/${this.user.id}/points`, { withCredentials: true })
+          .then(response => {
+            console.log('Points response:', response.data); // Log the response
+            this.stats[0].value = response.data.points;
+          })
+          .catch(error => {
+            console.error('Error fetching points:', error);
+          });
+      }
     }
   },
   mounted() {
@@ -233,6 +245,8 @@ export default {
         const photoUrl = this.user.photos && this.user.photos.length > 0 ? this.user.photos[0].value : 'default-photo-url';
         this.$emit('userPhotoLoaded', photoUrl); // Emit the photo URL
         this.updateStats(); // Update stats after loading user data
+        // Update points directly from the user data
+        this.stats[0].value = this.user.points;
       })
       .catch(error => {
         console.error("Error fetching user:", error);
@@ -250,15 +264,8 @@ export default {
     if (savedResults) {
       this.assessmentResults = JSON.parse(savedResults);
     }
-  },
-  methods: {
-    updateStats() {
-      if (this.user) {
-        this.stats[0].value = this.user.points;
-        this.stats[1].value = this.user.eventsAttended;
-        this.stats[2].value = this.user.tasksCompleted;
-      }
-    }
+
+    this.updateStats(); // Call updateStats to fetch points
   }
 };
 </script>
