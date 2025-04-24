@@ -187,16 +187,21 @@
         </div>
 
         <div class="notification-section">
-          <h3>Send Notification</h3>
+          <h3>Send Email Notification</h3>
           <div class="notification-form">
-            <input 
+            <textarea 
               v-model="notificationMessage" 
-              placeholder="Enter your message" 
+              placeholder="Enter your message to send via email..." 
               class="notification-input"
-            />
-            <button @click="sendNotification" class="send-btn">
+              rows="4"
+            ></textarea>
+            <button 
+              @click="sendNotification" 
+              class="send-btn"
+              :disabled="loading || !notificationMessage.trim()"
+            >
               <i class="fas fa-paper-plane"></i>
-              Send
+              {{ loading ? 'Sending...' : 'Send Email' }}
             </button>
           </div>
         </div>
@@ -310,7 +315,7 @@ export default {
         });
       */
     },
-    sendNotification() {
+    async sendNotification() {
       if (!this.notificationMessage.trim()) {
         alert('Please enter a message');
         return;
@@ -320,35 +325,31 @@ export default {
         alert('Please select a student first');
         return;
       }
-      
-      // For now, just show a success message since the backend endpoint might not be available
-      alert(`Notification would be sent to ${this.selectedStudent.firstName} ${this.selectedStudent.lastName}: "${this.notificationMessage}"`);
-      this.notificationMessage = '';
-      
-      // Uncomment this code when the backend endpoint is available
-      /*
-      this.loading = true;
-      console.log('Sending notification to student:', this.selectedStudent.id);
-      
-      axios
-        .post(`http://localhost:8082/api/notifications`, {
-          userId: this.selectedStudent.id,
-          message: this.notificationMessage
-        }, { withCredentials: true })
-        .then((response) => {
-          console.log('Notification sent successfully:', response.data);
-          alert('Notification sent successfully');
-          this.notificationMessage = '';
-          this.loading = false;
-        })
-        .catch((error) => {
-          console.error('Error sending notification:', error);
-          console.error('Error details:', error.response?.data);
-          this.error = error.response?.data?.message || 'Failed to send notification';
-          this.loading = false;
-          alert(`Error sending notification: ${error.response?.data?.message || error.message}`);
-        });
-      */
+
+      try {
+        this.loading = true;
+        const response = await axios.post(
+          'http://localhost:8082/api/notifications/email',
+          {
+            studentId: this.selectedStudent.id,
+            email: this.selectedStudent.email,
+            subject: 'New Notification from Career Services',
+            message: this.notificationMessage,
+            studentName: `${this.selectedStudent.firstName} ${this.selectedStudent.lastName}`
+          },
+          { withCredentials: true }
+        );
+
+        if (response.status === 200) {
+          alert('Email notification sent successfully!');
+          this.notificationMessage = ''; // Clear the message input
+        }
+      } catch (error) {
+        console.error('Error sending notification:', error);
+        alert('Failed to send notification. Please try again.');
+      } finally {
+        this.loading = false;
+      }
     },
     formatDate(dateString) {
       if (!dateString) return 'No date';
@@ -957,5 +958,57 @@ export default {
   to {
     transform: rotate(360deg);
   }
+}
+
+.notification-input {
+  flex: 1;
+  padding: 0.8rem;
+  border-radius: 8px;
+  border: 1px solid #333;
+  background: #333;
+  color: white;
+  resize: vertical;
+  min-height: 100px;
+  font-family: inherit;
+}
+
+.notification-input:focus {
+  outline: none;
+  border-color: #41b883;
+  box-shadow: 0 0 0 2px rgba(65, 184, 131, 0.2);
+}
+
+.send-btn {
+  align-self: flex-start;
+  height: fit-content;
+  background: #41b883;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.send-btn:hover:not(:disabled) {
+  background: #3aa876;
+  transform: translateY(-2px);
+}
+
+.send-btn:disabled {
+  background: #2c805c;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.notification-form {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  align-items: flex-start;
 }
 </style> 
