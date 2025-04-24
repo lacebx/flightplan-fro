@@ -15,6 +15,7 @@ import AddExperience from '../components/AddExperience.vue';
 import Shop from '../components/ShopView.vue';
 import TransactionHistory from '../components/TransactionHistory.vue';
 import Reports from '../components/EngagementReport.vue';
+import AdminTaskApprovals from '../components/AdminTaskApprovalsView.vue';  
 
 import SetupPasswordView from '../components/SetupPasswordView.vue';
 
@@ -56,6 +57,11 @@ const routes = [
     path: '/admin/manage-tasks',
     name: 'ManageTasks',
     component: ManageTasks
+  },
+  {
+    path: '/admin/task-approvals',
+    name: 'AdminTaskApprovals',
+    component: AdminTaskApprovals
   },
   {
     path: '/admin/view-student-plans',

@@ -5,7 +5,7 @@
       <TransactionHistory />
     </div>
     <!-- Conditional Navbar -->
-    <header v-if="isAdminRoute">
+    <header v-if="isAdmin">
       <nav>
         <ul>
           <li>
@@ -16,18 +16,37 @@
           <li><router-link to="/admin/manage-events" class="nav-link">Manage Events</router-link></li>
           <li><router-link to="/admin/manage-students" class="nav-link">Manage Students</router-link></li>
           <li><router-link to="/admin/reports" class="nav-link">Reports</router-link></li>
+          <li class="nav-link" @click="toggleDropdown">
+            Admin View
+            <ul v-if="showDropdown" class="dropdown-menu">
+              <li @click="switchToStudentView">Student View</li>
+            </ul>
+          </li>
         </ul>
       </nav>
     </header>
     <header v-else-if="isLoggedIn && !isLoginRoute">
-      <nav>
+      <nav><!--Student Navbar-->
         <ul>
           <li><router-link to="/home" class="nav-link">Tasks & Events</router-link></li>
           <li><router-link to="/sw" class="nav-link">S&W</router-link></li>
           <li><router-link to="/experience" class="nav-link">Experience</router-link></li>
           <li><router-link to="/shop" class="nav-link">Shop</router-link></li>
-
           <li><router-link to="/profile" class="nav-link">Profile</router-link></li>
+          <li v-if="isAdmin" @click="switchToAdminView" class="nav-link">
+            Return to Admin View
+          </li>
+          <li class="notification-icon" @click="toggleNotifications">
+            <i class="fas fa-bell"></i>
+            <span v-if="unreadNotifications.length" class="notification-count">{{ unreadNotifications.length }}</span>
+            <div v-if="showNotifications" class="notification-dropdown">
+              <ul>
+                <li v-for="notification in unreadNotifications" :key="notification.id">
+                  {{ notification.message }}
+                </li>
+              </ul>
+            </div>
+          </li>
         </ul>
       </nav>
     </header>
@@ -41,8 +60,9 @@
 
 <script>
 import { ref, onMounted, computed, provide } from 'vue';
+import axios from 'axios';
 
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import RedemptionPage from './components/ShopView.vue';
 import TransactionHistory from './components/TransactionHistory.vue';
 
@@ -57,6 +77,11 @@ export default {
   setup() {
     const isLoggedIn = ref(false);
     const route = useRoute();
+    const router = useRouter();
+    const showNotifications = ref(false);
+    const unreadNotifications = ref([]);
+    const showDropdown = ref(false);
+    const userRole = ref(null);
 
     RedemptionPage;
 
@@ -86,13 +111,54 @@ export default {
     const userPhoto = ref('');
     
 
+    const fetchNotifications = () => {
+      axios.get(`http://localhost:8082/api/notifications/${localStorage.getItem('userId')}`)
+        .then(response => {
+          unreadNotifications.value = response.data;
+        })
+        .catch(error => {
+          console.error('Error fetching notifications:', error);
+        });
+    };
+
+    const toggleNotifications = () => {
+      showNotifications.value = !showNotifications.value;
+    };
+
+    const toggleDropdown = () => {
+      showDropdown.value = !showDropdown.value;
+    };
+
+    const switchToStudentView = () => {
+      showDropdown.value = false;
+      router.push('/home');
+    };
+
+    const switchToAdminView = () => {
+      router.push('/admin');
+    };
+
+    const fetchUserRole = () => {
+      axios.get('http://localhost:8082/auth/user', { withCredentials: true })
+        .then(response => {
+          userRole.value = response.data.role;
+        })
+        .catch(error => {
+          console.error('Error fetching user role:', error);
+        });
+    };
+
     onMounted(() => {
       isLoggedIn.value = localStorage.getItem('isLoggedIn') === 'true';
+      fetchNotifications();
+      fetchUserRole();
     });
 
     const handleLogin = () => {
       isLoggedIn.value = true;
       localStorage.setItem('isLoggedIn', 'true');
+      fetchNotifications();
+      fetchUserRole();
     };
 
     const handleLogout = () => {
@@ -105,9 +171,9 @@ export default {
     };
 
     const isLoginRoute = computed(() => route.path === '/');
-    const isAdminRoute = computed(() => route.path.startsWith('/admin'));
+    const isAdmin = computed(() => userRole.value === 'admin');
 
-    return { isLoggedIn, handleLogin, handleLogout, isLoginRoute, isAdminRoute, userPhoto, setUserPhoto };
+    return { isLoggedIn, handleLogin, handleLogout, isLoginRoute, userPhoto, setUserPhoto, showNotifications, toggleNotifications, unreadNotifications, isAdmin, toggleDropdown, showDropdown, switchToStudentView, switchToAdminView };
   },
 };
 </script>
@@ -158,6 +224,7 @@ nav ul {
 }
 
 .nav-link {
+  position: relative;
   color: #ffffff;
   text-decoration: none;
   padding: 0.5rem 1rem;
@@ -274,5 +341,77 @@ main {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.notification-icon {
+  position: relative;
+  cursor: pointer;
+}
+
+.notification-count {
+  position: absolute;
+  top: -5px;
+  right: -10px;
+  background: red;
+  color: white;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 0.8rem;
+}
+
+.notification-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: rgba(30, 30, 30, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  min-width: 200px;
+  z-index: 1100;
+}
+
+.notification-dropdown ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.notification-dropdown li {
+  padding: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.notification-dropdown li:last-child {
+  border-bottom: none;
+}
+
+.notification-dropdown li:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Dropdown Menu */
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: rgba(30, 30, 30, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  min-width: 150px;
+  z-index: 1100;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.dropdown-menu li {
+  padding: 10px;
+  color: white;
+  cursor: pointer;
+}
+
+.dropdown-menu li:hover {
+  background: rgba(255, 255, 255, 0.1);
 }
 </style>
