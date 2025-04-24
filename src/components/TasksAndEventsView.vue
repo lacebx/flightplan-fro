@@ -39,65 +39,28 @@
       </div>
     </section>
 
-    <!-- Events Sections -->
-    <div class="events-wrapper glass-effect">
-      <!-- Upcoming Events -->
-      <section class="events-section">
-        <h2>Upcoming Events</h2>
-        <div class="events-container">
-          <div class="event-item" v-for="event in upcomingEvents" :key="event.id" data-scroll>
-            <div class="event-image">
-              <img :src="getEventImage(event.id)" :alt="event.name">
-              <div class="event-date-badge">
-                <span class="date">{{ formatDate(event.date) }}</span>
-              </div>
-            </div>
-            <div class="event-content glass-effect">
-              <div class="event-status" :class="{ 'registered': isRegistered(event.id) }">
-                {{ isRegistered(event.id) ? 'Registered' : 'Open' }}
-              </div>
-              <h3>{{ event.name }}</h3>
-              <p>{{ event.description }}</p>
-              <p><strong>Type:</strong> {{ event.eventtype }}</p>
-              <div class="event-details">
-                <span><i class="fas fa-clock"></i> {{ event.starttime }} - {{ event.endtime }}</span>
-                <span><i class="fas fa-map-marker-alt"></i> {{ event.location }}</span>
-              </div>
-              <p><strong>Attendance:</strong> {{ event.attendancetype }}</p>
-              <button v-if="!isRegistered(event.id)" 
-                      class="register-button neumorphic" 
-                      @click="openRegistrationModal(event.id)">
-                Register Now
-              </button>
-              <div v-else class="registered-info">
-                You're all set! See you there!
-              </div>
-            </div>
+    <!-- Events Section -->
+    <section class="events-section">
+      <div class="events-container">
+        <div class="event-item" v-for="event in events" :key="event.id" data-scroll>
+          <div class="event-image">
+            <img :src="getEventImage(event.id)" :alt="event.name">
           </div>
-        </div>
-      </section>
-
-      <!-- Past Events -->
-      <section class="past-events-section">
-        <h2>Past Events</h2>
-        <div class="past-events-grid">
-          <div class="past-event-card neumorphic" 
-               v-for="event in pastEvents" 
-               :key="event.id"
-               :class="{ 'attended': event.attended }">
-            <div class="event-status-badge" :class="{ 'attended': event.attended }">
-              {{ event.attended ? 'Attended' : 'Missed' }}
-            </div>
+          <div class="event-content glass-effect">
             <h3>{{ event.name }}</h3>
             <p>{{ event.description }}</p>
-            <div class="event-meta">
-              <span><i class="fas fa-calendar"></i> {{ formatDate(event.date) }}</span>
-              <span><i class="fas fa-tag"></i> {{ event.eventtype }}</span>
+            <p><strong>Type:</strong> {{ event.eventtype }}</p>
+            <div class="event-details">
+              <span>{{ event.date }}</span>
+              <span>{{ event.starttime }} - {{ event.endtime }}</span>
             </div>
+            <p><strong>Location:</strong> {{ event.location }}</p>
+            <p><strong>Attendance:</strong> {{ event.attendancetype }}</p>
+            <button class="register-button neumorphic" @click="openRegistrationModal(event.id)">Register Now</button>
           </div>
         </div>
-      </section>
-    </div>
+      </div>
+    </section>
 
     <!-- Registration Modal -->
     <div v-if="showRegistrationModal" class="modal">
@@ -151,22 +114,6 @@ export default {
       },
       notification: null,
     };
-  },
-  computed: {
-    upcomingEvents() {
-      const today = new Date();
-      return this.events.filter(event => {
-        const eventDate = new Date(event.date);
-        return eventDate >= today;
-      }).sort((a, b) => new Date(a.date) - new Date(b.date));
-    },
-    pastEvents() {
-      const today = new Date();
-      return this.registeredEvents.filter(event => {
-        const eventDate = new Date(event.date);
-        return eventDate < today;
-      }).sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort by most recent first
-    }
   },
   methods: {
     getEventImage(id) {
@@ -628,135 +575,5 @@ export default {
   border-radius: 5px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   z-index: 1000;
-}
-
-.events-wrapper {
-  max-width: 1200px;
-  margin: 40px auto;
-  padding: 2rem;
-}
-
-.events-section h2,
-.past-events-section h2 {
-  font-size: 2rem;
-  margin-bottom: 2rem;
-  color: #41b883;
-  border-bottom: 2px solid rgba(65, 184, 131, 0.3);
-  padding-bottom: 0.5rem;
-}
-
-.event-date-badge {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  background: rgba(65, 184, 131, 0.9);
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  color: white;
-  font-weight: bold;
-}
-
-.event-status {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  padding: 0.4rem 1rem;
-  border-radius: 20px;
-  font-size: 0.9rem;
-  font-weight: bold;
-}
-
-.event-status.registered {
-  background: #41b883;
-  color: white;
-}
-
-.past-events-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.5rem;
-  margin-top: 2rem;
-}
-
-.past-event-card {
-  position: relative;
-  padding: 1.5rem;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 15px;
-  transition: transform 0.3s ease;
-}
-
-.past-event-card:hover {
-  transform: translateY(-5px);
-}
-
-.past-event-card.attended {
-  border-left: 4px solid #41b883;
-}
-
-.event-status-badge {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  padding: 0.4rem 1rem;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  background: rgba(255, 59, 48, 0.2);
-  color: #ff3b30;
-}
-
-.event-status-badge.attended {
-  background: rgba(65, 184, 131, 0.2);
-  color: #41b883;
-}
-
-.event-meta {
-  display: flex;
-  gap: 1rem;
-  margin-top: 1rem;
-  color: #888;
-  font-size: 0.9rem;
-}
-
-.event-meta i {
-  margin-right: 0.5rem;
-  color: #41b883;
-}
-
-.registered-info {
-  margin-top: 1rem;
-  padding: 0.8rem;
-  background: rgba(65, 184, 131, 0.1);
-  border-radius: 8px;
-  color: #41b883;
-  text-align: center;
-  font-weight: bold;
-}
-
-.event-details {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  margin: 1rem 0;
-}
-
-.event-details i {
-  margin-right: 0.5rem;
-  color: #41b883;
-}
-
-@media (max-width: 768px) {
-  .events-wrapper {
-    padding: 1rem;
-  }
-
-  .past-events-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .event-date-badge {
-    top: 0.5rem;
-    right: 0.5rem;
-  }
 }
 </style>
