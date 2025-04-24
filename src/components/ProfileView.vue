@@ -82,17 +82,23 @@
       <!-- Skills Matrix -->
       <section class="skills-matrix glass-morphism" data-scroll>
         <h2>Your Top Strengths</h2>
-                <div class="skills-grid">
-          <div class="skill-card" v-for="skill in skills" :key="skill.name"
-               :style="{ '--progress': skill.level + '%' }">
+        <div v-if="assessmentResults" class="skills-grid">
+          <div class="skill-card" v-for="strength in assessmentResults.topStrengths" :key="strength.skill"
+               :style="{ '--progress': strength.score + '%' }">
             <div class="skill-info">
-              <h4>{{ skill.name }}</h4>
-              <span class="skill-level">{{ skill.level }}%</span>
+              <h4>{{ strength.skill }}</h4>
+              <span class="skill-level">{{ strength.score }}%</span>
             </div>
             <div class="skill-bar">
               <div class="skill-progress"></div>
             </div>
           </div>
+        </div>
+        <div v-else class="no-assessment">
+          <p>You haven't taken the Strengths & Weaknesses assessment yet.</p>
+          <router-link to="/sw" class="take-assessment-btn">
+            Take Assessment
+          </router-link>
         </div>
       </section>
 
@@ -196,14 +202,7 @@ export default {
           completed: false
         }
       ],
-      skills: [
-        { name: 'Leadership', level: 85 },
-        { name: 'Communication', level: 90 },
-        { name: 'Problem Solving', level: 88 },
-        { name: 'Team Work', level: 92 },
-        { name: 'Technical Skills', level: 87 },
-        { name: 'Project Management', level: 80 }
-      ]
+      assessmentResults: null
     };
   },
   computed: {
@@ -249,6 +248,12 @@ export default {
     console.log("InterviewProIcon:", InterviewProIcon);
     console.log("NetworkBuilderIcon:", NetworkBuilderIcon);
     console.log("SkillsChampionIcon:", SkillsChampionIcon);
+
+    // Load assessment results from localStorage
+    const savedResults = localStorage.getItem('swAssessmentResults');
+    if (savedResults) {
+      this.assessmentResults = JSON.parse(savedResults);
+    }
   },
   methods: {
     updateStats() {
@@ -726,5 +731,34 @@ export default {
 
 .leaderboard-link:hover {
   background-color: #69d4a4;
+}
+
+.no-assessment {
+  text-align: center;
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+}
+
+.no-assessment p {
+  margin-bottom: 1.5rem;
+  color: #888;
+}
+
+.take-assessment-btn {
+  display: inline-block;
+  padding: 0.8rem 1.5rem;
+  background: #41b883;
+  color: white;
+  text-decoration: none;
+  border-radius: 25px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.take-assessment-btn:hover {
+  transform: translateY(-2px);
+  background: #3aa876;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 </style>

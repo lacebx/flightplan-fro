@@ -211,8 +211,20 @@ export default {
         }
       ],
       topStrengths: [],
-      topWeaknesses: []
+      topWeaknesses: [],
+      assessmentCount: 0
     };
+  },
+  created() {
+    // Load previous results if they exist
+    const savedResults = localStorage.getItem('swAssessmentResults');
+    if (savedResults) {
+      const results = JSON.parse(savedResults);
+      this.topStrengths = results.topStrengths;
+      this.topWeaknesses = results.topWeaknesses;
+      this.showResults = true;
+      this.assessmentCount = results.assessmentCount || 0;
+    }
   },
   computed: {
     currentQuestion() {
@@ -269,10 +281,24 @@ export default {
         .filter(skill => skill.score < 80)
         .sort((a, b) => a.score - b.score); // Sort weaknesses by lowest score first
 
+      // Increment assessment count
+      this.assessmentCount++;
+
+      // Save results to localStorage
+      const results = {
+        topStrengths: this.topStrengths,
+        topWeaknesses: this.topWeaknesses,
+        assessmentCount: this.assessmentCount,
+        lastUpdated: new Date().toISOString()
+      };
+      localStorage.setItem('swAssessmentResults', JSON.stringify(results));
+
       this.showResults = true;
     },
     restartAssessment() {
-      this.startAssessment();
+      if (confirm('Are you sure you want to take the assessment again? Your previous results will be overwritten.')) {
+        this.startAssessment();
+      }
     }
   }
 };
