@@ -114,7 +114,6 @@
 
         <div class="role-change-section">
           <h3>Change Role</h3>
-          <p>Current Role: <strong>{{ selectedStudent.role }}</strong></p>
           <select v-model="selectedRole" class="role-select">
             <option value="student">Student</option>
             <option value="admin">Admin</option>
@@ -217,12 +216,6 @@ export default {
         return;
       }
       
-      // For now, just show a success message since the backend endpoint might not be available
-      alert(`Notification would be sent to ${this.selectedStudent.firstName} ${this.selectedStudent.lastName}: "${this.notificationMessage}"`);
-      this.notificationMessage = '';
-      
-      // Uncomment this code when the backend endpoint is available
-      /*
       this.loading = true;
       console.log('Sending notification to student:', this.selectedStudent.id);
       
@@ -244,7 +237,6 @@ export default {
           this.loading = false;
           alert(`Error sending notification: ${error.response?.data?.message || error.message}`);
         });
-      */
     },
     formatDate(dateString) {
       if (!dateString) return 'No date';

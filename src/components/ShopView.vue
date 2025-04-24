@@ -1,18 +1,17 @@
 <template>
   <div class="redemption-page">
     <!-- Reuse the floating spheres background -->
-    <div class="animated-bg">
+   
+      <div class="gradient-sphere"></div>
+      <div class="gradient-sphere"></div>
+      <div class="gradient-sphere"></div>
+   
 
-      <div class="gradient-sphere"></div>
-      <div class="gradient-sphere"></div>
-      <div class="gradient-sphere"></div>
-  
-    
-   
-<nav align="right"><router-link to="/transactionhistory" class="nav-link">Transaction History</router-link></nav>
-   
-<!-- Centered Hero Title -->
-<h1 class="hero-title centered">Available Rewards</h1>
+
+    <nav align="right"><router-link to="/transactionhistory" class="nav-link">Transaction History</router-link></nav>
+    <p class="user-points">Your Points: {{ userPoints }}</p>
+    <h1>Available Rewards</h1>
+
     <div v-if="loading" class="loading">Loading rewards...</div>
     <div v-else class="rewards-grid">
       <div v-for="reward in sortedRewards" :key="reward.id" class="reward-card">
@@ -21,30 +20,28 @@
         <p>{{ reward.description }}</p>
         <p>Cost: {{ reward.points_cost }} points</p>
         <p v-if="!reward.availability" class="unavailable">Out of Stock </p>
-        <button
-          :disabled="!reward.availability || userPoints < reward.points_cost"
-          @click="redeemReward(reward)" class="redeem-btn"
-        >
+        <button :disabled="!reward.availability || userPoints < reward.points_cost" @click="redeemReward(reward)"
+          class="redeem-btn">
           Redeem
         </button>
-        
+
       </div>
     </div>
-    <p class="user-points">Your Points: {{ userPoints }}</p>
 
 
 
-</div>
-</div>
-      
 
-    
+
+  </div>
+
+
+
 </template>
 
 
 <script>
 // RedemptionPage.vue
-import eventBus from '../eventBus';
+import { inject } from 'vue';
 
 import waterBottle from '@/assets/images/water-bottle.png';
 import coffeeMug from '@/assets/images/coffee-mug.png';
@@ -57,14 +54,20 @@ import backPack from '@/assets/images/backpack.png';
 import wirelessHeadPhones from '@/assets/images/wirelessheadphones.png';
 
 
-     export default {
+export default {
   name: 'RedemptionPage',
+
+
   data() {
+    // Inject the reactive array of redeemed items
+    const redeemedItems = inject('redeemedItems');
+    console.log(redeemedItems)
     return {
       userPoints: 1500, // Example starting points
       rewardsList: [
         {
           id: 1,
+          student_name: "Jane",
           item_name: 'Gift Card',
           description: 'A $50 gift card.',
           points_cost: 500,
@@ -73,6 +76,7 @@ import wirelessHeadPhones from '@/assets/images/wirelessheadphones.png';
         },
         {
           id: 2,
+          student_name: "Kibret",
           item_name: 'Wireless Headphones',
           description: 'Noise-cancelling over-ear headphones.',
           points_cost: 1200,
@@ -81,6 +85,7 @@ import wirelessHeadPhones from '@/assets/images/wirelessheadphones.png';
         },
         {
           id: 3,
+          student_name: "Ehit",
           item_name: 'Coffee Mug',
           description: 'A branded coffee mug.',
           points_cost: 300,
@@ -89,6 +94,7 @@ import wirelessHeadPhones from '@/assets/images/wirelessheadphones.png';
         },
         {
           id: 4,
+          student_name: "Helen",
           item_name: 'E-Book Voucher',
           description: 'Voucher for an e-book of your choice.',
           points_cost: 400,
@@ -97,6 +103,7 @@ import wirelessHeadPhones from '@/assets/images/wirelessheadphones.png';
         },
         {
           id: 5,
+          student_name: "Mike",
           item_name: 'Online Course Discount',
           description: 'Discount on an online course.',
           points_cost: 800,
@@ -105,6 +112,7 @@ import wirelessHeadPhones from '@/assets/images/wirelessheadphones.png';
         },
         {
           id: 6,
+          student_name: "Arsene",
           item_name: 'Stationery Set',
           description: 'A set of notebooks, pens, and more.',
           points_cost: 350,
@@ -113,6 +121,7 @@ import wirelessHeadPhones from '@/assets/images/wirelessheadphones.png';
         },
         {
           id: 7,
+          student_name: "Gaby",
           item_name: 'Backpack',
           description: 'A durable and stylish backpack.',
           points_cost: 1000,
@@ -121,14 +130,16 @@ import wirelessHeadPhones from '@/assets/images/wirelessheadphones.png';
         },
         {
           id: 8,
+          student_name: "Tade",
           item_name: 'Water Bottle',
           description: 'A reusable water bottle.',
           points_cost: 250,
-          availability: true,   
-         image: waterBottle,
+          availability: true,
+          image: waterBottle,
         },
         {
           id: 9,
+          student_name: "Fanta",
           item_name: 'Desk Organizer',
           description: 'Keep your workspace neat and tidy.',
           points_cost: 450,
@@ -140,10 +151,13 @@ import wirelessHeadPhones from '@/assets/images/wirelessheadphones.png';
     };
   },
   computed: {
+
     sortedRewards() {
       return this.rewardsList.slice().sort((a, b) => a.points_cost - b.points_cost);
     },
   },
+  inject: ['addRedeemedItem'],
+
   methods: {
     getImageUrl(imagePath) {
       return new URL(`../assets/${imagePath}`, import.meta.url).href;
@@ -151,10 +165,10 @@ import wirelessHeadPhones from '@/assets/images/wirelessheadphones.png';
     redeemReward(reward) {
       if (this.userPoints >= reward.points_cost && reward.availability) {
         this.userPoints -= reward.points_cost;
-        eventBus.emit('itemRedeemed', reward);
-         console.log(`Event 'itemRedeemed' emitted with item:`,  reward);
+        this.addRedeemedItem(reward);
+
         alert(`You have redeemed: ${reward.item_name}`);
-        
+
         // Additional logic (e.g., update reward availability) can be added here.
       } else {
         alert('Insufficient points or item not available.');
@@ -171,20 +185,12 @@ import wirelessHeadPhones from '@/assets/images/wirelessheadphones.png';
 
 
 <style scoped>
-
 .redemption-page {
-  font-family: Arial, sans-serif;  
-  margin: 0px auto;
-  max-width: 2500px;
-  padding: 0px;
+  background: #1a1a1a;
+  color: white;
+  margin: auto;
   text-align: center;
-}
 
-.hero-title {
-  font-size: 4rem;
-  text-shadow: 0 0 10px rgba(65, 184, 131, 0.5);
-  text-align: center;
-  margin-top: 40px;
 }
 
 .loading {
@@ -193,24 +199,20 @@ import wirelessHeadPhones from '@/assets/images/wirelessheadphones.png';
 }
 
 .rewards-grid {
+  position: absolute;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  grid-auto-rows: auto;
   gap: 10px;
-  margin-bottom: 0px;
+ 
+  margin-left: 50px;
 }
 
 .reward-card {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(5px);
-  border: 1px solid rgba(65, 184, 131, 0.2);
-  border-radius: 15px;
-  padding: 1.5rem;
-  transition: transform 0.3s ease;
-}
-
-.reward-card:hover {
-  transform: translateY(-5px);
+  border: 1px solid #ccc;
+  padding: 0px;
+  border-radius: 10px;
+  text-align: center;
+  width: 350px;
 }
 
 .reward-card h2 {
@@ -234,33 +236,33 @@ import wirelessHeadPhones from '@/assets/images/wirelessheadphones.png';
 
 .unavailable {
   color: #ff0000;
-  font-size:small;
- 
+  font-size: small;
+
 
 }
 
 .user-points {
-  font-size: 10px;
+  font-size: 42px;
   font-weight: bold;
   text-align: center;
 }
 
 .redeem-btn {
-  background-color: #28a745; 
-  color: white; 
-  padding: 10px 20px; 
+  background-color: #28a745;
+  color: white;
+  padding: 10px 20px;
 
-  font-size: 16px !important; 
+  font-size: 16px !important;
   font-weight: bold;
-  border: none; 
-  border-radius: 5px; 
+  border: none;
+  border-radius: 5px;
   width: 100px;
-  cursor: pointer; 
-  transition: background-color 0.3s ease; 
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .redeem-btn:hover {
-  background-color: #218838; 
+  background-color: #218838;
 }
 
 
@@ -273,10 +275,12 @@ import wirelessHeadPhones from '@/assets/images/wirelessheadphones.png';
   .hero-title {
     font-size: 2.5rem;
   }
+
   .floating-stats {
     flex-direction: column;
     align-items: center;
   }
+
   .stat-bubble {
     width: 10px;
     height: 10px;
