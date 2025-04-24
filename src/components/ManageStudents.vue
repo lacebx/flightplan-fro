@@ -10,10 +10,7 @@
           @input="filterStudents" 
           class="search-input"
         />
-        <button @click="fetchStudents" class="refresh-btn">
-          <i class="fas fa-sync-alt"></i>
-          Refresh List
-        </button>
+       
       </div>
     </div>
     
@@ -36,9 +33,6 @@
           class="student-item"
           :class="{ 'selected': selectedStudent && selectedStudent.id === student.id }"
         >
-          <div class="student-avatar">
-            <i class="fas fa-user-circle"></i>
-          </div>
           <div class="student-info">
             <span class="student-name">{{ student.firstName }} {{ student.lastName }}</span>
             <span class="student-id">ID: {{ student.idNumber }}</span>
@@ -53,9 +47,7 @@
       <div v-if="selectedStudent" class="student-details">
         <div class="details-header">
           <div class="student-profile">
-            <div class="profile-avatar">
-              <i class="fas fa-user-circle"></i>
-            </div>
+            
             <div class="profile-info">
               <h2>{{ selectedStudent.firstName }} {{ selectedStudent.lastName }}</h2>
               <p class="student-role">{{ selectedStudent.role || 'Student' }}</p>
@@ -146,6 +138,10 @@
                     <span :class="['status-badge', task.status]">
                       {{ task.status }}
                     </span>
+                  </div>
+                  <div v-if="task.status === 'pending'" class="task-actions">
+                    <button @click="approveTask(task)" class="approve-btn">Approve</button>
+                    <button @click="declineTask(task)" class="decline-btn">Decline</button>
                   </div>
                 </div>
               </div>
@@ -401,10 +397,39 @@ export default {
       if (!dateString) return '';
       const date = new Date(dateString);
       return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    },
+    fetchPendingTasks() {
+      axios.get('http://localhost:8082/api/admin/pending-task-approvals', { withCredentials: true })
+        .then(response => {
+          const pendingTasks = response.data;
+          this.students.forEach(student => {
+            student.tasks = student.tasks || [];
+            student.tasks.push(...pendingTasks.filter(task => task.userId === student.id));
+          });
+        })
+        .catch(error => {
+          console.error('Error fetching pending tasks:', error);
+        });
+    },
+    approveTask(task) {
+      axios.put(`http://localhost:8082/api/tasks/${task.taskId}/approve-completion`, { userId: task.userId }, { withCredentials: true })
+        .then(response => {
+          console.log('Task approved:', response.data);
+          task.status = 'completed';
+        })
+        .catch(error => {
+          console.error('Error approving task:', error);
+        });
+    },
+    declineTask(task) {
+      // Implement decline logic here
+      console.log('Task declined:', task);
+      task.status = 'declined';
     }
   },
   mounted() {
     this.fetchStudents();
+    this.fetchPendingTasks(); // Fetch pending tasks when component is mounted
   },
 };
 </script>
@@ -470,15 +495,14 @@ export default {
 }
 
 .student-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   background: #2a2a2a;
   border-radius: 12px;
   padding: 1.5rem;
   margin-bottom: 1rem;
   border: none;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  gap: 1.5rem;
-  align-items: center;
   transition: transform 0.2s ease, background-color 0.2s ease;
 }
 
@@ -490,21 +514,6 @@ export default {
 .student-item.selected {
   background: #2d3c34;
   border-left: 4px solid #41b883;
-}
-
-.student-avatar {
-  width: 50px;
-  height: 50px;
-  background: #1a1a1a;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.student-avatar i {
-  font-size: 1.8rem;
-  color: #41b883;
 }
 
 .student-info {
@@ -570,15 +579,7 @@ export default {
   gap: 2rem;
 }
 
-.profile-avatar {
-  width: 80px;
-  height: 80px;
-  background: #1a1a1a;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+
 
 .profile-avatar i {
   font-size: 2.5rem;
@@ -1008,5 +1009,27 @@ export default {
   gap: 1rem;
   margin-top: 1rem;
   align-items: flex-start;
+}
+
+.task-actions {
+  margin-top: 10px;
+}
+
+.approve-btn, .decline-btn {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+.approve-btn {
+  background-color: #41b883;
+  color: white;
+}
+
+.decline-btn {
+  background-color: #e74c3c;
+  color: white;
 }
 </style> 
