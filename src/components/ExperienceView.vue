@@ -8,7 +8,7 @@
     </div>
     
     <!-- Centered Hero Title -->
-    <h1 class="hero-title centered">Professional Journey</h1>
+    <h1 class="hero-title">Professional Journey</h1>
 
     <div class="content-wrapper">
       <!-- Experience Cards -->
@@ -17,27 +17,23 @@
              v-for="exp in experiences" 
              :key="exp.experienceid">
           <div class="card-content">
-            <h3 class="experience-name">{{ exp.name }}</h3>
-            <p class="category">{{ exp.category }}</p>
-            <p class="description">{{ exp.description }}</p>
-            <div class="card-footer">
-              <span class="points">
-                <i class="fas fa-star"></i> <strong>{{ exp.pointsearned }} Points</strong>
+            <div class="card-header">
+              <span class="category-badge" :class="exp.category.toLowerCase()">
+                {{ exp.category }}
               </span>
-              <span class="date">
-                <i class="fas fa-calendar-alt"></i> <small>{{ formatDate(exp.createdAt) }}</small>
+              <span class="date-badge">
+                {{ formatDate(exp.createdAt) }}
               </span>
             </div>
+            <h3 class="experience-name">{{ exp.name }}</h3>
+            <p class="description">{{ exp.description }}</p>
           </div>
         </div>
       </div>
 
       <!-- Add Experience Button -->
       <button class="add-experience-btn" @click="showAddExperience">
-        <span class="btn-content">
-          <span class="default-text">XP+</span>
-          <span class="hover-text">+ Add Experience</span>
-        </span>
+        <i class="fas fa-plus"></i>
       </button>
 
       <!-- Add Experience Modal -->
@@ -46,8 +42,8 @@
           <h2>Add New Experience</h2>
           <form @submit.prevent="submitExperience">
             <div class="form-group">
-              <label for="name">Name</label>
-              <input type="text" id="name" v-model="newExperience.name" required>
+              <label for="name">Experience Title</label>
+              <input type="text" id="name" v-model="newExperience.name" required placeholder="Enter experience title">
             </div>
             
             <div class="form-group">
@@ -62,32 +58,28 @@
 
             <div class="form-group">
               <label for="description">Description</label>
-              <textarea id="description" v-model="newExperience.description" required></textarea>
+              <textarea id="description" v-model="newExperience.description" required 
+                        placeholder="Describe your experience..."></textarea>
             </div>
 
             <div class="form-group">
-              <label for="points">Points Earned</label>
-              <input type="number" id="points" v-model="newExperience.pointsearned" required min="0">
-            </div>
-
-            <div class="form-group">
-              <label for="scheduling">Scheduling Type</label>
+              <label for="scheduling">Schedule Type</label>
               <select id="scheduling" v-model="newExperience.schedulingtype" required>
                 <option value="Flexible">Flexible</option>
                 <option value="Fixed">Fixed</option>
               </select>
             </div>
 
-            <div class="form-group">
+            <div class="form-group checkbox-group">
               <label>
                 <input type="checkbox" v-model="newExperience.reflectionrequired">
-                Reflection Required
+                Requires Reflection
               </label>
             </div>
 
             <div class="modal-buttons">
-              <button type="submit" class="submit-btn">Add Experience</button>
               <button type="button" class="cancel-btn" @click="closeModal">Cancel</button>
+              <button type="submit" class="submit-btn">Add Experience</button>
             </div>
           </form>
         </div>
@@ -122,7 +114,6 @@ export default {
   },
   methods: {
     showAddExperience() {
-
       this.showModal = true;
     },
     closeModal() {
@@ -183,302 +174,300 @@ export default {
   background: #1a1a1a;
   color: white;
   overflow-x: hidden;
-}
-
-/* 3D Hero Section */
-.hero-3d {
-  height: 60vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  perspective: 1000px;
-}
-
-.cube-container {
-  width: 200px;
-  height: 200px;
-  position: relative;
-  transform-style: preserve-3d;
-  animation: rotate 20s infinite linear;
-}
-
-.cube {
-  width: 100%;
-  height: 100%;
-  position: relative;
-  transform-style: preserve-3d;
-}
-
-.cube-face {
-  position: absolute;
-  width: 200px;
-  height: 200px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 2em;
-  background: rgba(65, 184, 131, 0.1);
-  border: 2px solid #41b883;
-  backdrop-filter: blur(5px);
-}
-
-.front  { transform: rotateY(0deg) translateZ(100px); }
-.back   { transform: rotateY(180deg) translateZ(100px); }
-.right  { transform: rotateY(90deg) translateZ(100px); }
-.left   { transform: rotateY(-90deg) translateZ(100px); }
-.top    { transform: rotateX(90deg) translateZ(100px); }
-.bottom { transform: rotateX(-90deg) translateZ(100px); }
-
-@keyframes rotate {
-  from { transform: rotateX(-20deg) rotateY(0deg); }
-  to { transform: rotateX(-20deg) rotateY(360deg); }
-}
-
-.hero-title {
-  font-size: 4rem;
-  text-shadow: 0 0 10px rgba(65, 184, 131, 0.5);
-  text-align: center;
-  margin-top: 20px;
-}
-
-/* Floating Stats */
-.floating-stats {
-  display: flex;
-  justify-content: center;
-  gap: 2rem;
-  margin: -50px 0 50px;
-}
-
-.stat-bubble {
-  background: linear-gradient(145deg, #41b883, #3aa876);
-  border-radius: 50%;
-  width: 120px;
-  height: 120px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  box-shadow: 0 10px 20px rgba(65, 184, 131, 0.2);
-  animation: float 3s ease-in-out infinite;
-}
-
-.stat-bubble:nth-child(2) { animation-delay: 0.2s; }
-.stat-bubble:nth-child(3) { animation-delay: 0.4s; }
-
-@keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
-  100% { transform: translateY(0px); }
-}
-
-.stat-value {
-  font-size: 2em;
-  font-weight: bold;
-}
-
-.stat-label {
-  font-size: 0.9em;
-  opacity: 0.8;
-}
-
-/* Experience Grid */
-.experience-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 2.5rem; /* Increased gap for extra spacing between cards */
   padding: 2rem;
 }
 
-.experience-card {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(5px);
-  border: 1px solid rgba(65, 184, 131, 0.2);
-  border-radius: 15px;
-  padding: 1.5rem;
-  transition: transform 0.3s ease;
-}
-
-.experience-card:hover {
-  transform: translateY(-5px);
-}
-
-.card-content {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.experience-name {
-  font-size: 1.5em;
-  font-weight: bold;
-}
-
-.category {
-  font-size: 1.1em;
+.hero-title {
+  font-size: 2.5rem;
+  font-weight: 300;
+  text-align: center;
+  margin: 2rem 0;
   color: #41b883;
 }
 
-.description {
-  font-size: 1em;
-  color: #ccc;
+.experience-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  padding: 1rem;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
-.card-footer {
+.experience-card {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  position: relative;
+  border: 1px solid rgba(65, 184, 131, 0.1);
+}
+
+.experience-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(to right, #41b883, #3aa876);
+  opacity: 0.7;
+}
+
+.experience-card.academic::before {
+  background: linear-gradient(to right, #4CAF50, #41b883);
+}
+
+.experience-card.professional::before {
+  background: linear-gradient(to right, #41b883, #2196F3);
+}
+
+.experience-card.leadership::before {
+  background: linear-gradient(to right, #FF9800, #41b883);
+}
+
+.experience-card.volunteer::before {
+  background: linear-gradient(to right, #E91E63, #41b883);
+}
+
+.experience-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 20px rgba(65, 184, 131, 0.15);
+  border-color: rgba(65, 184, 131, 0.3);
+  background: rgba(65, 184, 131, 0.05);
+}
+
+.card-content {
+  padding: 1.2rem;
+  position: relative;
+  background: linear-gradient(
+    180deg, 
+    rgba(65, 184, 131, 0.05) 0%,
+    rgba(26, 26, 26, 0) 100%
+  );
+}
+
+.card-header {
   display: flex;
   justify-content: space-between;
-  margin-top: 1rem;
+  align-items: center;
+  margin-bottom: 0.8rem;
 }
 
-.points, .date {
-  font-size: 0.9em;
-  color: #aaa;
+.category-badge {
+  font-size: 0.75rem;
+  padding: 0.3rem 0.8rem;
+  border-radius: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.points i, .date i {
-  margin-right: 5px;
+/* Updated category badge colors with gradients */
+.academic { 
+  background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(65, 184, 131, 0.1) 100%);
+  color: #4CAF50;
+  border: 1px solid rgba(76, 175, 80, 0.2);
 }
 
-/* Add Experience Button */
+.professional { 
+  background: linear-gradient(135deg, rgba(33, 150, 243, 0.1) 0%, rgba(65, 184, 131, 0.1) 100%);
+  color: #2196F3;
+  border: 1px solid rgba(33, 150, 243, 0.2);
+}
+
+.leadership { 
+  background: linear-gradient(135deg, rgba(255, 152, 0, 0.1) 0%, rgba(65, 184, 131, 0.1) 100%);
+  color: #FF9800;
+  border: 1px solid rgba(255, 152, 0, 0.2);
+}
+
+.volunteer { 
+  background: linear-gradient(135deg, rgba(233, 30, 99, 0.1) 0%, rgba(65, 184, 131, 0.1) 100%);
+  color: #E91E63;
+  border: 1px solid rgba(233, 30, 99, 0.2);
+}
+
+.experience-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0.5rem 0;
+  color: #fff;
+  position: relative;
+  display: inline-block;
+}
+
+.experience-name::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(to right, #41b883, transparent);
+  opacity: 0.3;
+}
+
+.description {
+  font-size: 0.9rem;
+  color: #bbb;
+  line-height: 1.6;
+  margin: 0.8rem 0 0;
+  padding-left: 0.5rem;
+  border-left: 2px solid rgba(65, 184, 131, 0.2);
+}
+
+.date-badge {
+  font-size: 0.75rem;
+  color: #41b883;
+  background: rgba(65, 184, 131, 0.1);
+  padding: 0.2rem 0.6rem;
+  border-radius: 12px;
+  border: 1px solid rgba(65, 184, 131, 0.2);
+}
+
+/* Update the add button with a gradient */
 .add-experience-btn {
   position: fixed;
   bottom: 2rem;
   right: 2rem;
-  background: #41b883;
+  width: 48px;
+  height: 48px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, #41b883, #3aa876);
   border: none;
-  border-radius: 50%;
-  width: 60px;
-  height: 60px;
+  color: white;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: all 0.3s ease;
-  overflow: hidden;
-  z-index: 100;
+  box-shadow: 0 4px 15px rgba(65, 184, 131, 0.3);
 }
 
 .add-experience-btn:hover {
-  width: 200px;
-  border-radius: 30px;
+  transform: translateY(-2px) rotate(90deg);
+  box-shadow: 0 6px 20px rgba(65, 184, 131, 0.4);
 }
 
-.btn-content {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 200px;
-  color: white;
-}
-
-.default-text {
-  font-size: 1.2em;
-  font-weight: bold;
-}
-
-.hover-text {
-  display: none;
-  margin-left: 10px;
-}
-
-.add-experience-btn:hover .default-text {
-  display: none;
-}
-
-.add-experience-btn:hover .hover-text {
-  display: inline;
-}
-
-@media (max-width: 768px) {
-  .hero-title {
-    font-size: 2.5rem;
-  }
-  .floating-stats {
-    flex-direction: column;
-    align-items: center;
-  }
-  .stat-bubble {
-    width: 100px;
-    height: 100px;
-  }
+.add-experience-btn i {
+  font-size: 1.2rem;
 }
 
 /* Modal Styles */
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.7);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
+.modal-content {
+  background: rgba(26, 26, 26, 0.95);
+  border-radius: 16px;
+  border: 1px solid rgba(65, 184, 131, 0.2);
+  box-shadow: 0 8px 32px rgba(65, 184, 131, 0.1);
 }
 
-.modal-content {
-  width: 90%;
-  max-width: 500px;
-  max-height: 90vh;
-  overflow-y: auto;
-  padding: 2rem;
+.modal-content h2 {
+  font-size: 1.5rem;
+  font-weight: 300;
+  margin-bottom: 1.5rem;
+  color: #41b883;
 }
 
 .form-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.2rem;
 }
 
 .form-group label {
-  display: block;
-  margin-bottom: 0.5rem;
-  color: white;
+  font-size: 0.9rem;
+  color: #aaa;
+  margin-bottom: 0.4rem;
 }
 
 .form-group input,
 .form-group select,
 .form-group textarea {
-  width: 100%;
-  padding: 0.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 4px;
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 0.6rem;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
 }
 
-.form-group textarea {
-  height: 100px;
-  resize: vertical;
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: #41b883;
+  box-shadow: 0 0 0 2px rgba(65, 184, 131, 0.1);
+}
+
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.checkbox-group input[type="checkbox"] {
+  width: auto;
+  margin-right: 0.5rem;
 }
 
 .modal-buttons {
   display: flex;
   gap: 1rem;
   justify-content: flex-end;
-  margin-top: 1.5rem;
+  margin-top: 2rem;
 }
 
 .submit-btn,
 .cancel-btn {
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
 }
 
 .submit-btn {
-  background: #41b883;
+  background: linear-gradient(135deg, #41b883, #3aa876);
   color: white;
-}
-
-.cancel-btn {
-  background: #dc3545;
-  color: white;
+  border: none;
+  box-shadow: 0 2px 8px rgba(65, 184, 131, 0.2);
 }
 
 .submit-btn:hover {
-  background: #3aa876;
+  background: linear-gradient(135deg, #3aa876, #41b883);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(65, 184, 131, 0.3);
+}
+
+.cancel-btn {
+  background: transparent;
+  border: 1px solid #666;
+  color: #666;
 }
 
 .cancel-btn:hover {
-  background: #c82333;
+  border-color: #888;
+  color: #888;
+}
+
+@media (max-width: 768px) {
+  .experience-grid {
+    grid-template-columns: 1fr;
+    padding: 0.5rem;
+  }
+
+  .hero-title {
+    font-size: 2rem;
+    margin: 1.5rem 0;
+  }
+
+  .experience-card {
+    margin: 0 auto;
+    max-width: 100%;
+  }
+
+  .modal-content {
+    padding: 1.5rem;
+    margin: 1rem;
+  }
 }
 </style>
