@@ -187,11 +187,11 @@
         </div>
 
         <div class="notification-section">
-          <h3>Send Email Notification</h3>
+          <h3>Send Notification</h3>
           <div class="notification-form">
             <textarea 
               v-model="notificationMessage" 
-              placeholder="Enter your message to send via email..." 
+              placeholder="Enter your message to send via notification..." 
               class="notification-input"
               rows="4"
             ></textarea>
@@ -201,7 +201,7 @@
               :disabled="loading || !notificationMessage.trim()"
             >
               <i class="fas fa-paper-plane"></i>
-              {{ loading ? 'Sending...' : 'Send Email' }}
+              {{ loading ? 'Sending...' : 'Send Notification' }}
             </button>
           </div>
         </div>
@@ -320,7 +320,7 @@ export default {
         alert('Please enter a message');
         return;
       }
-      
+
       if (!this.selectedStudent) {
         alert('Please select a student first');
         return;
@@ -329,11 +329,9 @@ export default {
       try {
         this.loading = true;
         const response = await axios.post(
-          'http://localhost:8082/api/notifications/email',
+          'http://localhost:8082/api/notifications/send',
           {
             studentId: this.selectedStudent.id,
-            email: this.selectedStudent.email,
-            subject: 'New Notification from Career Services',
             message: this.notificationMessage,
             studentName: `${this.selectedStudent.firstName} ${this.selectedStudent.lastName}`
           },
@@ -341,7 +339,7 @@ export default {
         );
 
         if (response.status === 200) {
-          alert('Email notification sent successfully!');
+          alert('Notification sent successfully!');
           this.notificationMessage = ''; // Clear the message input
         }
       } catch (error) {

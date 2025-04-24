@@ -5,7 +5,7 @@
       <TransactionHistory />
     </div>
     <!-- Conditional Navbar -->
-    <header v-if="isAdmin">
+    <header v-if="isAdmin && isAdminView">
       <nav>
         <ul>
           <li>
@@ -37,7 +37,7 @@
           <li v-if="isAdmin" @click="switchToAdminView" class="nav-link">
             Return to Admin View
           </li>
-          <li class="notification-icon" @click="toggleNotifications">
+          <li class="nav-link notification-icon" @click="toggleNotifications">
             <i class="fas fa-bell"></i>
             <span v-if="unreadNotifications.length" class="notification-count">{{ unreadNotifications.length }}</span>
             <div v-if="showNotifications" class="notification-dropdown">
@@ -83,6 +83,7 @@ export default {
     const unreadNotifications = ref([]);
     const showDropdown = ref(false);
     const userRole = ref(null);
+    const isStudentView = ref(false);
 
     RedemptionPage;
 
@@ -113,7 +114,13 @@ export default {
     
 
     const fetchNotifications = () => {
-      axios.get(`http://localhost:8082/api/notifications/${localStorage.getItem('userId')}`)
+      const userId = localStorage.getItem('userId');
+      if (!userId) {
+        console.error('User ID not found in localStorage');
+        return;
+      }
+
+      axios.get(`http://localhost:8082/api/notifications/${userId}`)
         .then(response => {
           unreadNotifications.value = response.data;
         })
@@ -132,10 +139,12 @@ export default {
 
     const switchToStudentView = () => {
       showDropdown.value = false;
+      isStudentView.value = true;
       router.push('/home');
     };
 
     const switchToAdminView = () => {
+      isStudentView.value = false;
       router.push('/admin');
     };
 
@@ -177,7 +186,11 @@ export default {
 
     const isLoginRoute = computed(() => route.path === '/');
     const isAdmin = computed(() => userRole.value === 'admin');
+    const isAdminView = computed(() => {
+      return isAdmin.value && !isStudentView.value;
+    });
 
+    return { isLoggedIn, handleLogin, handleLogout, isLoginRoute, userPhoto, setUserPhoto, showNotifications, toggleNotifications, unreadNotifications, isAdmin, toggleDropdown, showDropdown, switchToStudentView, switchToAdminView, isAdminView, isStudentView };
     return { isLoggedIn, handleLogin, handleLogout, isLoginRoute, userPhoto, setUserPhoto, showNotifications, toggleNotifications, unreadNotifications, isAdmin, toggleDropdown, showDropdown, switchToStudentView, switchToAdminView };
   },
 };
