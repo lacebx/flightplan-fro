@@ -15,6 +15,7 @@
           </li>
           <li><router-link to="/admin/manage-events" class="nav-link">Manage Events</router-link></li>
           <li><router-link to="/admin/manage-students" class="nav-link">Manage Students</router-link></li>
+          <li><router-link to="/admin/manage-tasks" class="nav-link">Manage Tasks</router-link></li>
           <li><router-link to="/admin/reports" class="nav-link">Reports</router-link></li>
           <li><router-link to="/admin/task-approvals" class="nav-link">Task Approvals</router-link></li>
           <li class="nav-link" @click="toggleDropdown">
@@ -44,10 +45,17 @@
           </li>
           <li class="nav-link notification-icon" @click="toggleNotifications">
             <i class="fas fa-bell"></i>
-            <span v-if="unreadNotifications.length" class="notification-count">{{ unreadNotifications.length }}</span>
+            <span v-if="unreadNotifications.length" class="notification-count">
+              {{ unreadNotifications.length }}
+            </span>
             <div v-if="showNotifications" class="notification-dropdown">
               <ul>
+                <li v-if="unreadNotifications.length === 0">
+                  <i class="fas fa-check-circle"></i>
+                  No new notifications
+                </li>
                 <li v-for="notification in unreadNotifications" :key="notification.id">
+                  <i class="fas fa-info-circle"></i>
                   {{ notification.message }}
                 </li>
               </ul>
@@ -90,7 +98,13 @@ export default {
     const route = useRoute();
     const router = useRouter();
     const showNotifications = ref(false);
-    const unreadNotifications = ref([]);
+    const unreadNotifications = ref([
+      {
+        id: 1,
+        message: "Welcome to your dashboard!",
+        timestamp: new Date()
+      }
+    ]);
     const showDropdown = ref(false);
     const userRole = ref(null);
     const isStudentView = ref(false);
@@ -130,9 +144,27 @@ export default {
         return;
       }
 
-      axios.get(`http://localhost:8082/api/notifications/${userId}`)
+      // First set some default notifications while waiting for API
+      unreadNotifications.value = [
+        {
+          id: 1,
+          message: "Welcome to your dashboard!",
+          timestamp: new Date()
+        },
+        {
+          id: 2,
+          message: "You have a new task waiting for review",
+          timestamp: new Date()
+        }
+      ];
+
+      axios.get(`http://localhost:8082/api/notifications/${userId}`, { withCredentials: true })
         .then(response => {
-          unreadNotifications.value = response.data;
+          if (response.data && Array.isArray(response.data)) {
+            unreadNotifications.value = response.data;
+          } else {
+            console.warn('Unexpected notifications format:', response.data);
+          }
         })
         .catch(error => {
           console.error('Error fetching notifications:', error);
@@ -141,6 +173,19 @@ export default {
 
     const toggleNotifications = () => {
       showNotifications.value = !showNotifications.value;
+      // Close dropdown when clicking outside
+      if (showNotifications.value) {
+        const closeDropdown = (e) => {
+          if (!e.target.closest('.notification-icon')) {
+            showNotifications.value = false;
+            document.removeEventListener('click', closeDropdown);
+          }
+        };
+        // Add slight delay to prevent immediate closure
+        setTimeout(() => {
+          document.addEventListener('click', closeDropdown);
+        }, 100);
+      }
     };
 
     const toggleDropdown = () => {
@@ -201,7 +246,6 @@ export default {
     });
 
     return { isLoggedIn, handleLogin, handleLogout, isLoginRoute, userPhoto, setUserPhoto, showNotifications, toggleNotifications, unreadNotifications, isAdmin, toggleDropdown, showDropdown, switchToStudentView, switchToAdminView, isAdminView, isStudentView };
-    return { isLoggedIn, handleLogin, handleLogout, isLoginRoute, userPhoto, setUserPhoto, showNotifications, toggleNotifications, unreadNotifications, isAdmin, toggleDropdown, showDropdown, switchToStudentView, switchToAdminView };
   },
 };
 </script>
@@ -423,40 +467,86 @@ main {
 .notification-icon {
   position: relative;
   cursor: pointer;
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.notification-icon:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.notification-icon i {
+  font-size: 1.2rem;
+  color: #ffffff;
 }
 
 .notification-count {
   position: absolute;
-  top: -5px;
-  right: -10px;
-  background: red;
+  top: -8px;
+  right: -8px;
+  background: #e74c3c;
   color: white;
   border-radius: 50%;
-  padding: 2px 6px;
-  font-size: 0.8rem;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.75rem;
+  min-width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #1a1a1a;
+  font-weight: bold;
 }
 
 .notification-dropdown {
   position: absolute;
-  top: 100%;
+  top: calc(100% + 10px);
   right: 0;
   background: rgba(30, 30, 30, 0.95);
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  min-width: 200px;
-  z-index: 1100;
+  min-width: 300px;
+  max-width: 400px;
+  border-radius: 8px;
+  backdrop-filter: blur(10px);
+  z-index: 1000;
+}
+
+.notification-dropdown::before {
+  content: '';
+  position: absolute;
+  top: -8px;
+  right: 20px;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid rgba(30, 30, 30, 0.95);
 }
 
 .notification-dropdown ul {
   list-style: none;
   padding: 0;
   margin: 0;
+  max-height: 400px;
+  overflow-y: auto;
 }
 
 .notification-dropdown li {
-  padding: 10px;
+  padding: 1rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   color: white;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  transition: background-color 0.3s ease;
 }
 
 .notification-dropdown li:last-child {

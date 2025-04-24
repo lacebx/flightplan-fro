@@ -23,10 +23,10 @@
       <div class="quick-actions">
         <h2>Quick Actions</h2>
         <div class="action-buttons">
-          <button @click="showTaskForm = true" class="action-btn">
+          <button @click="navigateToCreateTask" class="action-btn">
             <i class="fas fa-plus"></i> Create Task
           </button>
-          <button @click="showEventForm = true" class="action-btn">
+          <button @click="navigateToCreateEvent" class="action-btn">
             <i class="fas fa-calendar-plus"></i> Add Event
           </button>
           
@@ -137,8 +137,17 @@ export default {
         alert('Error creating task. Please try again.');
       }
     },
-    navigateToManageEvents() {
-      this.$router.push('/admin/manage-events');
+    navigateToCreateTask() {
+      this.$router.push({
+        path: '/admin/manage-tasks',
+        query: { showForm: 'true' }
+      });
+    },
+    navigateToCreateEvent() {
+      this.$router.push({
+        path: '/admin/manage-events',
+        query: { showForm: 'true' }
+      });
     },
     logout() {
       localStorage.removeItem('userRole');
@@ -155,7 +164,17 @@ export default {
 
     // Listen for updates to the pending tasks count
     eventBus.on('updatePendingTasksCount', (count) => {
+      console.log('Received pending tasks count update:', count);
       this.stats.pendingTasks = count;
+    });
+
+    // Listen for task approval/decline events
+    eventBus.on('taskApproved', () => {
+      this.fetchDashboardStats();
+    });
+
+    eventBus.on('taskDeclined', () => {
+      this.fetchDashboardStats();
     });
   },
   beforeUnmount() {
@@ -163,6 +182,10 @@ export default {
     if (this.statsInterval) {
       clearInterval(this.statsInterval);
     }
+    // Remove event listeners
+    eventBus.off('updatePendingTasksCount');
+    eventBus.off('taskApproved');
+    eventBus.off('taskDeclined');
   }
 };
 </script>

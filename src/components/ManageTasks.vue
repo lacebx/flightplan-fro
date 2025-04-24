@@ -270,7 +270,25 @@ export default {
   },
   created() {
     this.fetchTasks();
-  }
+  },
+  mounted() {
+    this.fetchTasks();
+    // Show form if navigated with showForm query parameter
+    if (this.$route.query.showForm === 'true') {
+      this.isFormVisible = true;
+    }
+  },
+  // Add watch for route changes
+  watch: {
+    '$route.query': {
+      handler(newQuery) {
+        if (newQuery.showForm === 'true') {
+          this.isFormVisible = true;
+        }
+      },
+      immediate: true
+    }
+  },
 };
 </script>
 
