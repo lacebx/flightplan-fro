@@ -283,4 +283,48 @@ main {
   align-items: center;
   justify-content: center;
 }
+
+/* Global styles for select elements */
+select {
+  background: #1a1a1a !important;
+  color: white !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 6px !important;
+  padding: 8px 12px !important;
+  cursor: pointer !important;
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 8px center !important;
+  background-size: 16px !important;
+  padding-right: 32px !important;
+}
+
+select:focus {
+  outline: none !important;
+  border-color: #41b883 !important;
+  box-shadow: 0 0 0 2px rgba(65, 184, 131, 0.2) !important;
+}
+
+select:hover {
+  background-color: #2a2a2a !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+select option {
+  background-color: #1a1a1a !important;
+  color: white !important;
+  padding: 8px !important;
+}
+
+select option:hover {
+  background-color: #2a2a2a !important;
+}
+
+select:disabled {
+  opacity: 0.6 !important;
+  cursor: not-allowed !important;
+}
 </style>

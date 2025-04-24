@@ -280,7 +280,7 @@ export default {
   max-width: 1200px;
   margin: auto;
   color: white;
-  background: #1a1a1a;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
   min-height: 100vh;
 }
 
@@ -289,15 +289,21 @@ export default {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2rem;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
   padding: 1.5rem;
-  border-radius: 10px;
+  border-radius: 15px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
 .page-header h1 {
   margin: 0;
-  font-size: 2rem;
-  color: #41b883;
+  font-size: 2.5rem;
+  background: linear-gradient(135deg, #41b883 0%, #34495e 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .action-buttons {
@@ -311,35 +317,56 @@ export default {
   gap: 0.5rem;
   padding: 0.8rem 1.5rem;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   font-weight: bold;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  position: relative;
+  overflow: hidden;
 }
 
 .primary-btn {
-  background: #41b883;
+  background: linear-gradient(135deg, #41b883 0%, #34495e 100%);
   color: white;
 }
 
 .refresh-btn {
   background: rgba(255, 255, 255, 0.1);
   color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .primary-btn:hover, .refresh-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+}
+
+.primary-btn::after, .refresh-btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 100%);
+  transform: translateX(-100%);
+  transition: transform 0.6s;
+}
+
+.primary-btn:hover::after, .refresh-btn:hover::after {
+  transform: translateX(0);
 }
 
 .form-container {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
   padding: 2rem;
-  border-radius: 10px;
+  border-radius: 15px;
   margin-bottom: 2rem;
   backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
 .task-form {
@@ -372,17 +399,22 @@ export default {
 .form-group input,
 .form-group select,
 .form-group textarea {
-  padding: 0.8rem;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 5px;
-  background: rgba(255, 255, 255, 0.1);
+  padding: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
   color: white;
   font-size: 1rem;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
 }
 
-.form-group textarea {
-  resize: vertical;
-  min-height: 100px;
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #41b883;
+  box-shadow: 0 0 0 2px rgba(65, 184, 131, 0.2);
 }
 
 .form-actions {
@@ -392,40 +424,45 @@ export default {
 }
 
 .submit-btn {
-  background: #41b883;
+  background: linear-gradient(135deg, #41b883 0%, #34495e 100%);
   color: white;
   border: none;
-  padding: 0.8rem 2rem;
-  border-radius: 5px;
+  padding: 1rem 2rem;
+  border-radius: 8px;
   font-weight: bold;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .submit-btn:hover {
-  background: #3aa876;
   transform: translateY(-2px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
 }
 
 .tasks-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 1.5rem;
 }
 
 .task-card {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 15px;
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
 }
 
 .task-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+  border-color: rgba(65, 184, 131, 0.3);
 }
 
 .task-header {
@@ -436,30 +473,34 @@ export default {
 
 .task-header h3 {
   margin: 0;
-  color: #41b883;
-  font-size: 1.2rem;
+  background: linear-gradient(135deg, #41b883 0%, #34495e 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 1.3rem;
 }
 
 .priority-badge {
-  padding: 0.3rem 0.8rem;
-  border-radius: 15px;
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
   font-size: 0.8rem;
   font-weight: bold;
   text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .priority-badge.low {
-  background: #3498db;
+  background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
   color: white;
 }
 
 .priority-badge.medium {
-  background: #f39c12;
+  background: linear-gradient(135deg, #f39c12 0%, #d35400 100%);
   color: white;
 }
 
 .priority-badge.high {
-  background: #e74c3c;
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
   color: white;
 }
 
@@ -474,19 +515,23 @@ export default {
   margin: 0;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  color: rgba(255, 255, 255, 0.8);
+  gap: 0.8rem;
+  color: rgba(255, 255, 255, 0.9);
+  padding: 0.5rem 0;
 }
 
 .task-details i {
   color: #41b883;
   width: 20px;
+  font-size: 1.1rem;
 }
 
 .task-description {
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 0.9rem;
-  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  padding: 0.5rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .task-actions {
@@ -501,60 +546,86 @@ export default {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  padding: 0.6rem;
+  padding: 0.8rem;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   font-weight: bold;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .edit-btn {
-  background: #2c805c;
+  background: linear-gradient(135deg, #2c805c 0%, #1a4a35 100%);
   color: white;
 }
 
 .delete-btn {
-  background: #802c2c;
+  background: linear-gradient(135deg, #802c2c 0%, #4a1a1a 100%);
   color: white;
 }
 
 .edit-btn:hover {
-  background: #41b883;
+  background: linear-gradient(135deg, #41b883 0%, #2c805c 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(65, 184, 131, 0.2);
 }
 
 .delete-btn:hover {
-  background: #b84141;
+  background: linear-gradient(135deg, #b84141 0%, #802c2c 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(184, 65, 65, 0.2);
 }
 
 .no-tasks {
   text-align: center;
-  padding: 3rem;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
-  color: rgba(255, 255, 255, 0.7);
+  padding: 4rem 2rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 15px;
+  color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .no-tasks i {
-  font-size: 3rem;
-  color: #41b883;
-  margin-bottom: 1rem;
+  font-size: 4rem;
+  background: linear-gradient(135deg, #41b883 0%, #34495e 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 1.5rem;
 }
 
 @media (max-width: 768px) {
+  .manage-tasks {
+    padding: 1rem;
+  }
+
   .page-header {
     flex-direction: column;
-    gap: 1rem;
+    gap: 1.5rem;
     text-align: center;
+    padding: 1.5rem 1rem;
   }
 
   .action-buttons {
+    width: 100%;
+    justify-content: center;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .primary-btn, .refresh-btn {
     width: 100%;
     justify-content: center;
   }
 
   .tasks-grid {
     grid-template-columns: 1fr;
+  }
+
+  .task-card {
+    margin: 0 0.5rem;
   }
 }
 </style> 
