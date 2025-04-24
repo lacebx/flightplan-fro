@@ -65,6 +65,7 @@
 
 <script>
 import axios from 'axios';
+import eventBus from '../eventBus';
 
 export default {
   name: 'AdminHomePage',
@@ -151,6 +152,11 @@ export default {
     this.statsInterval = setInterval(() => {
       this.fetchDashboardStats();
     }, 30000);
+
+    // Listen for updates to the pending tasks count
+    eventBus.on('updatePendingTasksCount', (count) => {
+      this.stats.pendingTasks = count;
+    });
   },
   beforeUnmount() {
     // Clear the interval when component is destroyed

@@ -35,6 +35,9 @@
           .then(response => {
             this.pendingRequests = response.data;
             console.log('Pending task approvals fetched:', this.pendingRequests);
+            
+            // Emit an event with the count of pending requests
+            eventBus.emit('updatePendingTasksCount', this.pendingRequests.length);
           })
           .catch(error => {
             console.error('Error fetching pending task approvals:', error);

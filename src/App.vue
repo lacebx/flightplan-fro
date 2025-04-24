@@ -16,6 +16,7 @@
           <li><router-link to="/admin/manage-events" class="nav-link">Manage Events</router-link></li>
           <li><router-link to="/admin/manage-students" class="nav-link">Manage Students</router-link></li>
           <li><router-link to="/admin/reports" class="nav-link">Reports</router-link></li>
+          <li><router-link to="/admin/task-approvals" class="nav-link">Task Approvals</router-link></li>
           <li class="nav-link" @click="toggleDropdown">
             Admin View
             <ul v-if="showDropdown" class="dropdown-menu">
