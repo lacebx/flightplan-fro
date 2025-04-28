@@ -230,43 +230,37 @@ export default {
       }
     },
     async redeemReward(reward) {
-      if (this.userPoints >= reward.points_cost && reward.availability) {
-        try {
-          const userId = localStorage.getItem('userId');
-          if (!userId) {
-            alert('Please log in to redeem rewards');
-            return;
-          }
+        if (this.userPoints >= reward.points_cost && reward.availability) {
+            try {
+                const response = await axios.post('http://localhost:8082/api/transactions', {
+                    userId: localStorage.getItem('userId'),
+                    itemId: reward.id,
+                    pointsCost: reward.points_cost,
+                    itemName: reward.item_name,
+                    date: new Date().toISOString()
+                }, { withCredentials: true });
 
-          const response = await axios.post('http://localhost:8082/api/transactions', {
-            userId: userId,
-            itemId: reward.id,
-            pointsCost: reward.points_cost,
-            itemName: reward.item_name,
-            date: new Date().toISOString()
-          }, { withCredentials: true });
+                if (response.status === 200) {
+                    this.userPoints -= reward.points_cost;
+                    this.addRedeemedItem(reward);
+                    reward.availability = false;
 
-          if (response.status === 200) {
-            this.userPoints -= reward.points_cost;
-            this.addRedeemedItem(reward);
-            reward.availability = false;
-            
-            // Show popup notification
-            this.notificationMessage = `Successfully redeemed ${reward.item_name}! Please visit the Book Store to pick up your item.`;
-            this.showNotification = true;
-            
-            // Hide notification after 5 seconds
-            setTimeout(() => {
-              this.showNotification = false;
-            }, 5000);
-          }
-        } catch (error) {
-          console.error('Error redeeming reward:', error);
-          alert('Failed to redeem reward. Please try again.');
+                    // Show popup notification
+                    this.notificationMessage = `Successfully redeemed ${reward.item_name}! Please visit the Book Store to pick up your item.`;
+                    this.showNotification = true;
+
+                    // Hide notification after 5 seconds
+                    setTimeout(() => {
+                        this.showNotification = false;
+                    }, 5000);
+                }
+            } catch (error) {
+                console.error('Error redeeming reward:', error);
+                alert('Failed to redeem reward. Please try again.');
+            }
+        } else {
+            alert('Insufficient points or item not available.');
         }
-      } else {
-        alert('Insufficient points or item not available.');
-      }
     },
     async addToTransactionHistory(reward) {
       try {
@@ -362,7 +356,7 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 3rem 0 2rem;
+  margin: 1.5rem 0 1rem;
   padding: 1rem;
   background: rgba(0, 0, 0, 0.2);
   border-radius: 15px;
@@ -430,7 +424,7 @@ export default {
 .shop-title {
   font-size: 3rem;
   color: #41b883;
-  margin: 4rem 0 3rem;
+  margin: 2rem 0 1.5rem;
   text-align: center;
   font-weight: 300;
   position: relative;

@@ -222,6 +222,7 @@ export default {
           isVisible: this.registrationForm.isVisible
         };
         console.log(registrationData);
+        
         const response = await axios.post(
           `http://localhost:8082/api/events/${this.selectedEventId}/register`,
           registrationData,

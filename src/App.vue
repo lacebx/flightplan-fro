@@ -5,7 +5,7 @@
       <TransactionHistory />
     </div>
     <!-- Conditional Navbar -->
-    <header v-if="isAdmin && isAdminView">
+    <header v-if="isAdmin && isAdminView && !isLoginRoute">
       <nav>
         <ul>
           <li>
